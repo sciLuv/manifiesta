@@ -1,16 +1,34 @@
-import React, { useState, useContext } from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
-import { myContext } from '../index';
+function App() {
+  const [compteur, setCompteur] = useState(0);
 
-export default function App() {
-    return (
-       <myContext.Provider>
-        <h1>Manifiesta</h1>
-            <BrowserRouter>
-            </BrowserRouter>
-       </myContext.Provider>
-    );
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/websocket');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, frame => {
+      console.log('Connecté: ' + frame);
+      
+      stompClient.subscribe('/topic/compteur', message => {
+        setCompteur(message.body);
+      });
+    });
+
+    return () => {
+      if (stompClient) {
+        stompClient.disconnect();
+      }
+    };
+  }, []);
+
+  return (
+    <div>
+      <h1>Compteur: <span>{compteur}</span></h1>
+    </div>
+  );
 }
 
+export default App;
