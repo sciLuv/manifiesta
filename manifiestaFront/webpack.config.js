@@ -31,6 +31,17 @@ module.exports = {
         test: /\.png|svg|jpg|gif$/,
         use: ["file-loader"],
       }, 
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Crée des noeuds `style` à partir des chaînes de caractères JS
+          "style-loader",
+          // Traduit le CSS en chaînes de caractères CommonJS
+          "css-loader",
+          // Compile Sass en CSS
+          "sass-loader",
+        ],
+      }
     ],
   },
 };
