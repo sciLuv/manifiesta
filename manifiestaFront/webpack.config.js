@@ -6,7 +6,8 @@ module.exports = {
   output: {
     filename: "bundle.[hash].js",
     path: path.resolve(__dirname, "dist"),
-  },
+    publicPath: '/',  // Ajoutez cette ligne
+},
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
@@ -43,5 +44,14 @@ module.exports = {
         ],
       }
     ],
+  },
+  devServer: {
+    historyApiFallback: true, // Ajout pour gérer l'historique HTML5
+    static: {
+      directory: path.join(__dirname, 'dist'), // Dossier où se trouvent vos fichiers statiques compilés
+    },
+    compress: true, // Pour tout compression de fichiers, utile en prod
+    port: 3000, // Vous pouvez spécifier le port que vous voulez utiliser
+    open: true, // Pour ouvrir automatiquement le navigateur
   },
 };
