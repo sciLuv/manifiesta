@@ -1,5 +1,9 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.service;
+package fr.sciluv.application.manifiesta.manifiestaBack.service.musicStreaming.Spotify;
 
+import fr.sciluv.application.manifiesta.manifiestaBack.config.SpotifyConfig;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -10,19 +14,29 @@ import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
 
+@Service
 public class SpotifyService {
 
-    private static final String clientId = "4cb9747367814a04be45cbd1493d586c";
-    private static final String clientSecret = "f5be1c0657e745739cf1307b34d897ef";
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:3000/spotify/");
+    private SpotifyApi spotifyApi;
 
-    private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
-            .setClientId(clientId)
-            .setClientSecret(clientSecret)
-            .setRedirectUri(redirectUri)
-            .build();
+    private final SpotifyConfig spotifyConfig;
 
-    public static String exchangeCodeForAccessToken(String code) {
+    @Autowired
+    public SpotifyService(SpotifyConfig spotifyConfig) {
+        this.spotifyConfig = spotifyConfig;
+    }
+
+    @PostConstruct
+    private void init() {
+        URI redirectUri = SpotifyHttpManager.makeUri(spotifyConfig.getRedirectUri());
+        spotifyApi = new SpotifyApi.Builder()
+                .setClientId(spotifyConfig.getClientId())
+                .setClientSecret(spotifyConfig.getClientSecret())
+                .setRedirectUri(redirectUri)
+                .build();
+    }
+
+    public String exchangeCodeForAccessToken(String code) {
         try {
             AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(code).build();
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
@@ -43,4 +57,3 @@ public class SpotifyService {
         }
     }
 }
-
