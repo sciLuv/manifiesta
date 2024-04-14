@@ -1,7 +1,9 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.controller.rest;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.config.SpotifyConfig;
-import fr.sciluv.application.manifiesta.manifiestaBack.service.SpotifyService;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.musicStreaming.Spotify.SpotifyService;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,19 +18,27 @@ import java.util.Map;
 
 @RestController
 public class SpotifyController {
-    private static final String clientId = "4cb9747367814a04be45cbd1493d586c";
-    private static final String clientSecret = "zudknyqbh3wunbhcvg9uyvo7uwzeu6nne";
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:3000/spotify/");
+    private final SpotifyConfig spotifyConfig;
+    private final SpotifyService spotifyService; // Ajout du service Spotify comme dépendance
+    private SpotifyApi spotifyApi;
 
-    private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
-            .setClientId(clientId)
-            .setClientSecret(clientSecret)
-            .setRedirectUri(redirectUri)
-            .build();
+    @Autowired
+    public SpotifyController(SpotifyConfig spotifyConfig, SpotifyService spotifyService) { // Injection de SpotifyService
+        this.spotifyConfig = spotifyConfig;
+        this.spotifyService = spotifyService; // Initialisation de SpotifyService
+    }
 
+    @PostConstruct
+    private void init() {
+        URI redirectUri = SpotifyHttpManager.makeUri(spotifyConfig.getRedirectUri());
+        spotifyApi = new SpotifyApi.Builder()
+                .setClientId(spotifyConfig.getClientId())
+                .setClientSecret(spotifyConfig.getClientSecret())
+                .setRedirectUri(redirectUri)
+                .build();
+    }
     @GetMapping("/spotify/authorize")
     public String getAuthorizationUri() {
-
         String[] scopes = {
                 "ugc-image-upload", "user-read-recently-played", "user-top-read", "user-read-playback-position",
                 "user-read-playback-state", "user-modify-playback-state", "user-read-currently-playing",
@@ -52,8 +62,8 @@ public class SpotifyController {
         String code = (String) payload.get("code");
         System.out.println("Code reçu: " + code);
 
-        // Appeler une méthode pour échanger le code contre un token d'accès
-        String accessToken = SpotifyService.exchangeCodeForAccessToken(code);
+        // Utilisation de l'instance spotifyService pour appeler la méthode
+        String accessToken = spotifyService.exchangeCodeForAccessToken(code);
 
         // Vous pouvez retourner le token d'accès ou simplement confirmer la réussite
         return ResponseEntity.ok().body("Token récupéré avec succès. Access Token: " + accessToken);
