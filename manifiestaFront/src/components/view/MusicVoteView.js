@@ -6,6 +6,7 @@ export function MusicVoteView(){
 
     const handleProgressClick = () => {
         setProgressWidth(prevWidth => Math.min(prevWidth + 1, 100));
+        
     };
 
     return(

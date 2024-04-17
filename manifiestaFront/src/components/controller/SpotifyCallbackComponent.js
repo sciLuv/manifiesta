@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { URI_BASE } from '../../env';
 
 const SpotifyCallbackComponent = () => {
   let [searchParams] = useSearchParams();
@@ -9,7 +10,7 @@ const SpotifyCallbackComponent = () => {
     if (code) {
       // Ajout d'un délai pour laisser le temps à la page de se charger après la redirection
       const timer = setTimeout(() => {
-        fetch('http://localhost:8080/spotify/callback', {
+        fetch(URI_BASE + 'spotify/callback', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

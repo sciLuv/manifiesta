@@ -6,6 +6,8 @@ import { MusicVoteView } from './view/MusicVoteView';
 import { JoinSessionView } from './view/JoinSessionView';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import SpotifyCallbackComponent from './controller/SpotifyCallbackComponent'; // Mettez à jour le chemin selon votre structure
+import AccountCreationController from './controller/AccountCreationController';
+import { URI_BASE } from '../env';
 
 
 function App() {
@@ -13,7 +15,7 @@ function App() {
 
 
   useEffect(() => {
-    const socket = new SockJS('http://127.0.0.1:8080/websocket');
+    const socket = new SockJS(URI_BASE + '/websocket');
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, (frame) => {
@@ -33,7 +35,7 @@ function App() {
 
   const handleIncrement = () => {
     // Utilisation de l'API fetch pour envoyer une requête GET à /incrementer
-    fetch('http://127.0.0.1:8080/incrementer')
+    fetch(URI_BASE + '/incrementer')
       .then(response => {
         if (!response.ok) {
           throw new Error('La requête a échoué');
@@ -48,7 +50,7 @@ function App() {
 
   const handleAuthorization = async () => {
     try {
-      const response = await fetch('http://localhost:8080/spotify/authorize');
+      const response = await fetch(URI_BASE + '/spotify/authorize');
       if (response.ok) {
         const authorizationUri = await response.text();
         setSpotifyAuthorizationUri(authorizationUri);
@@ -70,13 +72,15 @@ function App() {
       <JoinSessionView/>
       <h1>App React</h1>
       <button onClick={handleAuthorization}>Autoriser l'accès Spotify</button>
+      <AccountCreationController />
+
       
-      {/* Vous pouvez afficher l'URI de redirection si vous le souhaitez */}
       {spotifyAuthorizationUri && <p>URI de redirection Spotify : {spotifyAuthorizationUri}</p>}
       <Router>
         <Routes>
           <Route path="/spotify" element={<SpotifyCallbackComponent/>} />
           <Route path="/test" element={<TestComponent />} />
+          <Route path="/account" element={<AccountCreationController />} />
         </Routes>
       </Router>
       
