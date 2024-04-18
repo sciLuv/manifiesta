@@ -1,4 +1,4 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.service.musicStreaming.Spotify;
+package fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.config.SpotifyConfig;
 import jakarta.annotation.PostConstruct;

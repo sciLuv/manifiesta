@@ -5,7 +5,7 @@ import { URI_BASE } from '../../env';
 export default function AccountCreationController(){
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
+    const [mail, setMail] = useState('');
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -15,8 +15,8 @@ export default function AccountCreationController(){
         setPassword(event.target.value);
     };
 
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
+    const handleMailChange = (event) => {
+        setMail(event.target.value);
     };
 
     const handleFormSubmit = () => {
@@ -26,7 +26,7 @@ export default function AccountCreationController(){
         const requestData = {
             username: username,
             password: password,
-            email: email
+            mail: mail
         };
     
         fetch(URI_BASE + '/createAccount', {
@@ -57,9 +57,9 @@ export default function AccountCreationController(){
         <AccountCreation
             username={username} 
             password={password} 
-            email={email}
+            mail={mail}
             onUsernameChange={handleUsernameChange}
-            onEmailChange={handleEmailChange}
+            onMailChange={handleMailChange}
             onPasswordChange={handlePasswordChange} 
             onSubmit={handleFormSubmit} 
         />

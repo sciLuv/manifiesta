@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AccountCreation = ({ username, email, password, onUsernameChange, onEmailChange, onPasswordChange, onSubmit }) => {
+const AccountCreation = ({ username, mail, password, onUsernameChange, onMailChange, onPasswordChange, onSubmit }) => {
     return (
         <div className="container">
             <div className="row justify-content-center">
@@ -26,8 +26,8 @@ const AccountCreation = ({ username, email, password, onUsernameChange, onEmailC
                                         type="email"
                                         className="form-control"
                                         id="email"
-                                        value={email}
-                                        onChange={onEmailChange}
+                                        value={mail}
+                                        onChange={onMailChange}
                                         required
                                     />
                                 </div>

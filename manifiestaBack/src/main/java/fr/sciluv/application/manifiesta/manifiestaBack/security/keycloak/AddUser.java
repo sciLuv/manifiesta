@@ -1,5 +1,6 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak;
 
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,39 +13,43 @@ public class AddUser {
     private static final String CONTENT_TYPE = "application/json";
 
     ApplicationConnexion connexion = new ApplicationConnexion();
-    public void addUser() {
+    public boolean addUser(User user) {
 
-        RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", CONTENT_TYPE);
-        headers.add("Authorization", "Bearer " + connexion.getToken());
 
-        String user = "{\n" +
-                "    \"username\": \"newugdhfser2\",\n" +
-                "    \"enabled\": true,\n" +
-                "    \"emailVerified\": false,\n" +
-                "    \"firstName\": \"John\",\n" +
-                "    \"lastName\": \"Doe\",\n" +
-                "    \"email\": \"john2.doe@exytuample.com\",\n" +
-                "    \"credentials\": [\n" +
-                "        {\n" +
-                "            \"type\": \"password\",\n" +
-                "            \"value\": \"userpassword\",\n" +
-                "            \"temporary\": false\n" +
-                "        }\n" +
-                "    ]\n" +
-                "}";
+        try {
+            RestTemplate restTemplate = new RestTemplate();
 
-        HttpEntity<String> request = new HttpEntity<>(user, headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", CONTENT_TYPE);
+            headers.add("Authorization", "Bearer " + connexion.getToken());
 
-        ResponseEntity<String> response = restTemplate.exchange(TOKEN_URL, HttpMethod.POST, request, String.class);
+            String userInformations = "{\n" +
+                    "    \"username\": \"" + user.getUsername()+ "\",\n" +
+                    "    \"enabled\": true,\n" +
+                    "    \"emailVerified\": false,\n" +
+                    "    \"firstName\": \"user\",\n" +
+                    "    \"lastName\": \"user\",\n" +
+                    "    \"email\": \"" + user.getMail() +"\",\n" +
+                    "    \"credentials\": [\n" +
+                    "        {\n" +
+                    "            \"type\": \"password\",\n" +
+                    "            \"value\": \"" + user.getPassword() + "\",\n" +
+                    "            \"temporary\": false\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}";
 
-        System.out.println(response.getBody());
-    }
+            HttpEntity<String> request = new HttpEntity<>(userInformations, headers);
+            ResponseEntity<String> response = restTemplate.exchange(TOKEN_URL, HttpMethod.POST, request, String.class);
 
-    public static void main(String[] args) {
-        AddUser keycloak = new AddUser();
-        keycloak.addUser();
+            return true;
+
+
+        }   catch (Exception e) {
+
+            return false;
+        }
+
     }
 }

@@ -1,7 +1,7 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.controller.rest;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.config.SpotifyConfig;
-import fr.sciluv.application.manifiesta.manifiestaBack.service.musicStreaming.Spotify.SpotifyService;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.SpotifyService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
