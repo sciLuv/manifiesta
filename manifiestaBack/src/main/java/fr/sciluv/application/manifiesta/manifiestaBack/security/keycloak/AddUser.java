@@ -27,7 +27,7 @@ public class AddUser {
             String userInformations = "{\n" +
                     "    \"username\": \"" + user.getUsername()+ "\",\n" +
                     "    \"enabled\": true,\n" +
-                    "    \"emailVerified\": false,\n" +
+                    "    \"emailVerified\": true,\n" +
                     "    \"firstName\": \"user\",\n" +
                     "    \"lastName\": \"user\",\n" +
                     "    \"email\": \"" + user.getMail() +"\",\n" +
