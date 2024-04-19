@@ -13,6 +13,10 @@
     CREATE USER 'name'@'%' IDENTIFIED BY 'password';
     //Create a specific DB for keycloak
     CREATE DATABASE dbname;
+
+    //Create a specific DB for manifiesta application
+    CREATE DATABASE dbname;
+
     //To add capacity to interact with the Db to the keycloak user
     GRANT ALL PRIVILEGES ON dbname.* TO 'name'@'%';
 
@@ -37,8 +41,9 @@
     characterEncoding=UTF-8
 
 //Setting keycloak administration space (in localhost:8080 by default)
-1 - create an admin and its password
+1 - create an admin and its password to access to the admin pan
 2 - create a realm manifiesta
+2 - create an admin user, with validate password and mail, and add him the realm-admin realmrole
 3 -create a new client, call it "manifiesta", and select "client authentification" in "capability config"
 4 - in this realm, find the "admin-cli" client and select "client authentification" in "capability config"
 5 - After that, we can go in crendential and find the secret_key, necessary for use keycloak admin API
@@ -47,7 +52,9 @@
 //Default values of variables creates in this process
 MySQL user : keycloakAdmin
 MySQL user password : g7PUOC-hqD-&
-MySQL database name : keycloakManifiesta
+MySQL database keycloak name : keycloakManifiesta
+
+MySQL database manifiesta application name : manifiesta
 
 keycloak admin name : admin
 keycloak admin password : admin

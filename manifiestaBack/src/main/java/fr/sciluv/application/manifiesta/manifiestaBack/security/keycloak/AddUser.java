@@ -40,14 +40,16 @@ public class AddUser {
                     "    ]\n" +
                     "}";
 
+            System.out.println(userInformations);
             HttpEntity<String> request = new HttpEntity<>(userInformations, headers);
             ResponseEntity<String> response = restTemplate.exchange(TOKEN_URL, HttpMethod.POST, request, String.class);
 
+            System.out.println(response.getBody());
             return true;
 
 
         }   catch (Exception e) {
-
+            System.out.println(e);
             return false;
         }
 
