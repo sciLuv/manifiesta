@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 public class ApplicationConnexion {
     private static final String TOKEN_URL = "http://localhost:8080/realms/manifiesta/protocol/openid-connect/token";
     private static final String CLIENT_ID = "admin-cli";
-    private static final String CLIENT_SECRET = "Z4ew3AQWaOrTGIPQFNA8lZqZeGBE6yVF";
+    private static final String CLIENT_SECRET = "XqMiZuOyAiPFcQfMbUAkvlW11wGF020f";
     private static final String GRANT_TYPE = "password";
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "admin";
@@ -42,6 +42,9 @@ public class ApplicationConnexion {
 
         ResponseEntity<String> response = restTemplate.exchange(TOKEN_URL, HttpMethod.POST, request, String.class);
 
+        //sout response.getBody() to see the response
+        System.out.println(response.getBody());
+
         ObjectMapper mapper = new ObjectMapper();
         try {
             JsonNode jsonNode = mapper.readTree(response.getBody());
@@ -61,9 +64,9 @@ public class ApplicationConnexion {
         return refreshToken;
     }
 
-    public static void main(String[] args) {
-        ApplicationConnexion keycloak = new ApplicationConnexion();
-        System.out.println(keycloak.getToken());
-        System.out.println(keycloak.getRefreshToken());
-    }
+//    public static void main(String[] args) {
+//        ApplicationConnexion keycloak = new ApplicationConnexion();
+//        System.out.println(keycloak.getToken());
+//        System.out.println(keycloak.getRefreshToken());
+//    }
 }
