@@ -13,7 +13,7 @@ An application enabling the interactive sharing of Spotify playlists, between us
 
 ### Security
 
-*localhost8080*
+*localhost:8080*
 
 Manifiesta use keycloak framework and a MySQL database for user's authentification, role's autorisation and data encryption. First download Keycloak.
 
@@ -66,7 +66,7 @@ characterEncoding=UTF-8*
 7 - create two realm-roles, "user", and "guest"
 8 - create two client-roles for manifiesta client "client_user" and "client_guest"
 9 - associate "user" with "client_user" and "guest" with "client_guest" in "add associated roles" of each client-role created
-
+10 - go to "real setting" in "keys" and copy the public key of rs256
 
 **Default values of variables creates in this process**
 

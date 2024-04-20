@@ -1,4 +1,4 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user;
+package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.AccountCreation;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.AdminToken;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.KCAttributes;

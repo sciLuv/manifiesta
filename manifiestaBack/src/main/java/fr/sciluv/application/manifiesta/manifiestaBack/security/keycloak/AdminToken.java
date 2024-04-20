@@ -28,7 +28,7 @@ public class AdminToken {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("client_id", kcAttributes.getAdminClientId());
         map.add("client_secret", kcAttributes.getAdminClientSecret());
-        map.add("grant_type", kcAttributes.getGrantType());
+        map.add("grant_type", kcAttributes.getGrantTypePassword());
         map.add("username", kcAttributes.getAdminUsername());
         map.add("password", kcAttributes.getAdminPassword());
 

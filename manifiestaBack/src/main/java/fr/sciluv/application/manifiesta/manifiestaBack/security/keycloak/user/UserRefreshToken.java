@@ -2,7 +2,6 @@ package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.sciluv.application.manifiesta.manifiestaBack.security.TokenProcessingService;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.KCAttributes;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,8 +11,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-public class UserToken {
-
+public class UserRefreshToken {
     private String token;
     private String refreshToken;
 
@@ -21,7 +19,7 @@ public class UserToken {
 
 
     //constructor with getToken method inside
-    public UserToken(String username, String password) {
+    public UserRefreshToken(String refreshToken) {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -31,9 +29,8 @@ public class UserToken {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("client_id", kcAttributes.getManifiestaClientId());
         map.add("client_secret", kcAttributes.getManifiestaClientSecret());
-        map.add("grant_type", kcAttributes.getGrantTypePassword());
-        map.add("username", username);
-        map.add("password", password);
+        map.add("grant_type", kcAttributes.getGrantTypeRefreshToken());
+        map.add("refresh_token", refreshToken);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
@@ -63,12 +60,8 @@ public class UserToken {
     }
 
 //    public static void main(String[] args) {
-//        UserToken userToken = new UserToken();
-//        System.out.println("\r\n\r\n");
-//        System.out.println(userToken.getToken() + "\r\n\r\n");
-//        System.out.println(userToken.getRefreshToken()+ "\r\n\r\n") ;
-//
-//        TokenProcessingService tokenProcessingService = new TokenProcessingService();
-//        tokenProcessingService.extractTokenData(userToken.getToken());
+//        UserRefreshToken userRefreshToken = new UserRefreshToken("eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJjNWU2ZGE2My01YzRlLTQ1NTAtYmI5YS01NWFlZGNlOWRhY2YifQ.eyJleHAiOjE3MTM2NTUxOTEsImlhdCI6MTcxMzY1MzM5MSwianRpIjoiNzIwMjNjYTAtYjgyOS00NWY2LWJkNWEtNmM0MjI5ZDEzNGUyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9tYW5pZmllc3RhIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9tYW5pZmllc3RhIiwic3ViIjoiMGQ4Y2QxZTktZDdmYS00YTcwLTljNGEtZmY1N2RiMWMzYzMyIiwidHlwIjoiUmVmcmVzaCIsImF6cCI6Im1hbmlmaWVzdGEiLCJzZXNzaW9uX3N0YXRlIjoiNTE3MzA2N2QtNWQ0OC00Y2ZhLTg5NWUtZDU0ZTEzNTU2MGY5Iiwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwic2lkIjoiNTE3MzA2N2QtNWQ0OC00Y2ZhLTg5NWUtZDU0ZTEzNTU2MGY5In0.jmbeOlKFfsDANN7oclzzb6VAU1zsSOAj-vosUf9g8GRGGC-cyU7WqIIA3KbOeVK2FVEqCaw2SW3KqD9rzPEDBA");
+//        System.out.println(userRefreshToken.getToken());
+//        System.out.println(userRefreshToken.getRefreshToken());
 //    }
 }

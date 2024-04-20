@@ -1,8 +1,9 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user;
+package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.AccountCreation;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.TokenProcessingService;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.AdminToken;
+import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.UserToken;
 
 public class AddUserToKC{
     AdminToken connexion = new AdminToken();

@@ -19,7 +19,8 @@ public class KCAttributes {
     private String manifiestaNumberId = "1c242811-44c4-4c52-b6d3-364b7449feb8";
 
 
-    private String grantType = "password";
+    private String grantTypePassword = "password";
+    private String grantTypeRefreshToken = "refresh_token";
 
 
     private String userRoleId= "733ac06d-8dfb-49aa-afac-00e8e3249460";
@@ -41,8 +42,12 @@ public class KCAttributes {
         return adminClientSecret;
     }
 
-    public String getGrantType() {
-        return grantType;
+    public String getGrantTypePassword() {
+        return grantTypePassword;
+    }
+
+    public String getGrantTypeRefreshToken() {
+        return grantTypeRefreshToken;
     }
 
     public String getAdminUsername() {
