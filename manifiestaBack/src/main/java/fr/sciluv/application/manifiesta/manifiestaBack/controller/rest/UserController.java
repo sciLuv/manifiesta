@@ -1,7 +1,8 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.controller.rest;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
-import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.AddUser;
+import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.AddUserToKC;
+import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.CreateUser;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +22,13 @@ public class UserController {
     @PostMapping("/createAccount")
     public String createUser(@RequestBody User user) {
 
-        AddUser addUser = new AddUser();
-        boolean keycloakResponse = addUser.addUser(user);
 
-        if(keycloakResponse) return userService.createUser(user).toJSON();
-        else return "{\"User\": \"not created\"}";
+        AddUserToKC addUserToKC = new AddUserToKC();
+        String responseKC = addUserToKC.addingUserToKC(user);
+        if(responseKC.equals("User created")) {
+        }
+
+        // send the response to the front in JSON format
+        return "{\"responseKC\":\"" + responseKC + "\"}";
     }
 }

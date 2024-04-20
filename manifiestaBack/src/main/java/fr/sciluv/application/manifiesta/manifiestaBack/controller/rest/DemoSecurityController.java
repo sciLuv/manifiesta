@@ -12,13 +12,13 @@ public class DemoSecurityController {
     @GetMapping
     @PreAuthorize("hasRole('client_user')")
     public String hello(){
-        return "hello fromSpring Boot ApplicationConnexion (Public)";
+        return "hello fromSpring Boot AdminToken (Public)";
     }
 
     @GetMapping("/admin")
     @PreAuthorize("hasRole('client_admin')")
     public String hello2(){
-        return "hello fromSpring Boot ApplicationConnexion (ADMIN)";
+        return "hello fromSpring Boot AdminToken (ADMIN)";
     }
 
 }

@@ -1,18 +1,18 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak;
+package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
+import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.AdminToken;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-public class AddUser {
+public class CreateUser {
 
     private static final String TOKEN_URL = "http://localhost:8080/admin/realms/manifiesta/users";
-    private static final String CONTENT_TYPE = "application/json";
 
-    ApplicationConnexion connexion = new ApplicationConnexion();
+    AdminToken connexion = new AdminToken();
     public boolean addUser(User user) {
 
 
@@ -21,7 +21,7 @@ public class AddUser {
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", CONTENT_TYPE);
+            headers.add("Content-Type", "application/json");
             headers.add("Authorization", "Bearer " + connexion.getToken());
 
             String userInformations = "{\n" +
