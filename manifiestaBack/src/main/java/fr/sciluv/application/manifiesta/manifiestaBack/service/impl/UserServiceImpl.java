@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,5 +24,11 @@ public class UserServiceImpl implements UserService {
         user.setCreationDate(LocalDateTime.now());
         return userDao.save(user);
     }
+
+    @Override
+    public User getUser(String username) {
+        return userDao.findByUsername(username);
+    }
+
 }
 

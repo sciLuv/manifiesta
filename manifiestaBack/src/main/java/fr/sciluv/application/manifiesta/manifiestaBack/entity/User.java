@@ -15,17 +15,15 @@ public class User {
     private Long id;
 
     private String username;
-    private String password;
     private String mail;
     private LocalDateTime creationDate;
 
     public User() {
     }
 
-    public User(String username, String password, String mail) {
+    public User(String username, String mail) {
         this.id = -1L;
         this.username = username;
-        this.password = password;
         this.mail = mail;
         this.creationDate = LocalDateTime.now();
     }
@@ -35,7 +33,6 @@ public class User {
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", mail='" + mail + '\'' +
                 ", creationDate=" + creationDate +
                 '}';
@@ -44,7 +41,6 @@ public class User {
     public String toJSON() {
         return "{" +
                 "\"username\":\"" + username + "\"," +
-                "\"password\":\"" + password + "\"," +
                 "\"mail\":\"" + mail + "\"," +
                 "\"creationDate\":\"" + creationDate + "\"" +
                 "}";
@@ -53,10 +49,6 @@ public class User {
     //Getter
     public String getUsername() {
         return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getMail() {

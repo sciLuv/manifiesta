@@ -29,7 +29,7 @@ export default function AccountCreationController(){
             mail: mail
         };
     
-        fetch(URI_BASE + '/createAccount', {
+        fetch(URI_BASE + '/public/createAccount', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

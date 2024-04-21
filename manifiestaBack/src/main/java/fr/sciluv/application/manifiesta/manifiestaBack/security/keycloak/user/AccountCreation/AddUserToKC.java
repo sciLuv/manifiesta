@@ -1,6 +1,7 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.AccountCreation;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.UserDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.TokenProcessingService;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.AdminToken;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.UserToken;
@@ -8,7 +9,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.Us
 public class AddUserToKC{
     AdminToken connexion = new AdminToken();
 
-    public String addingUserToKC(User user){
+    public String addingUserToKC(UserDto user){
         CreateUser createUser = new CreateUser();
         if (createUser.addUser(user)){
             UserToken userToken = new UserToken(user.getUsername(), user.getPassword());

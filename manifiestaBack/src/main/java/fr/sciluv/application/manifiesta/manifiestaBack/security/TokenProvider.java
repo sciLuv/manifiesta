@@ -43,29 +43,31 @@ public class TokenProvider {
     }
 
     // Hypothétique méthode de validation de refresh token
-    public boolean validateRefreshToken(String refreshToken) {
-        try {
-            System.out.println("Validation du refresh token...");
-            Algorithm algorithm = Algorithm.HMAC512("your-256-bit-secret");
-            JWTVerifier verifier = JWT.require(algorithm).build(); // Réutiliser l'algorithme pour la signature
-            DecodedJWT jwt = verifier.verify(refreshToken);
-
-            // Vérifier si le token est expiré
-            boolean isExpired = jwt.getExpiresAt().before(new Date());
-            if (isExpired) {
-                System.out.println("Refresh token est expiré.");
-                return false;
-            }
-
-            return true;
-        } catch (JWTVerificationException e) {
-            System.out.println("Refresh token est invalide: " + e.getMessage());
-            return false;
-        } catch (Exception e) {
-            System.out.println("Erreur lors de la validation du refresh token: " + e.getMessage());
-            return false;
-        }
-    }
+    //ne fonctionne pas et spring et keycloak on déjà des vérification sans que j'en fasse moi même
+//    public boolean validateRefreshToken(String refreshToken) {
+//        try {
+//            System.out.println("Validation du refresh token...");
+//            System.out.println("Refresh token fourni: " + refreshToken);
+//            Algorithm algorithm = Algorithm.HMAC512("sqVweT2unKFE8WkbSET2PedQgyddGuVs");
+//            JWTVerifier verifier = JWT.require(algorithm).build(); // Réutiliser l'algorithme pour la signature
+//            DecodedJWT jwt = verifier.verify(refreshToken);
+//
+//            // Vérifier si le token est expiré
+//            boolean isExpired = jwt.getExpiresAt().before(new Date());
+//            if (isExpired) {
+//                System.out.println("Refresh token est expiré.");
+//                return false;
+//            }
+//
+//            return true;
+//        } catch (JWTVerificationException e) {
+//            System.out.println("Refresh token est invalide: " + e.getMessage());
+//            return false;
+//        } catch (Exception e) {
+//            System.out.println("Erreur lors de la validation du refresh token: " + e.getMessage());
+//            return false;
+//        }
+//    }
 
     // Hypothétique méthode pour rafraîchir le access token
     public String refreshAccessToken(String refreshToken) {

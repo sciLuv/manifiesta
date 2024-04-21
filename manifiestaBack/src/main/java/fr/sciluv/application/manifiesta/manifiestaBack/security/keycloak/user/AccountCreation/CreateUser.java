@@ -1,6 +1,7 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.AccountCreation;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.UserDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.AdminToken;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +14,7 @@ public class CreateUser {
     private static final String TOKEN_URL = "http://localhost:8080/admin/realms/manifiesta/users";
 
     AdminToken connexion = new AdminToken();
-    public boolean addUser(User user) {
+    public boolean addUser(UserDto user) {
 
 
 
