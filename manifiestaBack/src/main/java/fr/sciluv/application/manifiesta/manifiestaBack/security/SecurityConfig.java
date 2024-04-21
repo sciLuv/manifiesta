@@ -30,6 +30,7 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(oauth2 -> {
                     oauth2.jwt(jwt -> {
+                        System.out.println("hello");
                         jwt.jwtAuthenticationConverter(jwtAuthConverter);
                     });
                 })

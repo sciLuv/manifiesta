@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+/* import React, { useEffect } from 'react';
 import { URI_BASE } from '../../env';
 
 const Incrementer = () => {
   useEffect(() => {
-    fetch(URI_BASE + '/incrementer')
+    fetch(URI_BASE + 'public/incrementer')
       .then(response => response.text()) // ou .json() si le serveur renvoie du JSON
       .then(message => {
         console.log(message); // Log la réponse du serveur
@@ -18,4 +18,4 @@ const Incrementer = () => {
   );
 };
 
-export default Incrementer;
+export default Incrementer; */

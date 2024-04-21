@@ -11,7 +11,7 @@ public class CompteurController {
     @Autowired
     private CompteurService compteurService;
 
-    @GetMapping("/incrementer")
+    @GetMapping("public/incrementer")
     public String incrementerCompteur() {
         compteurService.incrementerEtNotifier();
         return "Compteur incrementé";

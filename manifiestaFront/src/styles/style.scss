@@ -1,3 +1,4 @@
+
 .progress-container{
     max-width: 500px;
     .progress{
@@ -8,7 +9,16 @@
         .progress-bar{
             height: 100%;
             width: 40%;
-            background-color: red;
+            background-color: rgb(17, 0, 255);
         }
     }
+}
+
+.custom-burger-button{
+    color: #ffffff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.navbar-toggler-icon{
+    filter: brightness(0) invert(1);
 }
