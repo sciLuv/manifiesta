@@ -2,20 +2,17 @@
 import { URI_BASE } from '../../env';
 
 const Incrementer = () => {
-  useEffect(() => {
-    fetch(URI_BASE + 'public/incrementer')
-      .then(response => response.text()) // ou .json() si le serveur renvoie du JSON
-      .then(message => {
-        console.log(message); // Log la réponse du serveur
-      })
-      .catch(error => {
-        console.error('Erreur lors de la requête:', error);
-      });
-  }, []);
-
-  return (
-    <button onClick={handleIncrement}>Incrémenter</button>
-  );
+  // Utilisation de l'API fetch pour envoyer une requête GET à /incrementer
+  fetch(URI_BASE + '/public/incrementer')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('La requête a échoué');
+      }
+      return response.text();
+    })
+    .then(data => console.log(data))
+    .catch(error => console.error('Erreur lors de l\'incrémentation:', error));
 };
 
-export default Incrementer; */
+export default Incrementer; 
+*/

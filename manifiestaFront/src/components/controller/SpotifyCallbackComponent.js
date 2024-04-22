@@ -34,4 +34,28 @@ const SpotifyCallbackComponent = () => {
   return <div>Chargement...</div>;
 };
 
+
+
+/* 
+
+  //c'était dans app avant
+  const [spotifyAuthorizationUri, setSpotifyAuthorizationUri] = useState('');
+
+  const handleAuthorization = async () => {
+    try {
+      const response = await fetch(URI_BASE + '/spotify/authorize');
+      if (response.ok) {
+        const authorizationUri = await response.text();
+        setSpotifyAuthorizationUri(authorizationUri);
+        // Rediriger l'utilisateur vers l'URI de redirection Spotify
+        window.location.href = authorizationUri;
+      } else {
+        console.error('Erreur lors de la récupération de l\'URI de redirection Spotify');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'URI de redirection Spotify', error);
+    }
+  };
+*/
+
 export default SpotifyCallbackComponent;

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import LoginView from '../view/LoginView';
 
-const LoginController = () => {
+
+const LoginController = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -34,14 +35,29 @@ const LoginController = () => {
             }
 
             const data = await response.json();
-            
-            // Traitez ici les données de réponse, comme le stockage du token
             console.log(data);
-            const customHeader = response.headers.get('access-Token');
-            console.log(customHeader);
-            console.log("test");
+            if(data.username && data.mail){
+                console.log("tessst");
+                props.setUser(data.username);
+                props.setMail(data.mail);
+            }
 
-            // Rediriger l'utilisateur ou effectuer d'autres actions de connexion réussie
+            
+
+            // Récupérer les tokens depuis les headers de la réponse
+            const newAccessToken = response.headers.get('Access-Token');
+            const newRefreshToken = response.headers.get('Refresh-Token');
+
+            // Vérifier que les deux tokens sont présents avant de mettre à jour les états
+            if (newAccessToken && newRefreshToken) {
+                props.setAccessToken(newAccessToken);
+                props.setRefreshToken(newRefreshToken);
+            }
+
+            // Rediriger l'utilisateur vers la page d'accueil
+            window.location.href = '/';
+
+
         } catch (error) {
             setShowErrorMessage(true);
             setErrorMessage(error.message || 'Une erreur est survenue lors de la connexion');
@@ -49,15 +65,18 @@ const LoginController = () => {
     };
 
     return (
-        <LoginView
-            username={username}
-            password={password}
-            errorMessage={errorMessage}
-            showErrorMessage={showErrorMessage}
-            onUsernameChange={handleUsernameChange}
-            onPasswordChange={handlePasswordChange}
-            onLoginSubmit={handleLoginSubmit}
-        />
+
+        <div>
+                <LoginView
+                    username={username}
+                    password={password}
+                    errorMessage={errorMessage}
+                    showErrorMessage={showErrorMessage}
+                    onUsernameChange={handleUsernameChange}
+                    onPasswordChange={handlePasswordChange}
+                    onLoginSubmit={handleLoginSubmit}
+                />
+        </div>
     );
 };
 
