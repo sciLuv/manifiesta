@@ -12,6 +12,7 @@ public class AddUserToKC{
     public String addingUserToKC(UserDto user){
         CreateUser createUser = new CreateUser();
         String creatingUser = createUser.addUser(user);
+        System.out.println(creatingUser);
         if ( creatingUser == "User created"){
             UserToken userToken = new UserToken(user.getUsername(), user.getPassword());
             if (userToken.getToken() != null){

@@ -6,14 +6,17 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import SpotifyCallbackComponent from './controller/SpotifyCallbackComponent'; // Mettez à jour le chemin selon votre structure
 import AccountCreationController from './controller/AccountCreationController';
 import { URI_BASE } from '../env';
-import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Container, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 import LoginController from './controller/LoginController';
+import HomeView from './view/HomeView';
+import logo from '../img/logo.png';
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
   const [user, setUser] = useState("");
   const [mail, setMail] = useState("");
+  const [role, setRole] = useState("");
 
 
   useEffect(() => {
@@ -21,8 +24,8 @@ function App() {
     console.log(mail);
     console.log(accessToken);
     console.log(refreshToken);
-    }, []); 
-
+    console.log(role);
+    }, [accessToken]);
 
 /*   useEffect(() => {
     const socket = new SockJS(URI_BASE + '/public/websocket');
@@ -44,7 +47,13 @@ function App() {
   }, []); */
 
 
-
+  const Deconnect = (event) => {
+    setAccessToken("");
+    setRefreshToken("");
+    setUser("");
+    setMail("");
+    setRole("");
+  };
 
   return (
     
@@ -52,27 +61,39 @@ function App() {
 
           <Router>
             <div>
-              
-              <Navbar expand="lg" className='border-bottom'>
-                <Container>
-                  <Navbar.Brand as={Link} className='text-light' to="#home">Manifiesta</Navbar.Brand>
+              <Navbar expand="lg" className='border-bottom'>  
+                  <Navbar.Brand as={Link} to="/" className="text-light d-flex align-items-center">
+                    <Image 
+                      src={logo}
+                      width="60"   // Vous pouvez utiliser des unités relatives comme 'rem' si vous préférez
+                      height="60"  // Vous pouvez utiliser des unités relatives comme 'rem' si vous préférez
+                      className="d-inline-block align-top mr-2"
+                      alt="Logo Manifiesta"
+                    />
+                    {/* Utilisation des classes de Bootstrap pour gérer la taille de la police de manière responsive */}
+                    <h1 className="mb-0 h4 h5-sm">Manifiesta</h1>
+                  </Navbar.Brand>
                   <Navbar.Toggle aria-controls="basic-navbar-nav" className="nav-custom" />
                   <Navbar.Collapse  id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                      <Nav.Link as={Link} className='text-light' to="/home">Accueil</Nav.Link>
-                      <Nav.Link as={Link} className='text-light' to="/spotify">spotify</Nav.Link>
-                      <Nav.Link as={Link} className='text-light' to="/account">créer un compte</Nav.Link>
-                      <Nav.Link as={Link} className='text-light' to="/login">Se connecter</Nav.Link>
-                      <NavDropdown title="Plus" id="basic-nav-dropdown">
-                        <NavDropdown.Item as={Link} to="/action/3.1">Action</NavDropdown.Item>
-                      </NavDropdown>
+                    <Nav className="ml-auto">
+                      {role === "" && (
+                        <>
+                          <Nav.Link as={Link} className='text-light' to="/account">Créer un compte</Nav.Link>
+                          <Nav.Link as={Link} className='text-light' to="/login">Se connecter</Nav.Link>
+                        </>
+                      )}
+                      {role === "user" && (
+                          <Nav.Link className='text-light' onClick={Deconnect}>Se déconnecter</Nav.Link>
+                      )}
                     </Nav>
                   </Navbar.Collapse>
-                </Container>
               </Navbar>
 
               <Routes>
-                <Route path="/home" element={<div>Accueil</div>} />
+                <Route path="/" element={<HomeView 
+                          role={role} 
+                          user={user}
+                />} />
                 <Route path="/account" element={<AccountCreationController />} />
                 <Route path="/login" element={<LoginController 
                       accessToken={accessToken}
@@ -83,6 +104,8 @@ function App() {
                       setUser={setUser}
                       mail={mail}
                       setMail={setMail}
+                      role={role}
+                      setRole={setRole}
                 />} />
               </Routes>
             </div>

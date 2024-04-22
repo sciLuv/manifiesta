@@ -23,9 +23,7 @@ export default function AccountCreationController(){
     };
 
     const handleFormSubmit = () => {
-
-        console.log('Creating account...');
-    
+            
         const requestData = {
             username: username,
             password: password,
@@ -48,10 +46,19 @@ export default function AccountCreationController(){
         .then(data => {
             console.log('Account created:', data);
             if((data.responseKC == "User exists with same email")|| (data.responseKC == "User exists with same username")) {
-                setErrorMessage("Un utilisateur existe déjà avec ce nom d'utilisateur ou cet email");
+                setErrorMessage("Un utilisateur existe déjà avec ce pseudonyme ou ce mail");
                 setShowErrorMessage('');
                 setShowSuccessMessage('d-none');
-            } else if((data.responseKC == "User created") && (data.responseDB == "User created")) {
+            } else if(data.responseKC == "error-invalid-email") { 
+                setErrorMessage("Le format du mail est incorrect");
+                setShowErrorMessage('');    
+                setShowSuccessMessage('d-none');
+            } else if(data.responseKC == "error-invalid-length") {
+                setErrorMessage("Votre pseudonyme est trop court");
+                setShowErrorMessage('');
+                setShowSuccessMessage('d-none');
+            }
+            else if((data.responseKC == "User created") && (data.response == "User created")) {
                 //ici ca renvoie l'utilisateur vers la page d'accueil
                 setErrorMessage('');
                 setShowErrorMessage('d-none');

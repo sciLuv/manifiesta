@@ -1,48 +1,53 @@
 import React from 'react';
+import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
 
 const LoginView = ({ username, password, errorMessage, showErrorMessage, onUsernameChange, onPasswordChange, onLoginSubmit }) => {
+    
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        onLoginSubmit();
+    };
+
     return (
-        <div className="container mt-3">
-            <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <div className="card">
-                        <div className="card-body">
-                            <h2 className="card-title">Connexion</h2>
-                            <div>
-                                <div className="form-group">
-                                    <label htmlFor="login-username">Pseudonyme:</label>
-                                    <input
+        <Container className="mt-3">
+            <Row className="justify-content-center">
+                <Col md={6}>
+                    <Card className="text-center shadow bg-dark text-light">
+                        <Card.Body>
+                            <Card.Title>Connexion</Card.Title>
+                            <Form onSubmit={handleSubmit}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="login-username">Pseudonyme:</Form.Label>
+                                    <Form.Control
                                         type="text"
-                                        className="form-control"
                                         id="login-username"
                                         value={username}
                                         onChange={onUsernameChange}
                                         required
                                     />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="login-password">Mot de passe:</label>
-                                    <input
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="login-password">Mot de passe:</Form.Label>
+                                    <Form.Control
                                         type="password"
-                                        className="form-control"
                                         id="login-password"
                                         value={password}
                                         onChange={onPasswordChange}
                                         required
                                     />
-                                </div>
-                                <button onClick={onLoginSubmit} className="btn btn-primary">Se connecter</button>
-                            </div>
-                        </div>
+                                </Form.Group>
+                                <Button variant="primary" type="submit">Se connecter</Button>
+                            </Form>
+                        </Card.Body>
                         {errorMessage && (
-                            <div className={`error-message text-danger text-center mb-3 ${showErrorMessage ? "" : "d-none"}`}>
+                            <Card.Footer className={`text-danger ${showErrorMessage ? "" : "d-none"}`}>
                                 {errorMessage}
-                            </div>
+                            </Card.Footer>
                         )}
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

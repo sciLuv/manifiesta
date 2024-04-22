@@ -22,3 +22,21 @@
 .navbar-toggler-icon{
     filter: brightness(0) invert(1);
 }
+
+.card-with-image{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    img{
+        width: 100%;
+        max-width: 150px;
+    }
+    @media (max-width: 768px){
+        flex-direction: column-reverse !important;
+    }
+    @media (max-width: 350px){
+        button{
+            white-space: wrap;
+        }
+    }
+}

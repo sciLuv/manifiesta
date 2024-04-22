@@ -22,17 +22,17 @@ public class UserController {
 
     @PostMapping("public/createAccount")
     public String createUser(@RequestBody UserDto user) {
-
+        if(user.getUsername() == "" || user.getMail() == "" || user.getPassword() == "") {
+            return "{\"response\":\"\"}";
+        }
 
         AddUserToKC addUserToKC = new AddUserToKC();
         String responseKC = addUserToKC.addingUserToKC(user);
         String responseDB;
+        System.out.println(responseKC);
         if(responseKC.equals("User created")) {
             User userEntity = new User(user.getUsername(), user.getMail());
             userService.createUser(userEntity);
-        }
-        if (userService.getUser(user.getUsername()) != null){
-
             responseDB = "User created";
         } else {
             responseDB = "User not created";
@@ -40,7 +40,7 @@ public class UserController {
 
         // send the response to the front in JSON format
         return "{\"responseKC\":\"" + responseKC + "\"" +
-                ",\"responseDB\":\"" + responseDB + "\"}";
+                ",\"response\":\"" + responseDB + "\"}";
     }
 
 
@@ -56,7 +56,8 @@ public class UserController {
             response.addHeader("Access-Token", userToken.getToken());
             response.addHeader("Refresh-Token", userToken.getRefreshToken());
             return "{\"username\":\"" + userFromDB.getUsername() +
-                    "\",\"mail\": \"" + userFromDB.getMail() + "\"}";
+                    "\",\"mail\": \"" + userFromDB.getMail() +
+                    "\",\"role\": \"user\"}";
         }
     }
     @GetMapping("public/test")

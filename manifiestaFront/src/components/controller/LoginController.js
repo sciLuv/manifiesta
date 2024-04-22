@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LoginView from '../view/LoginView';
 
 
 const LoginController = (props) => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    
     const [errorMessage, setErrorMessage] = useState('');
     const [showErrorMessage, setShowErrorMessage] = useState(false);
 
@@ -37,9 +40,9 @@ const LoginController = (props) => {
             const data = await response.json();
             console.log(data);
             if(data.username && data.mail){
-                console.log("tessst");
                 props.setUser(data.username);
                 props.setMail(data.mail);
+                props.setRole(data.role);
             }
 
             
@@ -54,8 +57,9 @@ const LoginController = (props) => {
                 props.setRefreshToken(newRefreshToken);
             }
 
+            
             // Rediriger l'utilisateur vers la page d'accueil
-            window.location.href = '/';
+            navigate('/'); 
 
 
         } catch (error) {
