@@ -11,10 +11,11 @@ import org.springframework.web.client.RestTemplate;
 
 public class CreateUser {
 
+
     private static final String TOKEN_URL = "http://localhost:8080/admin/realms/manifiesta/users";
 
     AdminToken connexion = new AdminToken();
-    public boolean addUser(UserDto user) {
+    public String addUser(UserDto user) {
 
 
 
@@ -46,13 +47,26 @@ public class CreateUser {
             ResponseEntity<String> response = restTemplate.exchange(TOKEN_URL, HttpMethod.POST, request, String.class);
 
             System.out.println(response.getBody());
-            return true;
-
+            return "User created";
 
         }   catch (Exception e) {
-            System.out.println(e);
-            return false;
+            return extractErrorMessage(e.getMessage());
         }
 
+    }
+
+    private String extractErrorMessage(String jsonResponse) {
+        try {
+            String searchPattern = "\"errorMessage\":\"";
+            int startIndex = jsonResponse.indexOf(searchPattern) + searchPattern.length();
+            int endIndex = jsonResponse.indexOf("\"", startIndex);
+            if (startIndex >= 0 && endIndex > startIndex) {
+                return jsonResponse.substring(startIndex, endIndex);
+            } else {
+                return "Error message not found";
+            }
+        } catch (Exception e) {
+            return "Error parsing error message: " + e.getMessage();
+        }
     }
 }

@@ -6,6 +6,9 @@ export default function AccountCreationController(){
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [mail, setMail] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [showSuccessMessage, setShowSuccessMessage] = useState('d-none');
+    const [showErrorMessage, setShowErrorMessage] = useState('d-none');
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -44,6 +47,16 @@ export default function AccountCreationController(){
         })
         .then(data => {
             console.log('Account created:', data);
+            if((data.responseKC == "User exists with same email")|| (data.responseKC == "User exists with same username")) {
+                setErrorMessage("Un utilisateur existe déjà avec ce nom d'utilisateur ou cet email");
+                setShowErrorMessage('');
+                setShowSuccessMessage('d-none');
+            } else if((data.responseKC == "User created") && (data.responseDB == "User created")) {
+                //ici ca renvoie l'utilisateur vers la page d'accueil
+                setErrorMessage('');
+                setShowErrorMessage('d-none');
+                setShowSuccessMessage('');
+            }
         })
         .catch(error => {
             console.error('Error:', error);
@@ -58,6 +71,9 @@ export default function AccountCreationController(){
             username={username} 
             password={password} 
             mail={mail}
+            errorMessage={errorMessage}
+            showSuccessMessage={showSuccessMessage}
+            showErrorMessage={showErrorMessage}
             onUsernameChange={handleUsernameChange}
             onMailChange={handleMailChange}
             onPasswordChange={handlePasswordChange} 

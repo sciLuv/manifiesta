@@ -8,10 +8,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.Us
 import fr.sciluv.application.manifiesta.manifiestaBack.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -29,15 +26,25 @@ public class UserController {
 
         AddUserToKC addUserToKC = new AddUserToKC();
         String responseKC = addUserToKC.addingUserToKC(user);
+        String responseDB;
         if(responseKC.equals("User created")) {
             User userEntity = new User(user.getUsername(), user.getMail());
             userService.createUser(userEntity);
         }
+        if (userService.getUser(user.getUsername()) != null){
+
+            responseDB = "User created";
+        } else {
+            responseDB = "User not created";
+        }
 
         // send the response to the front in JSON format
-        return "{\"responseKC\":\"" + responseKC + "\"}";
+        return "{\"responseKC\":\"" + responseKC + "\"" +
+                ",\"responseDB\":\"" + responseDB + "\"}";
     }
 
+
+    @CrossOrigin(exposedHeaders = {"Access-Token", "Refresh-Token"})
     @PostMapping("public/login")
     public String login(@RequestBody UserLoginDto user, HttpServletResponse response) {
 

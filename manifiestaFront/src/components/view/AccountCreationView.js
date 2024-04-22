@@ -1,8 +1,10 @@
 import React from 'react';
 
-const AccountCreation = ({ username, mail, password, onUsernameChange, onMailChange, onPasswordChange, onSubmit }) => {
+const AccountCreation = ({ username, mail, password, errorMessage, showSuccessMessage, showErrorMessage, onUsernameChange, onMailChange, onPasswordChange, onSubmit }) => {
+    
+
     return (
-        <div className="container">
+        <div className="container mt-3">
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <div className="card">
@@ -44,6 +46,12 @@ const AccountCreation = ({ username, mail, password, onUsernameChange, onMailCha
                                 </div>
                                 <button onClick={onSubmit} className="btn btn-primary">Création du compte</button>
                             </div>
+                        </div>
+                        <div className={`error-message text-danger text-center mb-3 ${showErrorMessage}`}>
+                            {errorMessage}
+                        </div>
+                        <div className={`success-message text-success text-center mb-3 ${showSuccessMessage}`}>
+                            Création du compte réussie, <a href="/login">connectez-vous</a>
                         </div>
                     </div>
                 </div>

@@ -11,7 +11,8 @@ public class AddUserToKC{
 
     public String addingUserToKC(UserDto user){
         CreateUser createUser = new CreateUser();
-        if (createUser.addUser(user)){
+        String creatingUser = createUser.addUser(user);
+        if ( creatingUser == "User created"){
             UserToken userToken = new UserToken(user.getUsername(), user.getPassword());
             if (userToken.getToken() != null){
                 TokenProcessingService tokenProcessingService = new TokenProcessingService();
@@ -26,7 +27,7 @@ public class AddUserToKC{
                 return "User created but token not generated";
             }
         } else {
-            return "User not created";
+            return creatingUser;
         }
     }
 

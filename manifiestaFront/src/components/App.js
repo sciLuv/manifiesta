@@ -8,6 +8,8 @@ import SpotifyCallbackComponent from './controller/SpotifyCallbackComponent'; //
 import AccountCreationController from './controller/AccountCreationController';
 import { URI_BASE } from '../env';
 import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import LoginView from './view/LoginView';
+import LoginController from './controller/LoginController';
 
 function App() {
   const [compteur, setCompteur] = useState(0);
@@ -68,6 +70,7 @@ function App() {
     <div>
     <Router>
       <div>
+        
         <Navbar expand="lg" className='border-bottom'>
           <Container>
             <Navbar.Brand as={Link} className='text-light' to="#home">Manifiesta</Navbar.Brand>
@@ -77,6 +80,7 @@ function App() {
                 <Nav.Link as={Link} className='text-light' to="/home">Accueil</Nav.Link>
                 <Nav.Link as={Link} className='text-light' to="/spotify">spotify</Nav.Link>
                 <Nav.Link as={Link} className='text-light' to="/account">créer un compte</Nav.Link>
+                <Nav.Link as={Link} className='text-light' to="/login">Se connecter</Nav.Link>
                 <NavDropdown title="Plus" id="basic-nav-dropdown">
                   <NavDropdown.Item as={Link} to="/action/3.1">Action</NavDropdown.Item>
                 </NavDropdown>
@@ -89,12 +93,10 @@ function App() {
           <Route path="/home" element={<div>Accueil</div>} />
           <Route path="/spotify" element={<SpotifyCallbackComponent />} />
           <Route path="/account" element={<AccountCreationController />} />
+          <Route path="/login" element={<LoginController />} />
         </Routes>
       </div>
     </Router>
-
-      
-
       <h1  className='text-light'>Compteur: <span>{compteur}</span></h1>
       <button onClick={handleIncrement}>Incrémenter</button>
       <MusicVoteView/>
