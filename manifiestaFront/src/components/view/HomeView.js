@@ -1,9 +1,15 @@
 import React from 'react';
 import { Card, Button, Container, Row, Col } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, Link  } from 'react-router-dom';
 import logo from '../../img/logo_2.png';
+import SessionParameterView from './SessionParameterView';
 
 const HomeView = (props) => {
+
+
+    //ici une fonction qui permet lors du clique sur un bouton de redirigé l'utilisateur vers une autre page
+
+
     const navigate = useNavigate();
     return (
         <Container fluid style={{ minHeight: '100vh', padding: '2rem' }}>
@@ -17,7 +23,8 @@ const HomeView = (props) => {
                                 <div>
                                 <Card.Title>Créer une session d'écoute</Card.Title>
                                 <Card.Text>Pour écouter et choisir les musiques que vous allez écouté avec vos amis</Card.Text>
-                                <Button variant="primary">Démarrer une session d'écoute</Button>
+                                
+                                <Button variant="primary" as={Link} to="/create-new-session">Démarrer une session d'écoute</Button>
                                 </div>
                                 <img src={logo} alt="logo" className='m-2'/>
                             </Card.Body>

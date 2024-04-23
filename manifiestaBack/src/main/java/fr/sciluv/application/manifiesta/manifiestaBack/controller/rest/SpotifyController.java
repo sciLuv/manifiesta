@@ -37,7 +37,7 @@ public class SpotifyController {
                 .setRedirectUri(redirectUri)
                 .build();
     }
-    @GetMapping("/spotify/authorize")
+    @GetMapping("public/spotify/authorize")
     public String getAuthorizationUri() {
         String[] scopes = {
                 "ugc-image-upload", "user-read-recently-played", "user-top-read", "user-read-playback-position",
@@ -57,7 +57,7 @@ public class SpotifyController {
         return authorizationUri.toString();
     }
 
-    @PostMapping("/spotify/callback")
+    @PostMapping("public/spotify/callback")
     public ResponseEntity<?> handleAuthorization(@RequestBody Map<String, Object> payload) {
         String code = (String) payload.get("code");
         System.out.println("Code reçu: " + code);
@@ -66,7 +66,7 @@ public class SpotifyController {
         String accessToken = spotifyService.exchangeCodeForAccessToken(code);
 
         // Vous pouvez retourner le token d'accès ou simplement confirmer la réussite
-        return ResponseEntity.ok().body("Token récupéré avec succès. Access Token: " + accessToken);
+        return ResponseEntity.ok().body("{\"spotifyToken\":\"" + accessToken + "\"}");
     }
 
 }

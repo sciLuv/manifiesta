@@ -3,13 +3,14 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { MusicVoteView } from './view/MusicVoteView';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import SpotifyCallbackComponent from './controller/SpotifyCallbackComponent'; // Mettez à jour le chemin selon votre structure
+import SpotifyCallback from './controller/SpotifyCallback'; // Mettez à jour le chemin selon votre structure
 import AccountCreationController from './controller/AccountCreationController';
 import { URI_BASE } from '../env';
 import { Container, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 import LoginController from './controller/LoginController';
 import HomeView from './view/HomeView';
 import logo from '../img/logo.png';
+import SessionParameterController from './controller/SessionParameterController';
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
@@ -94,6 +95,7 @@ function App() {
                           role={role} 
                           user={user}
                 />} />
+                <Route path="/create-new-session" element={<SessionParameterController/>} />
                 <Route path="/account" element={<AccountCreationController />} />
                 <Route path="/login" element={<LoginController 
                       accessToken={accessToken}
@@ -107,6 +109,7 @@ function App() {
                       role={role}
                       setRole={setRole}
                 />} />
+                <Route path="/spotify" element={<SpotifyCallback />} />
               </Routes>
             </div>
           </Router>

@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { URI_BASE } from '../../env';
 
-const SpotifyCallbackComponent = () => {
-  let [searchParams] = useSearchParams();
-  let code = searchParams.get("code");
 
+const SpotifyCallback = ({spotifyAuthorizationUri, setSpotifyAuthorizationUri}) => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  
   useEffect(() => {
+    const code = searchParams.get('code');
     if (code) {
-      // Ajout d'un délai pour laisser le temps à la page de se charger après la redirection
       const timer = setTimeout(() => {
-        fetch(URI_BASE + 'spotify/callback', {
+        fetch(URI_BASE + '/public/spotify/callback', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -20,19 +21,25 @@ const SpotifyCallbackComponent = () => {
         .then(response => response.json())
         .then(data => {
           console.log('Success:', data);
+          localStorage.setItem('spotifyToken', data.spotifyToken);
+          navigate('/create-new-session');  // Déplacer ici
         })
         .catch((error) => {
           console.error('Error:', error);
         });
       }, 1000); // Attendre 1 seconde avant d'exécuter le fetch
-  
       return () => clearTimeout(timer);
+    } else {
+      navigate('/'); // Redirigez l'utilisateur vers la page d'accueil en cas d'erreur
     }
-  }, [code]);
-  
-  // Affichez quelque chose de pertinent ici, par exemple un message de chargement
-  return <div>Chargement...</div>;
+  }, [searchParams, navigate]);
+
+  return (
+    <div className='text-light'>Authentification en cours...</div>
+  );
 };
+
+export default SpotifyCallback;
 
 
 
@@ -57,5 +64,3 @@ const SpotifyCallbackComponent = () => {
     }
   };
 */
-
-export default SpotifyCallbackComponent;
