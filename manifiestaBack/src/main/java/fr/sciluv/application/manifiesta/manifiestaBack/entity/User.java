@@ -1,11 +1,9 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -29,6 +27,12 @@ public class User {
     }
 
 
+    @OneToMany(mappedBy = "user")
+    private Set<Session> session;
+
+    @OneToMany(mappedBy = "user")
+    private Set<SessionParticipant> sessionParticipant;
+
     @Override
     public String toString() {
         return "User{" +
@@ -45,6 +49,9 @@ public class User {
                 "\"creationDate\":\"" + creationDate + "\"" +
                 "}";
     }
+
+    @OneToMany(mappedBy = "user")
+    private Set<QRCode> qrCodes;
 
     //Getter
     public String getUsername() {

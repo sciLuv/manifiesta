@@ -19,6 +19,13 @@ public class SessionParticipant {
     @OneToMany(mappedBy = "sessionParticipant")
     private Set<Vote> votes;
 
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private User user;
+
+    @ManyToMany
+    Set<Session> sessions;
+
     // Getters and setters
 
     public Long getIdParticipant() {

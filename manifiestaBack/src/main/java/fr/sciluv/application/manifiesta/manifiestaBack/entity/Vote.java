@@ -10,12 +10,12 @@ public class Vote {
     private Long idVote;
 
     @ManyToOne
-    @JoinColumn(name = "idPollTurnMusic")
-    private PollTurnMusic pollTurnMusic;
-
-    @ManyToOne
     @JoinColumn(name = "idParticipant")
     private SessionParticipant sessionParticipant;
+
+    @ManyToOne
+    @JoinColumn(name = "suggestedMusicId") // Assure-toi que le nom de la colonne correspond à la colonne clé étrangère dans ta base de données.
+    private SuggestedMusic suggestedMusic;
 
     //Getters et Setters
 
@@ -28,13 +28,6 @@ public class Vote {
         this.idVote = idVote;
     }
 
-    public PollTurnMusic getPollTurnMusic() {
-        return pollTurnMusic;
-    }
-
-    public void setPollTurnMusic(PollTurnMusic pollTurnMusic) {
-        this.pollTurnMusic = pollTurnMusic;
-    }
 
     public SessionParticipant getSessionParticipant() {
         return sessionParticipant;
