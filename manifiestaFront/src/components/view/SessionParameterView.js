@@ -31,7 +31,14 @@ const SessionParameterView = ({
             <Col>
             //ici un bouton de connexion qui permet de rediriger l'utilisateur vers la connexion a spotify
             <div className="flex">
-            <Card className="mt-5 text-light spotify-autorisation-card">
+            {isSpotifyConnected ? (
+                            <Card className="mt-1 text-light spotify-autorisation-card">
+                            <Card.Body>
+                                <Card.Title>Manifiesta peux utiliser Spotify 👍</Card.Title>
+                            </Card.Body>
+                        </Card>
+            ) : (
+                <Card className="mt-5 text-light spotify-autorisation-card">
                     <Card.Body>
                         <Card.Title>Connectez-vous à Spotify</Card.Title>
                         <Card.Text>
@@ -43,6 +50,8 @@ const SessionParameterView = ({
                         </Button>
                     </Card.Body>
             </Card>
+            )}
+
             {isSpotifyConnected ?
                 //ici on crée un formulaire pour que l'utilisateur puisse choisir les paramètres de sa session
                 <Card className="mt-5 mb-5 w-75">
