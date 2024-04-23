@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 public class GetInformationAboutUsersCurrentPlaybackExample {
-    private static final String accessToken = "BQClgv9UXVdvaQU2YFxMouKHfRH0iIDWJp5vzVZic4vdauRTvL2xrepUhrDUcD1qnqpJYp8kpZYx03LT3QtMAMyKMTC8vfZkLfsGqKtOFFvH6PtFtm0uLNnHChMbYVl0BwiU1Xyz4EugaHwGO2ynAgIwvEMD81bjOiql2d7nRKzFFeQX1tkbeKlLHtrVdS0zlXmxndQyo6w00qy360OmZC8zHukY9mfhE_AX87XA0J5YUfPqtr0FVFPHvTR4derTIa-L2AxwDYCsEvVu5J-ks9A0nuH9IdJMP-4GhGLzYSQ0Smw5GLrtHXqFXXgMTGNOrQ";
+    private static final String accessToken = "BQDTxWwErThUvHBQPjgaaDQfx4bFHgymvgq2aZBNjqv-fefxiKlxuR_5Xu-wY2tZ0BoIgUi9po-0j2BUn6eNJW4ETKmvSykbHrmd5VOE2FDvs8cWDms393djAueL6M0YIIYWdlsAm0LFDyaqo5o643z054K8f2KLU_R2P8EHtyzmZ48sedUw4AWEOOrRjXh2hgxLU9ECZmkKKs9w9XFI-DG3ETj4I1B-4FTDiM6a1xZxj4RXoeoUQURd4Odb5akJYod32Gm-Bre19mxDDifVOZLS6O03ION_m1hZ3KQc5THsU3cLjC6gdvbacbiLRL-Maw";
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(accessToken)

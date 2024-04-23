@@ -3,7 +3,7 @@ import SessionParameterView from '../view/SessionParameterView';
 import { URI_BASE } from '../../env';
 import SpotifyCallback from './SpotifyCallback';
 
-const SessionParameterController = () => {
+const SessionParameterController = ( {accessToken, setAccessToken, refreshToken, setRefreshToken, setUser ,user, mail,setMail,role,setRole} ) => {
     const [username, setUsername] = useState('');
     const [passwordSession, setPasswordSession] = useState('');
     const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -11,17 +11,55 @@ const SessionParameterController = () => {
     const [qrCodeType, setQrCodeType] = useState('');
     const [passwordOrNot, setPasswordOrNot] = useState(false);
     const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
-    const [spotifyAuthorizationUri, setSpotifyAuthorizationUri] = useState('');
+    const [spotifyRefreshToken, setSpotifyRefreshToken] = useState('');
+    const [spotifyToken, setSpotifyToken] = useState('');
 
-    //useeffect quand spotifyAuthorizationUri change
+
     useEffect(() => {
-        localStorage.getItem('spotifyToken') ? setSpotifyAuthorizationUri(localStorage.getItem('spotifyToken')) : setSpotifyAuthorizationUri('');
-        localStorage.getItem('spotifyToken') ? setIsSpotifyConnected(true) : setIsSpotifyConnected(false);
+        
+        if(localStorage.getItem('user') != null && localStorage.getItem('user') != undefined && localStorage.getItem('user') != ""){
+            setUser(localStorage.getItem('user'));
+            setMail(localStorage.getItem('mail'));
+            setRole(localStorage.getItem('role'));
+            setAccessToken(localStorage.getItem('accessToken'));
+            setRefreshToken(localStorage.getItem('refreshToken'));
+        }
+
+        const spotifyTokenTest = localStorage.getItem('spotifyToken');
+        const spotifyRefreshTokenTest = localStorage.getItem('spotifyRefreshToken');
+        
+        spotifyTokenTest != "" && 
+        spotifyTokenTest != null && 
+        spotifyTokenTest != undefined  ?  setSpotifyToken(spotifyTokenTest) : setSpotifyToken('');
+        spotifyTokenTest != "" &&
+        spotifyTokenTest != null && 
+        spotifyTokenTest != undefined  ?  setSpotifyRefreshToken(spotifyRefreshTokenTest) : setSpotifyRefreshToken('');
+        spotifyTokenTest != "" &&
+        spotifyTokenTest != null && 
+        spotifyTokenTest != undefined  ?  setIsSpotifyConnected(true) : setIsSpotifyConnected(false);
+     
+        
+        if(
+            (user == "" && mail == "" && role != "user" && accessToken == "" && refreshToken == "" )&&
+            (localStorage.getItem('user') == null || localStorage.getItem('user') == undefined || localStorage.getItem('user') == "")
+        ){
+            window.location.href = "/";
+        };
+        
+        setTimeout(() => {
+            localStorage.removeItem('spotifyToken');
+            localStorage.removeItem('spotifyRefreshToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('mail');
+            localStorage.removeItem('role');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+        }, 1000);
+
+
+        
+
     }, []);
-
-    useEffect(() => {
-       console.log(spotifyAuthorizationUri);
-    }, [isSpotifyConnected]);
 
     // Gérer les changements de l'username
     const handleUsernameChange = (event) => {
@@ -59,15 +97,20 @@ const SessionParameterController = () => {
 
     const handleAuthorization = async () => {
         try {
-          const response = await fetch(URI_BASE + '/public/spotify/authorize');
-          if (response.ok) {
-            const authorizationUri = await response.text();
-            setSpotifyAuthorizationUri(authorizationUri);
-            // Rediriger l'utilisateur vers l'URI de redirection Spotify
-            window.location.href = authorizationUri;
-          } else {
-            console.error('Erreur lors de la récupération de l\'URI de redirection Spotify');
-          }
+            localStorage.setItem('user', user);
+            localStorage.setItem('mail', mail);
+            localStorage.setItem('role', role);
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            const response = await fetch(URI_BASE + '/public/spotify/authorize');
+            if (response.ok) {
+                const authorizationUri = await response.text();
+                setSpotifyRefreshToken(authorizationUri);
+                // Rediriger l'utilisateur vers l'URI de redirection Spotify
+                window.location.href = authorizationUri;
+            } else {
+                console.error('Erreur lors de la récupération de l\'URI de redirection Spotify');
+            }
         } catch (error) {
           console.error('Erreur lors de la récupération de l\'URI de redirection Spotify', error);
         }
@@ -75,25 +118,27 @@ const SessionParameterController = () => {
 
     return (
         <>
-                <SessionParameterView 
-            username={username}
-            passwordSession={passwordSession}
-            errorMessage={errorMessage}
-            showErrorMessage={showErrorMessage}
-            onUsernameChange={handleUsernameChange}
-            onPasswordSessionChange={handlePasswordSessionChange}
-            onLoginSubmit={handleLoginSubmit}
-            qrCodeType={qrCodeType}
-            passwordOrNot={passwordOrNot}
-            setQrCodeType={setQrCodeType}
-            setPasswordOrNot={setPasswordOrNot}
-            isSpotifyConnected={isSpotifyConnected}
-            setIsSpotifyConnected={setIsSpotifyConnected} 
-            changeCheckBoxPassword={changeCheckBoxPassword}
-            handleAuthorization={handleAuthorization}
-            spotifyAuthorizationUri={spotifyAuthorizationUri}
-            setSpotifyAuthorizationUri={setSpotifyAuthorizationUri}
-        />
+            <SessionParameterView 
+                username={username}
+                passwordSession={passwordSession}
+                errorMessage={errorMessage}
+                showErrorMessage={showErrorMessage}
+                onUsernameChange={handleUsernameChange}
+                onPasswordSessionChange={handlePasswordSessionChange}
+                onLoginSubmit={handleLoginSubmit}
+                qrCodeType={qrCodeType}
+                passwordOrNot={passwordOrNot}
+                setQrCodeType={setQrCodeType}
+                setPasswordOrNot={setPasswordOrNot}
+                isSpotifyConnected={isSpotifyConnected}
+                setIsSpotifyConnected={setIsSpotifyConnected} 
+                changeCheckBoxPassword={changeCheckBoxPassword}
+                handleAuthorization={handleAuthorization}
+                setSpotifyRefreshToken={setSpotifyRefreshToken}
+                spotifyRefreshToken={spotifyRefreshToken}
+                spotifyToken={spotifyToken}
+                setSpotifyToken={setSpotifyToken}
+            />
         </>
     );
 };

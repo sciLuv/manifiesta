@@ -18,7 +18,10 @@ const SessionParameterView = ({
     setIsSpotifyConnected,
     changeCheckBoxPassword,
     handleAuthorization,
-    spotifyAuthorizationUri
+    spotifyRefreshToken,
+    setSpotifyTokenRefresh,
+    spotifyToken,
+    setSpotifyToken
     }) => {   
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -29,12 +32,11 @@ const SessionParameterView = ({
         <Container>
           <Row>
             <Col>
-            //ici un bouton de connexion qui permet de rediriger l'utilisateur vers la connexion a spotify
             <div className="flex">
             {isSpotifyConnected ? (
-                            <Card className="mt-1 text-light spotify-autorisation-card">
+                            <Card className="mt-4 text-light spotify-autorisation-card">
                             <Card.Body>
-                                <Card.Title>Manifiesta peux utiliser Spotify 👍</Card.Title>
+                                <Card.Title>Manifiesta peut utiliser votre compte Spotify 👍</Card.Title>
                             </Card.Body>
                         </Card>
             ) : (
@@ -49,7 +51,7 @@ const SessionParameterView = ({
                             Autoriser Spotify à utiliser Manifiesta
                         </Button>
                     </Card.Body>
-            </Card>
+                </Card>
             )}
 
             {isSpotifyConnected ?
@@ -116,6 +118,7 @@ const SessionParameterView = ({
                     </Form>
                     </Card.Body>
                 </Card>
+                
                 : <> </>
             }
             </div>

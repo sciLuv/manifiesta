@@ -22,6 +22,7 @@ const SpotifyCallback = ({spotifyAuthorizationUri, setSpotifyAuthorizationUri}) 
         .then(data => {
           console.log('Success:', data);
           localStorage.setItem('spotifyToken', data.spotifyToken);
+          localStorage.setItem('spotifyRefreshToken', data.spotifyRefreshToken);
           navigate('/create-new-session');  // Déplacer ici
         })
         .catch((error) => {

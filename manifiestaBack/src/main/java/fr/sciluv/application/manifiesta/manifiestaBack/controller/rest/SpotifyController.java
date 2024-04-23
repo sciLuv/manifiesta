@@ -63,10 +63,13 @@ public class SpotifyController {
         System.out.println("Code reçu: " + code);
 
         // Utilisation de l'instance spotifyService pour appeler la méthode
-        String accessToken = spotifyService.exchangeCodeForAccessToken(code);
+        String[] accessAndRefreshToken = spotifyService.exchangeCodeForAccessToken(code).split(" ");
+
 
         // Vous pouvez retourner le token d'accès ou simplement confirmer la réussite
-        return ResponseEntity.ok().body("{\"spotifyToken\":\"" + accessToken + "\"}");
+        return ResponseEntity.ok().body(
+                "{\"spotifyToken\":\"" + accessAndRefreshToken[0] +
+                "\",\"spotifyRefreshToken\":\"" + accessAndRefreshToken[1] + "\"}");
     }
 
 }

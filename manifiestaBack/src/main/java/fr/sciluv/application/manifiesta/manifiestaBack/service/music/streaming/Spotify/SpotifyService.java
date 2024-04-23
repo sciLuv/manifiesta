@@ -50,7 +50,7 @@ public class SpotifyService {
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
-            return authorizationCodeCredentials.getAccessToken();
+            return authorizationCodeCredentials.getAccessToken() + " " + authorizationCodeCredentials.getRefreshToken();
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error during token retrieval: " + e.getMessage());
             return null;

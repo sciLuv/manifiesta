@@ -84,7 +84,10 @@ function App() {
                         </>
                       )}
                       {role === "user" && (
+                        <>
+                          <Nav.Link className='text-light' >Rejoindre une session</Nav.Link>
                           <Nav.Link className='text-light' onClick={Deconnect}>Se déconnecter</Nav.Link>
+                        </>
                       )}
                     </Nav>
                   </Navbar.Collapse>
@@ -95,7 +98,18 @@ function App() {
                           role={role} 
                           user={user}
                 />} />
-                <Route path="/create-new-session" element={<SessionParameterController/>} />
+                <Route path="/create-new-session" element={<SessionParameterController
+                          accessToken={accessToken}
+                          setAccessToken={setAccessToken}
+                          refreshToken={refreshToken}
+                          setRefreshToken={setRefreshToken}
+                          user={user}
+                          setUser={setUser}
+                          mail={mail}
+                          setMail={setMail}
+                          role={role}
+                          setRole={setRole}
+                />} />
                 <Route path="/account" element={<AccountCreationController />} />
                 <Route path="/login" element={<LoginController 
                       accessToken={accessToken}

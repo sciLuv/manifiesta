@@ -17,6 +17,10 @@ public class Session {
     private Date hourOfEnd;
     private String password;
 
+    private int songsNumber;
+
+    private int musicalStylesNumber;
+
     @ManyToOne
     @JoinColumn(name = "id")
     private User user;

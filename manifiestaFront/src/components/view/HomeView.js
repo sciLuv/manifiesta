@@ -36,7 +36,7 @@ const HomeView = (props) => {
                         <h2 className="text-light">Bienvenue sur manifiesta !</h2>
                         <p className="text-light">
                             <a href="/login">connectez-vous</a> pour accéder à toutes les fonctionnalités du site.<br/>
-                            Si vous n'avez pas de compte, vous pouvez en <a href="/create-account">créer un</a>.
+                            Si vous n'avez pas de compte, vous pouvez en <a href="/account">créer un</a>.
                         </p>
                     </div>
                 )}
