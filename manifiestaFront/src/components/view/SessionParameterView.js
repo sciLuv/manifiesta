@@ -7,7 +7,6 @@ const SessionParameterView = ({
     passwordSession, 
     errorMessage, 
     showErrorMessage, 
-    onUsernameChange, 
     onPasswordSessionChange, 
     onLoginSubmit,
     qrCodeType,
@@ -21,7 +20,14 @@ const SessionParameterView = ({
     spotifyRefreshToken,
     setSpotifyTokenRefresh,
     spotifyToken,
-    setSpotifyToken
+    setSpotifyToken,
+    songsNumber,
+    setSongsNumber,
+    musicalStylesNumber,
+    setMusicalStylesNumber,
+    handleMusicStyle,
+    handleSongsNumber,
+    handleNewSession
     }) => {   
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -58,7 +64,7 @@ const SessionParameterView = ({
                 //ici on crée un formulaire pour que l'utilisateur puisse choisir les paramètres de sa session
                 <Card className="mt-5 mb-5 w-75">
                     <Card.Body >
-                    <Form onSubmit={handleSubmit}>
+                    <Form >
                         {showErrorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         
                         <Form.Group className="mb-3" controlId="qrCodeType">
@@ -93,7 +99,7 @@ const SessionParameterView = ({
         
                         <Form.Group className="mb-3" controlId="numberOfSongs">
                         <Form.Label>Nombre de musiques par vote</Form.Label>
-                        <Form.Control as="select">
+                        <Form.Control as="select" onChange={handleSongsNumber}>
                             {[2, 3, 4, 5, 6].map((number) => (
                             <option key={number} value={number}>
                                 {number}
@@ -104,7 +110,7 @@ const SessionParameterView = ({
         
                         <Form.Group className="mb-3" controlId="genreDiversity">
                         <Form.Label>Diversité des genres musicaux par votes</Form.Label>
-                        <Form.Control as="select">
+                        <Form.Control as="select" onChange={handleMusicStyle}>
                             {[1, 2, 3].map((number) => (
                             <option key={number} value={number}>
                                 {number}
@@ -112,7 +118,7 @@ const SessionParameterView = ({
                             ))}
                         </Form.Control>
                         </Form.Group>
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" onClick={handleNewSession}>
                         Commencer la session !
                         </Button>
                     </Form>

@@ -13,7 +13,8 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
     const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
     const [spotifyRefreshToken, setSpotifyRefreshToken] = useState('');
     const [spotifyToken, setSpotifyToken] = useState('');
-
+    const [songsNumber, setSongsNumber] = useState(5);
+    const [musicalStylesNumber, setMusicalStylesNumber] = useState(3);
 
     useEffect(() => {
         
@@ -61,10 +62,13 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
 
     }, []);
 
-    // Gérer les changements de l'username
-    const handleUsernameChange = (event) => {
-        setUsername(event.target.value);
-    };
+    const handleMusicStyle = (event) => {
+        setMusicalStylesNumber(event.target.value);
+    }
+
+    const handleSongsNumber = (event) => {
+        setSongsNumber(event.target.value);
+    }
 
     // Gérer les changements du mot de passe de la session
     const handlePasswordSessionChange = (event) => {
@@ -103,10 +107,12 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
             const response = await fetch(URI_BASE + '/spotify/authorize', {
+                method: 'GET',
                 headers :{
                     "Authorization" : "Bearer " + accessToken,
                     "Refresh-Token" : refreshToken
                 }
+
             });
             if (response.ok) {
                 const authorizationUri = await response.text();
@@ -121,6 +127,50 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
         }
       };
 
+
+    const handleNewSession = async () => {
+        try{
+            const response = await fetch(URI_BASE + '/createSession', {
+                method: 'POST',
+                headers :{
+                    "Content-Type" : "application/json",
+                    "Authorization" : "Bearer " + accessToken,
+                    "Refresh-Token" : refreshToken
+                },
+                body: JSON.stringify(
+                    {
+                        "sessionDto": {
+                            "idSession": "",
+                            "password": passwordSession,
+                            "songsNumber": songsNumber,
+                            "musicalStylesNumber": musicalStylesNumber
+                        },
+                        "userLoginDto": {
+                            "username": username,
+                            "password": passwordSession
+                        },
+                        "tokenDto": {
+                            "accessToken": spotifyToken,
+                            "refreshToken": spotifyRefreshToken
+                        }   
+                    }
+                )
+            });
+            if(response.ok){
+                const session = await response.json();
+                console.log(session);
+                if(session.response == "Music is not played"){
+                    setErrorMessage("Vous n'avez pas lancer de musique sur spotify.");
+                    setShowErrorMessage(true);
+                } else {
+                    /* window.location.href = "/session/" + session.idSession; */
+                }
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération de l\'URI de redirection Spotify', error);
+        }
+    }
+
     return (
         <>
             <SessionParameterView 
@@ -128,7 +178,6 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                 passwordSession={passwordSession}
                 errorMessage={errorMessage}
                 showErrorMessage={showErrorMessage}
-                onUsernameChange={handleUsernameChange}
                 onPasswordSessionChange={handlePasswordSessionChange}
                 onLoginSubmit={handleLoginSubmit}
                 qrCodeType={qrCodeType}
@@ -143,6 +192,13 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                 spotifyRefreshToken={spotifyRefreshToken}
                 spotifyToken={spotifyToken}
                 setSpotifyToken={setSpotifyToken}
+                handleNewSession={handleNewSession}
+                songsNumber={songsNumber}
+                setSongsNumber={setSongsNumber}
+                musicalStylesNumber={musicalStylesNumber}
+                setMusicalStylesNumber={setMusicalStylesNumber}
+                handleMusicStyle={handleMusicStyle}
+                handleSongsNumber={handleSongsNumber}
             />
         </>
     );

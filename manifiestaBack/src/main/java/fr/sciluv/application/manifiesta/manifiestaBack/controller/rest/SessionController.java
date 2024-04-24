@@ -23,7 +23,7 @@ public class SessionController {
     @Autowired
     private SpotifyService spotifyService;
 
-    @PostMapping("public/createSession")
+    @PostMapping("/createSession")
     public String createSession(@RequestBody CreateSessionRequestDto requestDto) {
         boolean isMusicActived = spotifyService.isMusicPlayed(requestDto.getTokenDto().getAccessToken(), requestDto.getTokenDto().getAccessToken());
         if(isMusicActived){
