@@ -3,7 +3,6 @@ import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap"
 
 
 const SessionParameterView = ({ 
-    username, 
     passwordSession, 
     errorMessage, 
     showErrorMessage, 
@@ -21,7 +20,10 @@ const SessionParameterView = ({
     spotifyRefreshToken,
     setSpotifyTokenRefresh,
     spotifyToken,
-    setSpotifyToken
+    setSpotifyToken,
+    handleNewSession,
+    handleSongsNumberChange,
+    handleMusicalStylesChange
     }) => {   
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -58,7 +60,7 @@ const SessionParameterView = ({
                 //ici on crée un formulaire pour que l'utilisateur puisse choisir les paramètres de sa session
                 <Card className="mt-5 mb-5 w-75">
                     <Card.Body >
-                    <Form onSubmit={handleSubmit}>
+                    <Form>
                         {showErrorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         
                         <Form.Group className="mb-3" controlId="qrCodeType">
@@ -93,7 +95,7 @@ const SessionParameterView = ({
         
                         <Form.Group className="mb-3" controlId="numberOfSongs">
                         <Form.Label>Nombre de musiques par vote</Form.Label>
-                        <Form.Control as="select">
+                        <Form.Control as="select" onClick={handleSongsNumberChange}>
                             {[2, 3, 4, 5, 6].map((number) => (
                             <option key={number} value={number}>
                                 {number}
@@ -104,7 +106,7 @@ const SessionParameterView = ({
         
                         <Form.Group className="mb-3" controlId="genreDiversity">
                         <Form.Label>Diversité des genres musicaux par votes</Form.Label>
-                        <Form.Control as="select">
+                        <Form.Control as="select" onClick={handleMusicalStylesChange}>
                             {[1, 2, 3].map((number) => (
                             <option key={number} value={number}>
                                 {number}
@@ -112,8 +114,8 @@ const SessionParameterView = ({
                             ))}
                         </Form.Control>
                         </Form.Group>
-                        <Button variant="primary" type="submit">
-                        Commencer la session !
+                        <Button variant="primary" onClick={handleNewSession}>
+                             Commencer la session !
                         </Button>
                     </Form>
                     </Card.Body>

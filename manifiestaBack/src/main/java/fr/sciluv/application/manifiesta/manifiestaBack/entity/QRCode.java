@@ -1,6 +1,8 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,8 +15,8 @@ public class QRCode {
 
     private String qrCodeInfo;
     private Boolean isGlobal;
-    private Date beginDate;
-    private Date endDate;
+    private LocalDateTime beginDate;
+    private LocalDateTime endDate;
 
     @ManyToOne
     @JoinColumn(name = "idSession")
@@ -25,5 +27,27 @@ public class QRCode {
     private User user;
 
     // Constructeurs, getters et setters
+
+    public QRCode(String qrCodeInfo, Session session, User user) {
+        this.qrCodeInfo = qrCodeInfo;
+        this.isGlobal = false;
+        this.beginDate = LocalDateTime.now();
+        this.endDate = null;
+        this.session = session;
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "QRCode{" +
+                "idQRCode=" + idQRCode +
+                ", qrCodeInfo='" + qrCodeInfo + '\'' +
+                ", isGlobal=" + isGlobal +
+                ", beginDate=" + beginDate +
+                ", endDate=" + endDate +
+                ", session=" + session +
+                ", user=" + user +
+                '}';
+    }
 }
 

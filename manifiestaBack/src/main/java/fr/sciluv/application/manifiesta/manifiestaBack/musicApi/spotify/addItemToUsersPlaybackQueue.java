@@ -11,16 +11,15 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-public class addItemToUsersPlaybackQueueExample {
-    private static final String accessToken = "BQDTxWwErThUvHBQPjgaaDQfx4bFHgymvgq2aZBNjqv-fefxiKlxuR_5Xu-wY2tZ0BoIgUi9po-0j2BUn6eNJW4ETKmvSykbHrmd5VOE2FDvs8cWDms393djAueL6M0YIIYWdlsAm0LFDyaqo5o643z054K8f2KLU_R2P8EHtyzmZ48sedUw4AWEOOrRjXh2hgxLU9ECZmkKKs9w9XFI-DG3ETj4I1B-4FTDiM6a1xZxj4RXoeoUQURd4Odb5akJYod32Gm-Bre19mxDDifVOZLS6O03ION_m1hZ3KQc5THsU3cLjC6gdvbacbiLRL-Maw";
-    private static final String trackUri = "spotify:track:01iyCAUm8EvOFqVWYJ3dVX";
+public class addItemToUsersPlaybackQueue {
+    private static final String accessToken = "BQBc0NlsxS7D8_e0mxlY597_TZzsskzCP0ddB30RVPeOAVuuWqClUVTaulRl_nIqZAC0Z98Bf1c7j7pbAiHZfNlgb52u1K4Aa_2_enCh8AsB1dqU-sYUT_o-RYLHmGgX20I6_eT58GelxtlpbsByEuhdppABZP-tq26z-UXpE6Mmsz-gWnpoJaaeRNWReznJ8PIXiCiLDj0mPH6JyWVIi1vpkwCm77Sxw3uLAqf2KnUZLXXPOFkc_7GFuFnYc4u6c0KuvugBSY_PlKC8626-eVxpZEcngAhRmStcQ2kV2zOk2W_S4b4no8NAbu3_pxhCZw";
+    private static final String trackUri = "spotify:track:3Dy4REq8O09IlgiwuHQ3sk";
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(accessToken)
             .build();
     private static final AddItemToUsersPlaybackQueueRequest addItemToUsersPlaybackQueueRequest = spotifyApi
             .addItemToUsersPlaybackQueue(trackUri)
-//    .device_id("5fbb3ba6aa454b5534c4ba43a8c7e8e45a63ad0e")
             .build();
 
     public static void addItemToUsersPlaybackQueue_Sync() {
@@ -33,25 +32,7 @@ public class addItemToUsersPlaybackQueueExample {
         }
     }
 
-    public static void addItemToUsersPlaybackQueue_Async() {
-        try {
-            final CompletableFuture<String> stringFuture = addItemToUsersPlaybackQueueRequest.executeAsync();
-
-            // Thread free to do other tasks...
-
-            // Example Only. Never block in production code.
-            final String string = stringFuture.join();
-
-            System.out.println("Null: " + string);
-        } catch (CompletionException e) {
-            System.out.println("Error: " + e.getCause().getMessage());
-        } catch (CancellationException e) {
-            System.out.println("Async operation cancelled.");
-        }
-    }
-
     public static void main(String[] args) {
         addItemToUsersPlaybackQueue_Sync();
-        addItemToUsersPlaybackQueue_Async();
     }
 }

@@ -28,6 +28,7 @@ public class GetInformationAboutUsersCurrentPlayback {
             System.out.println("Timestamp: " + currentlyPlayingContext.getTimestamp());
             System.out.println(currentlyPlayingContext.getIs_playing());
             System.out.println(currentlyPlayingContext.getItem());
+            System.out.println(currentlyPlayingContext);
             return currentlyPlayingContext.getIs_playing();
         } catch (NullPointerException e) {
             System.out.println("No track currently playing.");

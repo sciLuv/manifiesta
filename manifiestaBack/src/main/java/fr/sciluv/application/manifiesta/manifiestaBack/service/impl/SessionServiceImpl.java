@@ -36,8 +36,7 @@ public class SessionServiceImpl implements SessionService {
                 sessionDto.getMusicalStylesNumber(),
                 user);
         // Set properties for the session
-        sessionRepository.save(newSession);
-        return newSession;
+        return sessionRepository.save(newSession);
     }
 
 }
