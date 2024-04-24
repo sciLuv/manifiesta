@@ -102,7 +102,12 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
             localStorage.setItem('role', role);
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
-            const response = await fetch(URI_BASE + '/public/spotify/authorize');
+            const response = await fetch(URI_BASE + '/spotify/authorize', {
+                headers :{
+                    "Authorization" : "Bearer " + accessToken,
+                    "Refresh-Token" : refreshToken
+                }
+            });
             if (response.ok) {
                 const authorizationUri = await response.text();
                 setSpotifyRefreshToken(authorizationUri);

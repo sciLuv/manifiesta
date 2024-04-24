@@ -9,7 +9,7 @@ public class StreamingService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idService;
+    private Integer idStreamingService;
 
     private String name;
 

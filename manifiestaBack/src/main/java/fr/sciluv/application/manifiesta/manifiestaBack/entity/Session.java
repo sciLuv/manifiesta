@@ -2,6 +2,8 @@ package fr.sciluv.application.manifiesta.manifiestaBack.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -13,8 +15,8 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idSession;
 
-    private Date hourOfBegin;
-    private Date hourOfEnd;
+    private LocalDateTime hourOfBegin;
+    private LocalDateTime hourOfEnd;
     private String password;
 
     private int songsNumber;
@@ -32,16 +34,26 @@ public class Session {
     @ManyToMany
     Set<SessionParticipant> sessionParticipants;
 
-    @ManyToMany
-    @JoinTable(
-            name = "session_token",
-            joinColumns = @JoinColumn(name = "idSession"),
-            inverseJoinColumns = @JoinColumn(name = "idToken")
-    )
-    private Set<Token> tokens;
-
     @OneToMany(mappedBy = "session")
     private Set<QRCode> qrCodes;
 
     // Constructeurs, getters et setters
+
+
+    public Session(Integer idSession,
+                   LocalDateTime hourOfBegin,
+                   LocalDateTime hourOfEnd,
+                   String password,
+                   int songsNumber,
+                   int musicalStylesNumber,
+                   User user
+    ) {
+        this.idSession = idSession;
+        this.hourOfBegin = hourOfBegin;
+        this.hourOfEnd = hourOfEnd;
+        this.password = password;
+        this.songsNumber = songsNumber;
+        this.musicalStylesNumber = musicalStylesNumber;
+        this.user = user;
+    }
 }

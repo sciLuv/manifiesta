@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { URI_BASE } from '../../env';
 
 
-const SpotifyCallback = ({spotifyAuthorizationUri, setSpotifyAuthorizationUri}) => {
+const SpotifyCallback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   
@@ -11,10 +11,12 @@ const SpotifyCallback = ({spotifyAuthorizationUri, setSpotifyAuthorizationUri}) 
     const code = searchParams.get('code');
     if (code) {
       const timer = setTimeout(() => {
-        fetch(URI_BASE + '/public/spotify/callback', {
+        fetch(URI_BASE + '/spotify/callback', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+            'Refresh-Token': localStorage.getItem('refreshToken'),
           },
           body: JSON.stringify({ code }),
         })

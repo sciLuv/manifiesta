@@ -1,6 +1,8 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.config.SpotifyConfig;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.Token;
+import fr.sciluv.application.manifiesta.manifiestaBack.repository.TokenRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 
 @Service
 public class SpotifyService {

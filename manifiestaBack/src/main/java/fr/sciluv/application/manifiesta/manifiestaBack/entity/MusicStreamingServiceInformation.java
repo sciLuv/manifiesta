@@ -15,7 +15,7 @@ public class MusicStreamingServiceInformation {
     private String url_link;
 
     @ManyToOne
-    @JoinColumn(name = "idService")
+    @JoinColumn(name = "idStreamingService")
     private StreamingService streamingService;
 
     @ManyToOne

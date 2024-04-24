@@ -37,7 +37,7 @@ public class SpotifyController {
                 .setRedirectUri(redirectUri)
                 .build();
     }
-    @GetMapping("public/spotify/authorize")
+    @GetMapping("spotify/authorize")
     public String getAuthorizationUri() {
         String[] scopes = {
                 "ugc-image-upload", "user-read-recently-played", "user-top-read", "user-read-playback-position",
@@ -57,7 +57,7 @@ public class SpotifyController {
         return authorizationUri.toString();
     }
 
-    @PostMapping("public/spotify/callback")
+    @PostMapping("spotify/callback")
     public ResponseEntity<?> handleAuthorization(@RequestBody Map<String, Object> payload) {
         String code = (String) payload.get("code");
         System.out.println("Code reçu: " + code);

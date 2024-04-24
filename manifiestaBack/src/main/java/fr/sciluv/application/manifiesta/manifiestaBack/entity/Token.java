@@ -1,6 +1,8 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -13,16 +15,27 @@ public class Token {
     private Long idToken;
 
     private String token;
-    private Date beginDate;
+    private LocalDateTime beginDate;
     private Integer expirationTime;
     private Boolean isRefreshToken;
 
-    @ManyToMany(mappedBy = "tokens")
-    private Set<Session> sessions;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "idService")
+    @JoinColumn(name = "idStreamingService")
     private StreamingService streamingService;
 
     // Constructeurs, getters et setters
+
+
+    public Token(String token, LocalDateTime beginDate, Integer expirationTime, Boolean isRefreshToken, User user, StreamingService streamingService) {
+        this.token = token;
+        this.beginDate = beginDate;
+        this.expirationTime = expirationTime;
+        this.isRefreshToken = isRefreshToken;
+        this.user = user;
+        this.streamingService = streamingService;
+    }
 }
