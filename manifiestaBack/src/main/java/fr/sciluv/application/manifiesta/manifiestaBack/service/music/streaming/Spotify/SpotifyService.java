@@ -2,6 +2,7 @@ package fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.
 
 import fr.sciluv.application.manifiesta.manifiestaBack.config.SpotifyConfig;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.Token;
+import fr.sciluv.application.manifiesta.manifiestaBack.musicApi.spotify.GetInformationAboutUsersCurrentPlayback;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.TokenRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,10 @@ public class SpotifyService {
             System.out.println("Error during token retrieval: " + e.getMessage());
             return null;
         }
+    }
+
+    public boolean isMusicPlayed(String accessToken, String refreshToken){
+        GetInformationAboutUsersCurrentPlayback getInformationAboutUsersCurrentPlayback = new GetInformationAboutUsersCurrentPlayback(accessToken);
+        return getInformationAboutUsersCurrentPlayback.getInformationAboutUsersCurrentPlayback();
     }
 }

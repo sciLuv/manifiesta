@@ -14,18 +14,30 @@ public class AuthorizationCodeRefresh {
     SpotifyAttributes spotifyAttributes = new SpotifyAttributes();
 
 
-    private final String clientId = spotifyAttributes.getClientId();
-    private final String clientSecret = spotifyAttributes.getClientSecret();
-    private final String refreshToken = spotifyAttributes.getRefreshToken();
+    private String clientId;
+    private String clientSecret;
+    private String refreshToken;
+
+    private SpotifyApi spotifyApi;
+    private AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest;
+
+    public AuthorizationCodeRefresh(SpotifyAttributes spotifyAttributes) {
+        this.spotifyAttributes = spotifyAttributes;
+        this.refreshToken = spotifyAttributes.getRefreshToken();
+        this.clientId = spotifyAttributes.getClientId();
+        this.clientSecret = spotifyAttributes.getClientSecret();
+
+        this.spotifyApi = new SpotifyApi.Builder()
+                .setClientId(clientId)
+                .setClientSecret(clientSecret)
+                .setRefreshToken(refreshToken)
+                .build();
+
+        this.authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()
+                .build();
+    }
 
 
-    private final SpotifyApi spotifyApi = new SpotifyApi.Builder()
-            .setClientId(clientId)
-            .setClientSecret(clientSecret)
-            .setRefreshToken(refreshToken)
-            .build();
-    private final AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh()
-            .build();
 
     public String authorizationCodeRefresh_Sync() {
         System.out.println(refreshToken);
@@ -47,7 +59,8 @@ public class AuthorizationCodeRefresh {
 
 
     public static void main(String[] args) {
-        new AuthorizationCodeRefresh().
+        SpotifyAttributes spotifyAttributes1 = new SpotifyAttributes();
+        new AuthorizationCodeRefresh(spotifyAttributes1).
         authorizationCodeRefresh_Sync();
     }
 }

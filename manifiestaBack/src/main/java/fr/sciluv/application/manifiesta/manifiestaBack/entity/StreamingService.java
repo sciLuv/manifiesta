@@ -19,4 +19,9 @@ public class StreamingService {
     @OneToMany(mappedBy = "streamingService")
     private Set<Token> tokens;
     // Constructeurs, getters et setters
+
+
+    public StreamingService(String name) {
+        this.name = name;
+    }
 }

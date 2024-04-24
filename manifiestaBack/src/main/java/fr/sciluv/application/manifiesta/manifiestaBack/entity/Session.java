@@ -40,6 +40,9 @@ public class Session {
     // Constructeurs, getters et setters
 
 
+    public Session() {
+    }
+
     public Session(Integer idSession,
                    LocalDateTime hourOfBegin,
                    LocalDateTime hourOfEnd,

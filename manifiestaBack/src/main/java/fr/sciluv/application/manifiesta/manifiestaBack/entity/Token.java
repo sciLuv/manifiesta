@@ -13,7 +13,7 @@ public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idToken;
-
+    @Column(name = "token", length = 1000)
     private String token;
     private LocalDateTime beginDate;
     private Integer expirationTime;

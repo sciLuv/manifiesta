@@ -5,6 +5,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.Token;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.UserLoginDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.repository.SessionRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.TokenRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.SessionService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.UserService;
@@ -16,13 +17,15 @@ import java.time.LocalDateTime;
 @Service
 public class SessionServiceImpl implements SessionService {
 
+    @Autowired
+    SessionRepository sessionRepository;
+
+    @Autowired
     UserService userService;
 
     public Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto) {
 
         User user = userService.getUser(userLoginDto.getUsername());
-
-
 
         Session newSession = new Session(
                 -1,
@@ -33,6 +36,7 @@ public class SessionServiceImpl implements SessionService {
                 sessionDto.getMusicalStylesNumber(),
                 user);
         // Set properties for the session
+        sessionRepository.save(newSession);
         return newSession;
     }
 

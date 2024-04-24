@@ -5,9 +5,11 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.Token;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.TokenDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.UserLoginDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.repository.StreamingServiceRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.TokenRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.TokenService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,13 +17,24 @@ import java.time.LocalDateTime;
 @Service
 public class TokenServiceImpl implements TokenService {
 
+    @Autowired
     TokenRepository tokenRepository;
+
+    @Autowired
     UserService userService;
+
+    @Autowired
+    StreamingServiceRepository streamingServiceRepository;
 
     @Override
     public void createToken(TokenDto tokenDto, UserLoginDto userDto) {
 
+        System.out.println(userDto.getUsername());
         User user = userService.getUser(userDto.getUsername());
+
+        StreamingService streamingService = new StreamingService("Spotify");
+
+                streamingServiceRepository.save(streamingService);
 
         Token accessToken = new Token(
                 tokenDto.getAccessToken(),
@@ -29,7 +42,7 @@ public class TokenServiceImpl implements TokenService {
                 3600,
                 false,
                 user,
-                new StreamingService()
+                streamingService
         );
         Token refreshToken = new Token(
                 tokenDto.getRefreshToken(),
@@ -37,7 +50,7 @@ public class TokenServiceImpl implements TokenService {
                 3600,
                 true,
                 user,
-                new StreamingService()
+                streamingService
         );
 
         tokenRepository.save(accessToken);
