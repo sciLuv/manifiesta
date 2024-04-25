@@ -1,10 +1,11 @@
+
 import React, { useEffect, useState } from 'react';
 import SessionParameterView from '../view/SessionParameterView';
 import { URI_BASE } from '../../env';
 import SpotifyCallback from './SpotifyCallback';
 
 const SessionParameterController = ( {accessToken, setAccessToken, refreshToken, setRefreshToken, setUser ,user, mail,setMail,role,setRole} ) => {
-    const [username, setUsername] = useState('');
+
     const [passwordSession, setPasswordSession] = useState('');
     const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -13,8 +14,10 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
     const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
     const [spotifyRefreshToken, setSpotifyRefreshToken] = useState('');
     const [spotifyToken, setSpotifyToken] = useState('');
-    const [songsNumber, setSongsNumber] = useState(5);
-    const [musicalStylesNumber, setMusicalStylesNumber] = useState(3);
+    const [musicalStyles, setMusicalStyles] = useState(1);
+    const [songsNumber, setSongsNumber] = useState(2);
+
+
 
     useEffect(() => {
         
@@ -62,32 +65,22 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
 
     }, []);
 
-    const handleMusicStyle = (event) => {
-        setMusicalStylesNumber(event.target.value);
-    }
-
-    const handleSongsNumber = (event) => {
-        setSongsNumber(event.target.value);
-    }
 
     // Gérer les changements du mot de passe de la session
     const handlePasswordSessionChange = (event) => {
         setPasswordSession(event.target.value);
     };
 
-    // Gérer la soumission des données pour la connexion
-    const handleLoginSubmit = () => {
-        // Simulez une validation ou une authentification
-        if (!username || !passwordSession) {
-            setErrorMessage('Le nom d’utilisateur et le mot de passe sont requis.');
-            setShowErrorMessage(true);
-        } else {
-            setShowErrorMessage(false);
-            // Effectuez la logique de connexion ou de validation ici
-            console.log('Connexion en cours avec : ', username, passwordSession);
-            // Redirection ou autre logique
-        }
-    };
+    // Gerer la selection du nombre de chansons
+    const handleSongsNumberChange = (event) => {
+        setSongsNumber(event.target.value);
+    }
+
+    // Gerer la selection du nombre de styles musicaux
+    const handleMusicalStylesChange = (event) => {
+        setMusicalStyles(event.target.value);
+    }
+        
 
     //gerer la selection d'un mot de passe ou non
     const changeCheckBoxPassword = (event) => {
@@ -107,12 +100,10 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
             const response = await fetch(URI_BASE + '/spotify/authorize', {
-                method: 'GET',
                 headers :{
                     "Authorization" : "Bearer " + accessToken,
                     "Refresh-Token" : refreshToken
                 }
-
             });
             if (response.ok) {
                 const authorizationUri = await response.text();
@@ -128,58 +119,59 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
       };
 
 
-    const handleNewSession = async () => {
-        try{
+      const handleNewSession = async () => {
+        try {
             const response = await fetch(URI_BASE + '/createSession', {
                 method: 'POST',
                 headers :{
-                    "Content-Type" : "application/json",
                     "Authorization" : "Bearer " + accessToken,
-                    "Refresh-Token" : refreshToken
+                    "Refresh-Token" : refreshToken,
+                    "Content-Type": "application/json"
                 },
-                body: JSON.stringify(
-                    {
-                        "sessionDto": {
-                            "idSession": "",
-                            "password": passwordSession,
-                            "songsNumber": songsNumber,
-                            "musicalStylesNumber": musicalStylesNumber
-                        },
-                        "userLoginDto": {
-                            "username": username,
-                            "password": passwordSession
-                        },
-                        "tokenDto": {
-                            "accessToken": spotifyToken,
-                            "refreshToken": spotifyRefreshToken
-                        }   
+                  
+                body: JSON.stringify({
+                    sessionDto: {
+                        idSession: null,
+                        password: passwordSession,
+                        songsNumber: songsNumber,
+                        musicalStylesNumber: musicalStyles
+                    },
+                    userLoginDto: {
+                        username: user,
+                        password: ""
+                    },
+                    tokenDto: {
+                        accessToken: spotifyToken,
+                        refreshToken: spotifyRefreshToken
                     }
-                )
+                })
             });
-            if(response.ok){
-                const session = await response.json();
-                console.log(session);
-                if(session.response == "Music is not played"){
-                    setErrorMessage("Vous n'avez pas lancer de musique sur spotify.");
+            if (response.ok) {
+                const responseJson = await response.json();
+                console.log(responseJson);
+                if(responseJson.response == "Music is not played"){
+                    setErrorMessage('La musique n\'est pas jouée');
                     setShowErrorMessage(true);
-                } else {
-                    /* window.location.href = "/session/" + session.idSession; */
+                }  else {
+                    setShowErrorMessage(false);
+                    console.log('Session créée avec succès');
                 }
+            } else {
+                console.error('Erreur lors de la requete de création de session');
             }
         } catch (error) {
-            console.error('Erreur lors de la récupération de l\'URI de redirection Spotify', error);
-        }
+            console.error('Erreur lors de la requete de création de session', error);
+        }               
     }
+
 
     return (
         <>
             <SessionParameterView 
-                username={username}
                 passwordSession={passwordSession}
                 errorMessage={errorMessage}
                 showErrorMessage={showErrorMessage}
                 onPasswordSessionChange={handlePasswordSessionChange}
-                onLoginSubmit={handleLoginSubmit}
                 qrCodeType={qrCodeType}
                 passwordOrNot={passwordOrNot}
                 setQrCodeType={setQrCodeType}
@@ -191,14 +183,10 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                 setSpotifyRefreshToken={setSpotifyRefreshToken}
                 spotifyRefreshToken={spotifyRefreshToken}
                 spotifyToken={spotifyToken}
+                handleSongsNumberChange={handleSongsNumberChange}
+                handleMusicalStylesChange={handleMusicalStylesChange}
                 setSpotifyToken={setSpotifyToken}
                 handleNewSession={handleNewSession}
-                songsNumber={songsNumber}
-                setSongsNumber={setSongsNumber}
-                musicalStylesNumber={musicalStylesNumber}
-                setMusicalStylesNumber={setMusicalStylesNumber}
-                handleMusicStyle={handleMusicStyle}
-                handleSongsNumber={handleSongsNumber}
             />
         </>
     );

@@ -37,7 +37,7 @@ public class Session {
     @OneToMany(mappedBy = "session")
     private Set<QRCode> qrCodes;
 
-    // Constructeurs, getters et setters
+    // Constructeurs
 
 
     public Session() {
@@ -58,5 +58,87 @@ public class Session {
         this.songsNumber = songsNumber;
         this.musicalStylesNumber = musicalStylesNumber;
         this.user = user;
+    }
+
+    // Getters et setters
+
+    public Integer getIdSession() {
+        return idSession;
+    }
+
+    public void setIdSession(Integer idSession) {
+        this.idSession = idSession;
+    }
+
+    public LocalDateTime getHourOfBegin() {
+        return hourOfBegin;
+    }
+
+    public void setHourOfBegin(LocalDateTime hourOfBegin) {
+        this.hourOfBegin = hourOfBegin;
+    }
+
+    public LocalDateTime getHourOfEnd() {
+        return hourOfEnd;
+    }
+
+    public void setHourOfEnd(LocalDateTime hourOfEnd) {
+        this.hourOfEnd = hourOfEnd;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getSongsNumber() {
+        return songsNumber;
+    }
+
+    public void setSongsNumber(int songsNumber) {
+        this.songsNumber = songsNumber;
+    }
+
+    public int getMusicalStylesNumber() {
+        return musicalStylesNumber;
+    }
+
+    public void setMusicalStylesNumber(int musicalStylesNumber) {
+        this.musicalStylesNumber = musicalStylesNumber;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Set<PollTurn> getPollTurns() {
+        return pollTurns;
+    }
+
+    public void setPollTurns(Set<PollTurn> pollTurns) {
+        this.pollTurns = pollTurns;
+    }
+
+    public Set<SessionParticipant> getSessionParticipants() {
+        return sessionParticipants;
+    }
+
+    public void setSessionParticipants(Set<SessionParticipant> sessionParticipants) {
+        this.sessionParticipants = sessionParticipants;
+    }
+
+    public Set<QRCode> getQrCodes() {
+        return qrCodes;
+    }
+
+    public void setQrCodes(Set<QRCode> qrCodes) {
+        this.qrCodes = qrCodes;
     }
 }
