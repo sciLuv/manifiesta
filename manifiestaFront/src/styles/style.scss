@@ -62,3 +62,36 @@
     flex-direction: column;
     align-items: center;
 }
+
+.session-view {
+    color: white; /* Couleur du texte */
+    background-color: #121212; /* Couleur de fond principale */
+    height: 100vh; /* Utilise toute la hauteur de la vue */
+}
+
+.full-height {
+    height: 100%;
+}
+
+.dark-card {
+    background-color: #282828; /* Fond sombre pour la carte */
+    border: none; /* Suppression des bordures */
+}
+
+.album-image {
+    width: 100%; /* L'image prend toute la largeur de la carte */
+    height: auto; /* Hauteur automatique pour garder le ratio */
+}
+
+.text-orange {
+    color: #FFA500; /* Couleur orange pour les titres */
+}
+
+.song-button {
+    background-color: #6a1b9a; /* Violet pour les boutons */
+    border: none;
+}
+
+.song-button:hover, .song-button:focus {
+    background-color: #ff7043; /* Orange plus clair pour le hover/click */
+}
