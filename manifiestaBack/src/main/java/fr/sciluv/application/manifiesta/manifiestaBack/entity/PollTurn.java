@@ -26,4 +26,10 @@ public class PollTurn {
     private Session session;
 
     // Constructeurs, getters et setters
+    public PollTurn() {
+    }
+
+    public PollTurn(Session session) {
+        this.session = session;
+    }
 }

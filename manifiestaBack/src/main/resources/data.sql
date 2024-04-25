@@ -32,3 +32,6 @@
 
 INSERT INTO user (creation_date, id, mail, username) VALUES
 ('2024-04-22 12:11:15.862515', 1, 'liance.remi@gmail.com', 'remi');
+
+INSERT INTO streaming_service (name) VALUES ('Spotify');
+INSERT INTO streaming_service (name) VALUES ('Deezer');

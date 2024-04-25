@@ -4,4 +4,5 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.StreamingService;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StreamingServiceRepository extends JpaRepository<StreamingService, Long> {
+    StreamingService findByName(String name);
 }

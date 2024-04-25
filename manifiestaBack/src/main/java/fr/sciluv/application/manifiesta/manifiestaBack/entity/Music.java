@@ -15,6 +15,7 @@ public class Music {
 
     private String name;
     private String artist;
+    private String album;
 
     // Les musiques peuvent être associées à plusieurs PollTurn via SuggestedMusic
     @OneToMany(mappedBy = "music")
@@ -27,4 +28,14 @@ public class Music {
     private Set<MusicStreamingServiceInformation> streamingInfos;
 
     // Constructeurs, getters et setters
+
+    public Music() {
+    }
+
+    public Music(String name, String artist, String album) {
+        this.numMusic = -1L;
+        this.name = name;
+        this.artist = artist;
+        this.album = album;
+    }
 }

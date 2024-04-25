@@ -32,9 +32,7 @@ public class TokenServiceImpl implements TokenService {
         System.out.println(userDto.getUsername());
         User user = userService.getUser(userDto.getUsername());
 
-        StreamingService streamingService = new StreamingService("Spotify");
-
-                streamingServiceRepository.save(streamingService);
+        StreamingService streamingService = streamingServiceRepository.findByName("spotify");
 
         Token accessToken = new Token(
                 tokenDto.getAccessToken(),

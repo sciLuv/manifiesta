@@ -24,6 +24,11 @@ public class SuggestedMusic {
     @OneToMany(mappedBy = "suggestedMusic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vote> votes;
 
+    public SuggestedMusic(Music music, PollTurn pollTurn) {
+        this.music = music;
+        this.pollTurn = pollTurn;
+    }
+
     // Tu peux aussi avoir des attributs supplémentaires ici pour les détails spécifiques à la suggestion
 
     // Constructeurs, getters et setters

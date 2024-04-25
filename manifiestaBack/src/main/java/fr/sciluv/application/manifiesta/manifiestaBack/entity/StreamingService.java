@@ -21,7 +21,15 @@ public class StreamingService {
     // Constructeurs, getters et setters
 
 
+    public StreamingService() {
+    }
+
     public StreamingService(String name) {
+        this.name = name;
+    }
+
+    public StreamingService(Integer idStreamingService, String name) {
+        this.idStreamingService = idStreamingService;
         this.name = name;
     }
 }
