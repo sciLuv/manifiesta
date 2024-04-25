@@ -16,10 +16,31 @@ public class GetUsersTopTracks {
     private SpotifyApi spotifyApi;
     private GetUsersTopTracksRequest getUsersTopTracksRequest;
 
+    private int offset;
+
     public Optional<Paging<Track>> getUsersTopTracks() {
         try {
             final Paging<Track> trackPaging = getUsersTopTracksRequest.execute();
-            return Optional.ofNullable(trackPaging);
+            int numbersOfTracks = trackPaging.getTotal();
+
+            int RealOffset = (int) Math.floor((Math.random()*numbersOfTracks));
+            if(RealOffset+50 > numbersOfTracks){
+                RealOffset = numbersOfTracks - 50;
+            }
+
+            final GetUsersTopTracksRequest realGetUsersTopTracksRequest = spotifyApi.getUsersTopTracks()
+                    .limit(50)
+                    .offset(RealOffset)
+                    .time_range("medium_term")
+                    .build();
+
+            final Paging<Track> realTrackPaging = realGetUsersTopTracksRequest.execute();
+
+            for (Track item : realTrackPaging.getItems()) {
+                System.out.println(item.getName());
+            }
+
+            return Optional.ofNullable(realTrackPaging);
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
@@ -29,14 +50,13 @@ public class GetUsersTopTracks {
 
     //Constructeur
 
-    public GetUsersTopTracks(String accessToken, int limit, int offset) {
+    public GetUsersTopTracks(String accessToken) {
         this.accessToken = accessToken;
+        this.offset = offset;
         this.spotifyApi = new SpotifyApi.Builder()
                 .setAccessToken(accessToken)
                 .build();
         this.getUsersTopTracksRequest = spotifyApi.getUsersTopTracks()
-                .limit(limit)
-                .offset(offset)
                 .time_range("medium_term")
                 .build();
     }

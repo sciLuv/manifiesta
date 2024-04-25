@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 
+import java.util.Optional;
+
 @Service
 public class MusicServiceImpl implements MusicService {
 
@@ -25,13 +27,18 @@ public class MusicServiceImpl implements MusicService {
     @Override
     public Music generateMusic(Track track) {
 
-        Music music = new Music(
-                track.getName(),
-                track.getArtists()[0].getName(),
-                track.getAlbum().getName()
-        );
+        Optional<Music> musicOptional = musicRepository.findByNameAndArtistAndAlbum(track.getName(), track.getArtists()[0].getName(), track.getAlbum().getName());
+        if(musicOptional.isPresent()){
+            return musicOptional.get();
+        } else {
+            Music music = new Music(
+                    track.getName(),
+                    track.getArtists()[0].getName(),
+                    track.getAlbum().getName()
+            );
 
-        return musicRepository.save(music);
+            return musicRepository.save(music);
+        }
     }
 
     @Override

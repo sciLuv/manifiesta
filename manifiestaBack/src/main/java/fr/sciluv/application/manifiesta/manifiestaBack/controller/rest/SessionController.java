@@ -7,6 +7,8 @@ import fr.sciluv.application.manifiesta.manifiestaBack.musicApi.spotify.GetUsers
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.StreamingServiceRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.SpotifyService;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.util.NumberUtil;
+import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class SessionController {
@@ -42,28 +45,40 @@ public class SessionController {
     @PostMapping("/createSession")
     public String createSession(@RequestBody CreateSessionRequestDto requestDto) {
         String returnMessage = "";
+        // Check if music is played
         boolean isMusicActived = spotifyService.isMusicPlayed(requestDto.getTokenDto().getAccessToken(), requestDto.getTokenDto().getAccessToken());
         if(isMusicActived){
+            // put spotify token (refresh et access) on db
             tokenService.createToken(requestDto.getTokenDto(), requestDto.getUserLoginDto());
+            // create session
             Session newSession = sessionService.createSession(requestDto.getSessionDto(), requestDto.getUserLoginDto());
             if(newSession != null){
+                // generate QRCode (in reality, it's a string with code to go to the session)
                 QRCode code = qrCodeService.generateQRCode(newSession, requestDto.getUserLoginDto());
-                System.out.println(code.toString());
                 if(code != null){
-                    GetUsersTopTracks getUsersTopTracks = new GetUsersTopTracks(requestDto.getTokenDto().getAccessToken(), 10, 0);
+                    // get top tracks of user
+                    GetUsersTopTracks getUsersTopTracks = new GetUsersTopTracks(requestDto.getTokenDto().getAccessToken());
+                    //in function of top tracks, generate musics, suggested musics and music streaming service informations
+
                     getUsersTopTracks.getUsersTopTracks().ifPresent(trackPaging -> {
+
                         PollTurn pollTurn = pollTurnService.createPollTurn(newSession);
+                        StreamingService streamingService = streamingServiceRepository.findByName("spotify");
+
+                        int totalOfMusics = trackPaging.getTotal();
+                        int offSet = trackPaging.getOffset();
+                        System.out.println("offset" + offSet);
+
                         List<Music> musics = new ArrayList<>();
                         List<MusicStreamingServiceInformation> musicStreamingServiceInformations = new ArrayList<>();
-                        StreamingService streamingService = streamingServiceRepository.findByName("spotify");
-                        for (int i = 0; i < 3; i++) {
-                            System.out.println("test");
-                            Music music = musicService.generateMusic(trackPaging.getItems()[i]);
+                        Set<Integer> numbers = NumberUtil.generateNumbers(50);
+                        for (Integer number : numbers) {
+                            Music music = musicService.generateMusic(trackPaging.getItems()[(number)]);
                             musics.add(music);
 
                             MusicStreamingServiceInformation musicStreamingServiceInformation =
                                     musicService.generateMusicStreamingServiceInformation(
-                                            trackPaging.getItems()[i], music, streamingService);
+                                            trackPaging.getItems()[(number)], music, streamingService);
 
                             musicStreamingServiceInformations.add(musicStreamingServiceInformation);
                             SuggestedMusic suggestedMusic = musicService.generateSuggestedMusic(music, pollTurn);

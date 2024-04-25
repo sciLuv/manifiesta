@@ -27,7 +27,7 @@ public class Music {
     @OneToMany(mappedBy = "music")
     private Set<MusicStreamingServiceInformation> streamingInfos;
 
-    // Constructeurs, getters et setters
+    // Constructeurs
 
     public Music() {
     }
@@ -37,5 +37,19 @@ public class Music {
         this.name = name;
         this.artist = artist;
         this.album = album;
+    }
+
+    // Getters et Setters
+
+    public String getName() {
+        return name;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public String getAlbum() {
+        return album;
     }
 }
