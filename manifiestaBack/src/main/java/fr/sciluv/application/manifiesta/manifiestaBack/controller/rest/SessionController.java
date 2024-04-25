@@ -24,7 +24,7 @@ public class SessionController {
 
     @Autowired
     private SpotifyService spotifyService;
-    
+
     @Autowired
     private QRCodeService qrCodeService;
     @PostMapping("/createSession")

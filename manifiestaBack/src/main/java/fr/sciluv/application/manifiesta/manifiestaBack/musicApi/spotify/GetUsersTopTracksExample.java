@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 public class GetUsersTopTracksExample {
-    private static final String accessToken = "BQAWdx-npSbQmZwW8M0tJFtJr3tc_-iR9cYD69w1k1TNAKZisCgEgwX-5zpHR9lBqbaNWsKbbscDhPEzdvbfnPadBOzjfGUG0SD6VTFW1K9RahKjMzWijBnlFBaOnWxoFYv5DsOM89Xn3wAkgPpreJ6MoyAgeu9JBbrwkx8WGoYb83Ubt2ikopXQ8IzZ8F4uqXl2sLHwdSMNzjWg73PFjTDbYz_gGyWHt7jHwt7ijpIsy1NohuAKLFjfVb8VHRq1HRTkxIwUMjE-gUaKVVPQ7lDtTJ_rF2OhSOU2vMtwA2tcrXbLlPYpR6ETR1rEhEuPMQ";
+    private static final String accessToken = "BQB-NhKcLu5bgqWvm6YLiHKDOA5MX3NhmYEdkUn1lJggVEOIWgTpFzm1sqz3A203rGRqmmOVF5m3TuGpfxIaxoLsR3udVd0LR1mAiCfq6pqLftOwbE4qYxrS97mFy4G3KImhEkdY6jclLb-f_NjQ6dJqGkwdpYbWrdZBkA9tHymk-hmzu4a7TwZbQYE8mi4Zz_sDChB2dQmfIvgaNZ1huYJVAY29UlP4_f3UF2jgS1Uc8CX7gGVLwSMgYcRhm1vGq8hPNI8FR4sNgztnZkzLGIBw7ykyQ2T4-koqGg7yo7J4rnF-lEzv2lKwUF79iRpDjw";
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(accessToken)
@@ -40,25 +40,7 @@ public class GetUsersTopTracksExample {
         }
     }
 
-    public static void getUsersTopTracks_Async() {
-        try {
-            final CompletableFuture<Paging<Track>> pagingFuture = getUsersTopTracksRequest.executeAsync();
-
-            // Thread free to do other tasks...
-
-            // Example Only. Never block in production code.
-            final Paging<Track> trackPaging = pagingFuture.join();
-
-            System.out.println("Total: " + trackPaging.getTotal());
-        } catch (CompletionException e) {
-            System.out.println("Error: " + e.getCause().getMessage());
-        } catch (CancellationException e) {
-            System.out.println("Async operation cancelled.");
-        }
-    }
-
     public static void main(String[] args) {
         getUsersTopTracks_Sync();
-        getUsersTopTracks_Async();
     }
 }

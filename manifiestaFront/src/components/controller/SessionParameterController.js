@@ -150,7 +150,7 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                 const responseJson = await response.json();
                 console.log(responseJson);
                 if(responseJson.response == "Music is not played"){
-                    setErrorMessage('La musique n\'est pas jouée');
+                    setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
                     setShowErrorMessage(true);
                 }  else {
                     setShowErrorMessage(false);

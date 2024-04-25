@@ -19,6 +19,7 @@ function App() {
   const [mail, setMail] = useState("");
   const [role, setRole] = useState("");
 
+  console.log();
 
   useEffect(() => {
     console.log(user);
