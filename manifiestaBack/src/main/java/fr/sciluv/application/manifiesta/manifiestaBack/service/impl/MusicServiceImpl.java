@@ -62,4 +62,15 @@ public class MusicServiceImpl implements MusicService {
         );
         return suggestedMusicRepository.save(suggestedMusic);
     }
+
+    public String musicToJSON(Music music, MusicStreamingServiceInformation musicStreamingServiceInformation) {
+        return String.format("{\"name\": \"%s\", \"artist\": \"%s\", \"album\": \"%s\", " +
+                        "\"duration\": \"%d\", \"url_img\": \"%s\", \"url_link\": \"%s\"}",
+                music.getName(), music.getArtist(), music.getAlbum(),
+                musicStreamingServiceInformation.getDuration(), musicStreamingServiceInformation.getUrl_img(),
+                musicStreamingServiceInformation.getUrl_link());
+    }
+
+
+
 }

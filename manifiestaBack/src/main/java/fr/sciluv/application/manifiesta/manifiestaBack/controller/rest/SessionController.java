@@ -8,15 +8,20 @@ import fr.sciluv.application.manifiesta.manifiestaBack.repository.StreamingServi
 import fr.sciluv.application.manifiesta.manifiestaBack.service.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.SpotifyService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.util.NumberUtil;
-import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
+import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
+import se.michaelthelin.spotify.model_objects.specification.Track;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 public class SessionController {
@@ -43,8 +48,8 @@ public class SessionController {
     private PollTurnService pollTurnService;
 
     @PostMapping("/createSession")
-    public String createSession(@RequestBody CreateSessionRequestDto requestDto) {
-        String returnMessage = "";
+    public String createSession(@RequestBody CreateSessionRequestDto requestDto) throws IOException, ParseException, org.apache.hc.core5.http.ParseException, SpotifyWebApiException {
+        AtomicReference<String> returnMessage = new AtomicReference<>("");
         // Check if music is played
         boolean isMusicActived = spotifyService.isMusicPlayed(requestDto.getTokenDto().getAccessToken(), requestDto.getTokenDto().getAccessToken());
         if(isMusicActived){
@@ -71,7 +76,7 @@ public class SessionController {
 
                         List<Music> musics = new ArrayList<>();
                         List<MusicStreamingServiceInformation> musicStreamingServiceInformations = new ArrayList<>();
-                        Set<Integer> numbers = NumberUtil.generateNumbers(50);
+                        Set<Integer> numbers = NumberUtil.generateNumbers(50, requestDto.getSessionDto().getSongsNumber());
                         for (Integer number : numbers) {
                             Music music = musicService.generateMusic(trackPaging.getItems()[(number)]);
                             musics.add(music);
@@ -83,13 +88,54 @@ public class SessionController {
                             musicStreamingServiceInformations.add(musicStreamingServiceInformation);
                             SuggestedMusic suggestedMusic = musicService.generateSuggestedMusic(music, pollTurn);
                         }
+
+
+                        //create JSON for musics
+                        String json = "{\"musics\":[";
+                        for (int i = 0; i < musics.size(); i++) {
+                            json += musicService.musicToJSON(musics.get(i), musicStreamingServiceInformations.get(i));
+                            if(i != musics.size()-1) json += ",";
+                                    else json += "],";
+                        }
+                        System.out.println(json);
+
+                        CurrentlyPlaying currentlyPlaying = null;
+                        try {
+                            currentlyPlaying = spotifyService.getCurrentTrack(requestDto.getTokenDto().getAccessToken());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        } catch (SpotifyWebApiException e) {
+                            throw new RuntimeException(e);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        } catch (org.apache.hc.core5.http.ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        Track track = (Track) currentlyPlaying.getItem();
+                        Music musicActual = musicService.generateMusic(track);
+                        MusicStreamingServiceInformation musicStreamingServiceInformation =
+                                musicService.generateMusicStreamingServiceInformation(track, musicActual, streamingService);
+
+                        json += " \"currentlyPlayingMusic\" : " + musicService.musicToJSON(musicActual, musicStreamingServiceInformation) + ",";
+
+                        json += "\"currentMusicInformation\": {"
+                                + "\"timeStamp\": \"" + currentlyPlaying.getTimestamp() + "\","
+                                + "\"progressMs\": \"" + currentlyPlaying.getProgress_ms() + "\"}";
+
+                        json += ",\"sessionInformations\" :  {" +
+                                 "\"sessionName\": \"" + newSession.getPassword() + "\"," +
+                                "\"sessionCode\": \"" + code.getQrCodeInfo() + "\"," +
+                                "\"codeIsGlobal\": \"" + code.getGlobal() + "\"" +
+                                "}}";
+
+                        returnMessage.set(json);
                     });
-                    returnMessage = "{\"response\":\"QRCode generated\"}";
+
                 } else {
-                    returnMessage = "{\"response\":\"QRCode not generated\"}";
+                    returnMessage.set("{\"response\":\"QRCode not generated\"}");
                 }
             }
-            return returnMessage;
+            return returnMessage.get();
         } else {
             return "{\"response\":\"Music is not played\"}";
         }

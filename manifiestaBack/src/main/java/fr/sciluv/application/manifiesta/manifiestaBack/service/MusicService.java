@@ -6,5 +6,6 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 public interface MusicService {
     Music generateMusic(Track track);
     MusicStreamingServiceInformation generateMusicStreamingServiceInformation(Track track, Music music, StreamingService streamingService);
+    String musicToJSON(Music music, MusicStreamingServiceInformation musicStreamingServiceInformation);
     SuggestedMusic generateSuggestedMusic(Music music, PollTurn pollTurn);
 }

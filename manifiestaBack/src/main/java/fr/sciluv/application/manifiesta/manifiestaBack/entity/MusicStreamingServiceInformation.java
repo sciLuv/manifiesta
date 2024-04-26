@@ -24,12 +24,23 @@ public class MusicStreamingServiceInformation {
 
     // Constructeurs, getters et setters
 
-
     public MusicStreamingServiceInformation(Integer duration, String url_img, String url_link, StreamingService streamingService, Music music) {
         this.duration = duration;
         this.url_img = url_img;
         this.url_link = url_link;
         this.streamingService = streamingService;
         this.music = music;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public String getUrl_img() {
+        return url_img;
+    }
+
+    public String getUrl_link() {
+        return url_link;
     }
 }

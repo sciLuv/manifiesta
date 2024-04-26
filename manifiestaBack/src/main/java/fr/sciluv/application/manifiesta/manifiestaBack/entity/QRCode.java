@@ -49,5 +49,13 @@ public class QRCode {
                 ", user=" + user +
                 '}';
     }
+
+    public String getQrCodeInfo() {
+        return qrCodeInfo;
+    }
+
+    public Boolean getGlobal() {
+        return isGlobal;
+    }
 }
 

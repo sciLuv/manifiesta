@@ -5,10 +5,10 @@ import java.util.Random;
 import java.util.Set;
 
 public class NumberUtil {
-    public static Set<Integer> generateNumbers(int maxExclusive) {
+    public static Set<Integer> generateNumbers(int maxExclusive, int necessaryNumbers) {
         Random random = new Random();
         Set<Integer> numbers = new HashSet<>();
-        while (numbers.size() < 3) {
+        while (numbers.size() < necessaryNumbers){
             numbers.add(random.nextInt(maxExclusive));
         }
         return numbers;

@@ -80,18 +80,38 @@
 
 .album-image {
     width: 100%; /* L'image prend toute la largeur de la carte */
+    max-width: 400px; /* Largeur maximale de l'image */
+    margin-left: 20px;
     height: auto; /* Hauteur automatique pour garder le ratio */
+    @media (max-width: 768px){
+        margin-left: 0px;
+        margin-top: 20px;
+    }
 }
 
 .text-orange {
-    color: #FFA500; /* Couleur orange pour les titres */
+    color: #f3bb13 !important; /* Couleur orange pour les titres */
 }
 
 .song-button {
-    background-color: #6a1b9a; /* Violet pour les boutons */
+    background-color: #6a1b9a !important; /* Violet pour les boutons */
+    width: 80%; /* Largeur maximale */
     border: none;
 }
 
 .song-button:hover, .song-button:focus {
-    background-color: #ff7043; /* Orange plus clair pour le hover/click */
+    background-color: #ff7043 !important; /* Orange plus clair pour le hover/click */
+}
+
+.dflex-session{
+    margin-top: 50px;
+    overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    @media (max-width: 768px){
+        flex-direction: column !important;
+        align-items: center !important;
+    }
 }
