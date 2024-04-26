@@ -11,7 +11,7 @@ import LoginController from './controller/LoginController';
 import HomeView from './view/HomeView';
 import logo from '../img/logo.png';
 import SessionParameterController from './controller/SessionParameterController';
-import  SessionView  from './view/SessionView';
+import  SessionController  from './controller/SessionController';
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
@@ -126,7 +126,7 @@ function App() {
                       setRole={setRole}
                 />} />
                 <Route path="/spotify" element={<SpotifyCallback />} />
-                <Route path="/session" element={<SessionView />} />
+                <Route path="/session" element={<SessionController />} />
               </Routes>
             </div>
           </Router>

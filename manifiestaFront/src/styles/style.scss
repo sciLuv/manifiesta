@@ -81,7 +81,6 @@
 .album-image {
     width: 100%; /* L'image prend toute la largeur de la carte */
     max-width: 400px; /* Largeur maximale de l'image */
-    margin-left: 20px;
     height: auto; /* Hauteur automatique pour garder le ratio */
     @media (max-width: 768px){
         margin-left: 0px;
@@ -95,7 +94,8 @@
 
 .song-button {
     background-color: #6a1b9a !important; /* Violet pour les boutons */
-    width: 80%; /* Largeur maximale */
+    width: 80%; 
+    max-width: 500px;
     border: none;
 }
 
@@ -115,3 +115,49 @@
         align-items: center !important;
     }
 }
+
+
+.title-and-image-session{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    margin: 20px;
+    border-right : 2px solid white;
+    padding-right: 5%;
+    @media (max-width: 768px){
+        flex-direction: column !important;
+        align-items: center !important;
+        border-right : 2px solid rgba(255, 255, 255, 0);
+        padding-right: 0%;
+        border-bottom: 2px solid white;
+        padding-bottom: 5%;
+    }
+}
+
+.progress{
+    width: 90% !important;
+    height: 30px !important;
+    min-width: 400px !important;
+
+}
+.progress-bar{
+    height: 100% !important;
+    background-color: #ff7043 !important;
+}
+
+
+.song-button {
+    overflow: hidden; /* Empêche le texte de déborder */
+    white-space: nowrap; /* Garde le texte sur une seule ligne */
+    text-overflow: ellipsis; /* Ajoute des points de suspension si le texte est trop long */
+  }
+  
+  .song-button:hover {
+    text-overflow: clip; /* Supprime les points de suspension au survol */
+    white-space: normal; /* Permet au texte de passer à la ligne suivante */
+    overflow: auto; /* Permet le défilement */
+  }
+  
+

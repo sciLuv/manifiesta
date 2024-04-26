@@ -1,10 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SessionParameterView from '../view/SessionParameterView';
 import { URI_BASE } from '../../env';
 import SpotifyCallback from './SpotifyCallback';
 
 const SessionParameterController = ( {accessToken, setAccessToken, refreshToken, setRefreshToken, setUser ,user, mail,setMail,role,setRole} ) => {
+
+    const navigate = useNavigate();
 
     const [passwordSession, setPasswordSession] = useState('');
     const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -149,6 +152,8 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
             if (response.ok) {
                 const responseJson = await response.json();
                 console.log(responseJson);
+                localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
+                navigate('/session'); 
                 if(responseJson.response == "Music is not played"){
                     setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
                     setShowErrorMessage(true);
