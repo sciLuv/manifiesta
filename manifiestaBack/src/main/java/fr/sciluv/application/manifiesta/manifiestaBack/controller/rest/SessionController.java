@@ -3,12 +3,14 @@ package fr.sciluv.application.manifiesta.manifiestaBack.controller.rest;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.*;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.JoinSessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.musicApi.spotify.GetUsersTopTracks;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.StreamingServiceRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.SpotifyService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,9 +51,11 @@ public class SessionController {
 
     @PostMapping("/createSession")
     public String createSession(@RequestBody CreateSessionRequestDto requestDto) throws IOException, ParseException, org.apache.hc.core5.http.ParseException, SpotifyWebApiException {
+        String accessToken = requestDto.getTokenDto().getAccessToken();
+
         AtomicReference<String> returnMessage = new AtomicReference<>("");
         // Check if music is played
-        boolean isMusicActived = spotifyService.isMusicPlayed(requestDto.getTokenDto().getAccessToken(), requestDto.getTokenDto().getAccessToken());
+        boolean isMusicActived = spotifyService.isMusicPlayed(accessToken, accessToken);
         if(isMusicActived){
             // put spotify token (refresh et access) on db
             tokenService.createToken(requestDto.getTokenDto(), requestDto.getUserLoginDto());
@@ -62,7 +66,7 @@ public class SessionController {
                 QRCode code = qrCodeService.generateQRCode(newSession, requestDto.getUserLoginDto());
                 if(code != null){
                     // get top tracks of user
-                    GetUsersTopTracks getUsersTopTracks = new GetUsersTopTracks(requestDto.getTokenDto().getAccessToken());
+                    GetUsersTopTracks getUsersTopTracks = new GetUsersTopTracks(accessToken);
                     //in function of top tracks, generate musics, suggested musics and music streaming service informations
 
                     getUsersTopTracks.getUsersTopTracks().ifPresent(trackPaging -> {
@@ -101,7 +105,7 @@ public class SessionController {
 
                         CurrentlyPlaying currentlyPlaying = null;
                         try {
-                            currentlyPlaying = spotifyService.getCurrentTrack(requestDto.getTokenDto().getAccessToken());
+                            currentlyPlaying = spotifyService.getCurrentTrack(accessToken);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         } catch (SpotifyWebApiException e) {
@@ -141,6 +145,28 @@ public class SessionController {
         }
 
     }
+
+
+    @PostMapping("/joinSession")
+    public String joinSession(@RequestBody JoinSessionDto joinSessionDto) {
+        return "session";
+    }
+
+    @PostMapping("/findOwnUserActualSession")
+    public String joinOwnSession(@RequestBody String joinOwnSessionDto) {
+        return "session";
+    }
+
+    @GetMapping("/numberOfParticipantsInSession")
+    public String sessionParticipantsNumbers() {
+        return "session";
+    }
+
+    @GetMapping("/ListOfParticipantsInSession")
+    public String sessionListOfParticipants() {
+        return "session";
+    }
+
 
 
 }

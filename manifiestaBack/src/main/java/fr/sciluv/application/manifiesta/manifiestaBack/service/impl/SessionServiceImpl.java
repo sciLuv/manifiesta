@@ -1,12 +1,10 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.service.impl;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.Session;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.Token;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.UserLoginDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.SessionRepository;
-import fr.sciluv.application.manifiesta.manifiestaBack.repository.TokenRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.SessionService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

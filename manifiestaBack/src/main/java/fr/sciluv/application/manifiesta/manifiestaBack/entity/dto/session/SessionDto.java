@@ -1,4 +1,4 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.entity.dto;
+package fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session;
 
 import java.util.Date;
 

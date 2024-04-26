@@ -1,5 +1,7 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.entity.dto;
 
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionDto;
+
 public class CreateSessionRequestDto {
     private SessionDto sessionDto;
     private UserLoginDto userLoginDto;
