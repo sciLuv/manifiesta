@@ -23,9 +23,25 @@ public class SessionParticipant {
     @JoinColumn(name = "id")
     private User user;
 
-    @ManyToMany
-    Set<Session> sessions;
+    @ManyToOne
+    @JoinColumn(name = "idSession")
+    private Session session;
 
+
+    //constructeurs
+    public SessionParticipant() {
+    }
+
+    public SessionParticipant(User user, Session session, String role) {
+        this.user = user;
+        this.session = session;
+        this.hourOfCome = LocalDateTime.now();
+        if(role.equals("guest")){
+            this.isGuest = true;
+        }else{
+            this.isGuest = false;
+        }
+    }
     // Getters and setters
 
     public Long getIdParticipant() {

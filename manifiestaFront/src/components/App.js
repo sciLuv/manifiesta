@@ -1,17 +1,20 @@
 import React, { useEffect, useState} from 'react';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import { MusicVoteView } from './view/MusicVoteView';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import SpotifyCallback from './controller/SpotifyCallback'; // Mettez à jour le chemin selon votre structure
-import AccountCreationController from './controller/AccountCreationController';
 import { URI_BASE } from '../env';
-import { Container, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
-import LoginController from './controller/LoginController';
-import HomeView from './view/HomeView';
+import { BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
+import SpotifyCallback from './controller/SpotifyCallback'; // Mettez à jour le chemin selon votre structure
+import { Navbar, Nav, Image } from 'react-bootstrap';
+
 import logo from '../img/logo.png';
+
+import AccountCreationController from './controller/AccountCreationController';
 import SessionParameterController from './controller/SessionParameterController';
 import  SessionController  from './controller/SessionController';
+import DeconnectionController from './controller/DeconnectionController';
+import JoinSessionController from './controller/JoinSessionController';
+import LoginController from './controller/LoginController';
+import HomeController from './controller/HomeController';
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
@@ -50,14 +53,6 @@ function App() {
   }, []); */
 
 
-  const Deconnect = (event) => {
-    setAccessToken("");
-    setRefreshToken("");
-    setUser("");
-    setMail("");
-    setRole("");
-  };
-
   return (
     
     <div>
@@ -87,8 +82,8 @@ function App() {
                       )}
                       {role === "user" && (
                         <>
-                          <Nav.Link className='text-light' >Rejoindre une session</Nav.Link>
-                          <Nav.Link className='text-light' onClick={Deconnect}>Se déconnecter</Nav.Link>
+                          <Nav.Link as={Link} className='text-light' to="/join-session" >Rejoindre une session</Nav.Link>
+                          <Nav.Link as={Link} className='text-light' to="/deconnexion">Se déconnecter</Nav.Link>
                         </>
                       )}
                     </Nav>
@@ -96,7 +91,7 @@ function App() {
               </Navbar>
 
               <Routes>
-                <Route path="/" element={<HomeView 
+                <Route path="/" element={<HomeController 
                           role={role} 
                           user={user}
                 />} />
@@ -127,6 +122,19 @@ function App() {
                 />} />
                 <Route path="/spotify" element={<SpotifyCallback />} />
                 <Route path="/session" element={<SessionController />} />
+                <Route path="/deconnexion" element={
+                    <DeconnectionController
+                        setAccessToken={setAccessToken}
+                        setRefreshToken={setRefreshToken}
+                        setUser={setUser}
+                        setMail={setMail}
+                        setRole={setRole}
+                    />
+                } />
+                <Route path="/join-session" element={<JoinSessionController 
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                />} />
               </Routes>
             </div>
           </Router>

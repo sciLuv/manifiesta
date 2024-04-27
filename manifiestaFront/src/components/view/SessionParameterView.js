@@ -46,11 +46,11 @@ const SessionParameterView = ({
                     <Card.Body>
                         <Card.Title>Connectez-vous à Spotify</Card.Title>
                         <Card.Text>
-                            Pour commencer votre session il faut autoriser Manifiesta a utiliser spotify.
+                            Pour commencer votre session il faut autoriser Manifiesta a utiliser Spotify.
                         </Card.Text>
                         <Button variant="primary" className="bg-primary-subtle" 
                         onClick={handleAuthorization}>
-                            Autoriser Spotify à utiliser Manifiesta
+                            Autoriser Manifiesta à utiliser Spotify 
                         </Button>
                     </Card.Body>
                 </Card>

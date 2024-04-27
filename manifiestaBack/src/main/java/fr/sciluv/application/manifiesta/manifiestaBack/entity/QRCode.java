@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "qr_code")
@@ -18,9 +19,8 @@ public class QRCode {
     private LocalDateTime beginDate;
     private LocalDateTime endDate;
 
-    @ManyToOne
-    @JoinColumn(name = "idSession")
-    private Session session;
+    @OneToMany(mappedBy = "qrCode")
+    private Set<Session> sessions;
 
     @ManyToOne
     @JoinColumn(name = "idUser")
@@ -31,12 +31,11 @@ public class QRCode {
     public QRCode() {
     }
 
-    public QRCode(String qrCodeInfo, Session session, User user) {
+    public QRCode(String qrCodeInfo, User user) {
         this.qrCodeInfo = qrCodeInfo;
         this.isGlobal = false;
         this.beginDate = LocalDateTime.now();
         this.endDate = null;
-        this.session = session;
         this.user = user;
     }
 
@@ -48,7 +47,7 @@ public class QRCode {
                 ", isGlobal=" + isGlobal +
                 ", beginDate=" + beginDate +
                 ", endDate=" + endDate +
-                ", session=" + session +
+                ", sessions=" + sessions +
                 ", user=" + user +
                 '}';
     }
@@ -69,8 +68,8 @@ public class QRCode {
         return endDate;
     }
 
-    public Session getSession() {
-        return session;
+    public Set<Session> getSessions() {
+        return sessions;
     }
 
     public User getUser() {

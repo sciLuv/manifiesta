@@ -31,11 +31,12 @@ public class Session {
     @OneToMany(mappedBy = "session")
     private Set<PollTurn> pollTurns;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "session")
     Set<SessionParticipant> sessionParticipants;
 
-    @OneToMany(mappedBy = "session")
-    private Set<QRCode> qrCodes;
+    @ManyToOne
+    @JoinColumn(name = "idQRCode")
+    private QRCode qrCode;
 
     // Constructeurs
 
@@ -49,7 +50,8 @@ public class Session {
                    String password,
                    int songsNumber,
                    int musicalStylesNumber,
-                   User user
+                   User user,
+                   QRCode qrCode
     ) {
         this.idSession = idSession;
         this.hourOfBegin = hourOfBegin;
@@ -58,6 +60,7 @@ public class Session {
         this.songsNumber = songsNumber;
         this.musicalStylesNumber = musicalStylesNumber;
         this.user = user;
+        this.qrCode = qrCode;
     }
 
     // Getters et setters
@@ -134,11 +137,11 @@ public class Session {
         this.sessionParticipants = sessionParticipants;
     }
 
-    public Set<QRCode> getQrCodes() {
-        return qrCodes;
+    public QRCode getQrCode() {
+        return qrCode;
     }
 
-    public void setQrCodes(Set<QRCode> qrCodes) {
-        this.qrCodes = qrCodes;
+    public void setQrCode(QRCode qrCodes) {
+        this.qrCode = qrCode;
     }
 }

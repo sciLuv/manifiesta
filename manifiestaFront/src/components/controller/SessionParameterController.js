@@ -152,7 +152,7 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
             if (response.ok) {
                 const responseJson = await response.json();
                 
-                const response2 = await fetch(URI_BASE + '/public/joinSession', {
+                const response2 = await fetch(URI_BASE + '/joinSession', {
                     method: 'POST',
                     headers :{
                         "Authorization" : "Bearer " + accessToken,

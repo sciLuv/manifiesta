@@ -1,17 +1,18 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.service.impl;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.QRCode;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.Session;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLoginDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.QRCodeRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.QRCodeService;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.SessionService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Optional;
 
 @Service
 
@@ -19,6 +20,9 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Autowired
     QRCodeRepository qrCodeRepository;
+
+    @Autowired
+    SessionService sessionService;
 
     @Autowired
     UserService userService;
@@ -32,11 +36,16 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
-    public QRCode generateQRCode(Session session, UserLoginDto userLoginDto) {
+    public QRCode generateQRCode(UserLoginDto userLoginDto) {
         String url = generateUniqueId(9);
         User user = userService.getUser(userLoginDto.getUsername());
-        System.out.println(session.getIdSession());
-        System.out.println(url);
-        return qrCodeRepository.save(new QRCode(url, session, user));
+
+        QRCode qrCode = qrCodeRepository.save(new QRCode(url, user));
+        return qrCode;
+    }
+
+    @Override
+    public QRCode findQRCodeByInfo(String qrCodeInfo) {
+        return qrCodeRepository.findByQrCodeInfo(qrCodeInfo).orElse(null);
     }
 }

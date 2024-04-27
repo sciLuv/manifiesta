@@ -62,6 +62,12 @@ public class User {
     private Set<Token> tokens;
 
     //Getter
+
+
+    public Long getId() {
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }

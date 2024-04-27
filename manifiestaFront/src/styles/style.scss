@@ -96,7 +96,7 @@
     background-color: #6a1b9a !important; /* Violet pour les boutons */
     width: 80%; 
     max-width: 500px;
-    border: none;
+    border: none !important; /* Suppression des bordures */
 }
 
 .song-button:hover, .song-button:focus {
@@ -161,3 +161,38 @@
   }
   
 
+  .menu-toggle {
+    position: relative;
+}
+
+.dropdown-toggle{
+    border-radius: 50px !important;
+    background-color: #691b9a00 !important;
+    border : none !important;
+    transition: all 0.3s;
+  &::after {
+    display: none !important; 
+  }
+  &:hover{
+    background-color: #691b9a5f !important;
+    transition: 0.3s;
+  }
+
+}
+
+.header-options{
+    border-radius: 5px;
+    margin: 35px 0px 12px 0px;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    @media (max-width: 768px){
+        flex-direction: column !important;
+    }
+    img{
+        filter: brightness(0) invert(1);
+        margin: 10px;
+        margin-right: 5px;
+      }
+}

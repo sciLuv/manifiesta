@@ -6,10 +6,6 @@ import SessionParameterView from './SessionParameterView';
 
 const HomeView = (props) => {
 
-
-    //ici une fonction qui permet lors du clique sur un bouton de redirigé l'utilisateur vers une autre page
-
-
     const navigate = useNavigate();
     return (
         <Container fluid style={{ minHeight: '100vh', padding: '2rem' }}>
@@ -18,7 +14,8 @@ const HomeView = (props) => {
                 {props.role === "user" ? (
                     <div>
                         <h2 className="text-light mb-4">Bienvenue {props.user} !</h2>
-                        <Card className="h-100 text-center shadow bg-dark text-light">
+                        {!props.UserHasSession ? (
+                            <Card className="h-100 text-center shadow bg-dark text-light">
                             <Card.Body className="card-with-image">
                                 <div>
                                 <Card.Title>Créer une session d'écoute</Card.Title>
@@ -29,6 +26,28 @@ const HomeView = (props) => {
                                 <img src={logo} alt="logo" className='m-2'/>
                             </Card.Body>
                         </Card>
+                        ) : (
+                            <>
+                                <h4 className='text-light'>Votre session d'écoute est en cours </h4>
+                                <Card className="h-100 text-center shadow bg-dark text-light">
+                                    <Card.Body className="card-with-image">
+                                        <Button variant="primary" as={Link} to="/join-session">Rejoindre votre session d'écoute</Button>
+                                        <img src={logo} alt="logo" className='m-2'/>
+                                    </Card.Body>
+                                </Card>
+                            </>
+                        )}
+                        <h4 className='text-light'>Les session d'écoute en cours auquelles vous participez</h4>
+                        {props.UserParticipateToSession ? (
+                            <Card className="h-100 text-center shadow bg-dark text-light">
+                                <Card.Body className="card-with-image">
+                                    <Button variant="primary" as={Link} to="/join-session">Retourner sur cette session d'écoute</Button>
+                                    <img src={logo} alt="logo" className='m-2'/>
+                                </Card.Body>
+                            </Card>
+                        ) : (
+                            <span className='text-light'>Vous ne participez à aucune session d'écoute</span>
+                        )}
                     </div>
                 ) : (
                     <div>
@@ -37,6 +56,7 @@ const HomeView = (props) => {
                         <p className="text-light">
                             <a href="/login">connectez-vous</a> pour accéder à toutes les fonctionnalités du site.<br/>
                             Si vous n'avez pas de compte, vous pouvez en <a href="/account">créer un</a>.
+                            vous pouvez aussi <a href="/join-session-guest">rejoindre une session en tant qu'invité</a>.
                         </p>
                     </div>
                 )}

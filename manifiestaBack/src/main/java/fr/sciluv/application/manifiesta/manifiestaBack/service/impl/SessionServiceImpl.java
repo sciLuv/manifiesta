@@ -53,7 +53,7 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     MusicService musicService;
 
-    public Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto) {
+    public Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto, QRCode qrCode) {
 
         User user = userService.getUser(userLoginDto.getUsername());
 
@@ -64,7 +64,8 @@ public class SessionServiceImpl implements SessionService {
                 sessionDto.getPassword(),
                 sessionDto.getSongsNumber(),
                 sessionDto.getMusicalStylesNumber(),
-                user);
+                user,
+                qrCode);
         // Set properties for the session
         return sessionRepository.save(newSession);
     }
@@ -79,7 +80,8 @@ public class SessionServiceImpl implements SessionService {
             List<MusicDto> musicDtos = new ArrayList<>();
             StreamingService streamingService = streamingServiceRepository.findByName("Spotify");
 
-            Session session = qrCode.get().getSession();
+            QRCode qrCode1 = qrCode.get();
+            Session session = sessionRepository.findByQrCode(qrCode1);
             PollTurn pollTurn = pollTurnRepository.findBySession(session);
             Set<SuggestedMusic> suggestedMusics = pollTurn.getSuggestedMusics();
             suggestedMusics.forEach(suggestedMusic -> {
@@ -116,4 +118,14 @@ public class SessionServiceImpl implements SessionService {
         }
         return null;
     }
+
+    public Session addQrCodeToSession(Session session, QRCode qrCode) {
+        session.setQrCode(qrCode);
+        return sessionRepository.save(session);
+    }
+
+    public Session findSessionByQrCode(QRCode qrCode){
+        return sessionRepository.findByQrCode(qrCode);
+    }
+
 }

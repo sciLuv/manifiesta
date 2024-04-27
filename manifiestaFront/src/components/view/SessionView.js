@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Card, Button, ProgressBar } from "react-bootstrap";
 import MusicPlayer from "./MusicPlayer";
+import SessionNavView from "./SessionNavView";
 
 
 const SessionView = (props) => {
@@ -10,10 +11,15 @@ const SessionView = (props) => {
     console.log(data);
 
     return (
-        <Container fluid className="session-view ">
+        <Container fluid className="session-view">
             <Row className="justify-content-center align-items-start full-height ">
                 <Col className="">
-                    <Card className="text-center dark-card bg-dark dflex-session">
+                    <SessionNavView 
+                        userCount={12} 
+                        playedMusicCount={5} 
+                        userRole={"user"}
+                    />
+                    <Card className="text-center dark-card bg-dark dflex-session mt-3">
                         <div className="title-and-image-session">
                             <Card.Img variant="top" src={data.musicCurrentlyPlayed.imageUrl} className="album-image" />
                             <Card.Title className="text-orange mt-3">{data.musicCurrentlyPlayed.name}</Card.Title>
