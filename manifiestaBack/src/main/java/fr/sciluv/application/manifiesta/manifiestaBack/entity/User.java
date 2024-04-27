@@ -74,8 +74,13 @@ public class User {
         return creationDate;
     }
 
+    public Set<Token> getTokens() {
+        return tokens;
+    }
+
     //Setter
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
+
 }

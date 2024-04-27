@@ -1,4 +1,4 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.entity.dto;
+package fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music;
 
 public class MusicDto {
     // Attributes from Music and MusicStreamingServiceInformation
@@ -7,11 +7,11 @@ public class MusicDto {
     private String album;
     private String uri;
     private String imageUrl;
-    private Long durationMs;
+    private int durationMs;
 
     // Constructors
 
-    public MusicDto(String name, String artist, String album, String uri, String imageUrl, Long durationMs) {
+    public MusicDto(String name, String artist, String album, String uri, String imageUrl, int durationMs) {
         this.name = name;
         this.artist = artist;
         this.album = album;
@@ -63,11 +63,24 @@ public class MusicDto {
         this.imageUrl = imageUrl;
     }
 
-    public Long getDurationMs() {
+    public int getDurationMs() {
         return durationMs;
     }
 
-    public void setDurationMs(Long durationMs) {
+    public void setDurationMs(int durationMs) {
         this.durationMs = durationMs;
+    }
+
+
+    @Override
+    public String toString() {
+        return "MusicDto{" +
+                "name='" + name + '\'' +
+                ", artist='" + artist + '\'' +
+                ", album='" + album + '\'' +
+                ", uri='" + uri + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", durationMs=" + durationMs +
+                '}';
     }
 }

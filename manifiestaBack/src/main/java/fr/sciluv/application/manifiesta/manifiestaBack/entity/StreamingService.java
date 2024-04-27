@@ -32,4 +32,24 @@ public class StreamingService {
         this.idStreamingService = idStreamingService;
         this.name = name;
     }
+
+    public Integer getIdStreamingService() {
+        return idStreamingService;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<MusicStreamingServiceInformation> getMusicInfos() {
+        return musicInfos;
+    }
+
+    @Override
+    public String toString() {
+        return "StreamingService{" +
+                "idStreamingService=" + idStreamingService +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -7,31 +7,32 @@ const SessionView = (props) => {
     // Données simulées, remplacer par les props si les données sont passées du parent
     const data = props.stringJson;
 
+    console.log(data);
+
     return (
         <Container fluid className="session-view ">
             <Row className="justify-content-center align-items-start full-height ">
                 <Col className="">
                     <Card className="text-center dark-card bg-dark dflex-session">
                         <div className="title-and-image-session">
-                            <Card.Img variant="top" src={data.currentlyPlayingMusic.url_img} className="album-image" />
-                            <Card.Title className="text-orange mt-3">{data.currentlyPlayingMusic.name}</Card.Title>
+                            <Card.Img variant="top" src={data.musicCurrentlyPlayed.imageUrl} className="album-image" />
+                            <Card.Title className="text-orange mt-3">{data.musicCurrentlyPlayed.name}</Card.Title>
                             <Card.Text className=" pb-3">
                                     <span className="text-orange">Artiste : </span>
-                                    {data.currentlyPlayingMusic.artist}
+                                    {data.musicCurrentlyPlayed.artist}
                                     <span className="text-orange">  Album : </span>
-                                    {data.currentlyPlayingMusic.album}
+                                    {data.musicCurrentlyPlayed.album}
                             </Card.Text>
                                 <MusicPlayer
-                                    currentSongProgress={data.currentMusicInformation.progressMs}
-                                    duration={data.currentlyPlayingMusic.duration}
-                                    beginhour={data.currentMusicInformation.timeStamp}
+                                    currentSongProgress={data.musicCurrentlyPlayed.progressMs}
+                                    duration={data.musicCurrentlyPlayed.durationMs}
                                 />
                         </div>
                         <Card.Body>
 
                             <div>
                                 <h3 className="mb-3">Sélectionnez la prochaine musique :</h3>
-                                {data.musics.map((music, index) => (
+                                {data.musics.musics.map((music, index) => (
                                     <Button
                                         key={index}
                                         className="song-button m-3"

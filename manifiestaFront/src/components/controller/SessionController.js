@@ -8,6 +8,7 @@ const SessionController = () => {
     
     let stringJson = localStorage.getItem('sessionInformations');
     const data = JSON.parse(stringJson);
+    console.log(data);
 
     // Gerer la selection du nombre de chansons
     const handleSongsNumberChange = (event) => {

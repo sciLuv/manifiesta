@@ -28,6 +28,9 @@ public class QRCode {
 
     // Constructeurs, getters et setters
 
+    public QRCode() {
+    }
+
     public QRCode(String qrCodeInfo, Session session, User user) {
         this.qrCodeInfo = qrCodeInfo;
         this.isGlobal = false;
@@ -56,6 +59,22 @@ public class QRCode {
 
     public Boolean getGlobal() {
         return isGlobal;
+    }
+
+    public LocalDateTime getBeginDate() {
+        return beginDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public User getUser() {
+        return user;
     }
 }
 

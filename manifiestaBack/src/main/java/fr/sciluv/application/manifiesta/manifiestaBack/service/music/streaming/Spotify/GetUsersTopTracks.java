@@ -1,4 +1,4 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.musicApi.spotify;
+package fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify;
 
 
 import se.michaelthelin.spotify.SpotifyApi;

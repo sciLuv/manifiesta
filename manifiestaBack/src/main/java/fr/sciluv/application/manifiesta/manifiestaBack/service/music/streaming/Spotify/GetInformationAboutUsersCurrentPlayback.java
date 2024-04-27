@@ -1,4 +1,4 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.musicApi.spotify;
+package fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify;
 
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -38,10 +38,4 @@ public class GetInformationAboutUsersCurrentPlayback {
             return false;
         }
     }
-
-//    public static void main(String[] args) {
-//        new GetInformationAboutUsersCurrentPlayback("BQCUI9kOi0qF54M5b2WG-Ta059RGDhD2UMRtXgiEsqODe7THNH9RZgGKsUwTphWhT_AS9UqTJtreeSkDEDU8qTeq_YjIX9SNhUdWnz96-ftrHSicaAiutaIWW-a_et8XMRh3xKA5RKfcTfIsmyj0uBCMK5cG5A503UBV1hCej9BOESNCrmrmL62UeXJvajttJxd72jLXZeIRuNWfZpFBn7bdubaol5wZxRLP9Pup6GyKwk1yftjqef00r1bEWy8t5zB5rSMMC4evJ-vY3tzjwKyXF66zl75PjYCCywWiLab8oABVEZ5EcNLICpcDVZSDDA").
-//        getInformationAboutUsersCurrentPlayback_Sync();
-//
-//    }
 }

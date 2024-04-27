@@ -1,9 +1,6 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.config.SpotifyConfig;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.Token;
-import fr.sciluv.application.manifiesta.manifiestaBack.musicApi.spotify.GetInformationAboutUsersCurrentPlayback;
-import fr.sciluv.application.manifiesta.manifiestaBack.repository.TokenRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,14 +9,12 @@ import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
-import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
 
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
-import java.time.LocalDateTime;
 
 @Service
 public class SpotifyService {

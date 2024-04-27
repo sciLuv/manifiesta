@@ -1,8 +1,8 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.controller.rest;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.UserDto;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.UserLoginDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLoginDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.AccountCreation.AddUserToKC;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.UserToken;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.UserService;

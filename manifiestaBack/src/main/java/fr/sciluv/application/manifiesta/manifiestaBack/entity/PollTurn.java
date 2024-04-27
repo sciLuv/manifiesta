@@ -33,4 +33,20 @@ public class PollTurn {
         this.session = session;
         this.number_turn = number_turn;
     }
+
+    public int getNumber_turn() {
+        return number_turn;
+    }
+
+    public Set<SuggestedMusic> getSuggestedMusics() {
+        return suggestedMusics;
+    }
+
+    public SelectedMusic getSelectedMusic() {
+        return selectedMusic;
+    }
+
+    public Session getSession() {
+        return session;
+    }
 }

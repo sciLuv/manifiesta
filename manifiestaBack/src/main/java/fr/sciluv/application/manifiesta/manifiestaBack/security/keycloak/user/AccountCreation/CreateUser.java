@@ -1,7 +1,6 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.AccountCreation;
 
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.UserDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.AdminToken;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

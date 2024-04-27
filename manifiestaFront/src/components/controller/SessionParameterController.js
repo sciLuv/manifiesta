@@ -151,8 +151,39 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
             });
             if (response.ok) {
                 const responseJson = await response.json();
-                console.log(responseJson);
-                localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
+                
+                const response2 = await fetch(URI_BASE + '/public/joinSession', {
+                    method: 'POST',
+                    headers :{
+                        "Authorization" : "Bearer " + accessToken,
+                        "Refresh-Token" : refreshToken,
+                        "Content-Type": "application/json"
+                    },
+                      
+                    body: JSON.stringify({
+                        qrCodeInfo : responseJson.sessionCode,
+                        password : responseJson.SessionPassword
+                    })
+                });
+                if (response2.ok) {
+                    const responseJson = await response2.json();
+                    console.log(responseJson);
+                    localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
+                    navigate('/session'); 
+                    if(responseJson.response == "Music is not played"){
+                        setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
+                        setShowErrorMessage(true);
+                    }  else {
+                        setShowErrorMessage(false);
+                        console.log('Session créée avec succès');
+                    }
+                } else {
+                    console.error('Erreur lors de la requete de création de session');
+                }
+
+                /* const responseJson = await response.json();
+                console.log(responseJson); */
+/*                 localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
                 navigate('/session'); 
                 if(responseJson.response == "Music is not played"){
                     setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
@@ -160,7 +191,7 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                 }  else {
                     setShowErrorMessage(false);
                     console.log('Session créée avec succès');
-                }
+                } */
             } else {
                 console.error('Erreur lors de la requete de création de session');
             }

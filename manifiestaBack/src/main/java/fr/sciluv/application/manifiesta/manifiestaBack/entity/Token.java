@@ -29,6 +29,8 @@ public class Token {
 
     // Constructeurs, getters et setters
 
+    public Token() {
+    }
 
     public Token(String token, LocalDateTime beginDate, Integer expirationTime, Boolean isRefreshToken, User user, StreamingService streamingService) {
         this.token = token;
@@ -37,5 +39,21 @@ public class Token {
         this.isRefreshToken = isRefreshToken;
         this.user = user;
         this.streamingService = streamingService;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public LocalDateTime getBeginDate() {
+        return beginDate;
+    }
+
+    public Integer getExpirationTime() {
+        return expirationTime;
+    }
+
+    public Boolean getRefreshToken() {
+        return isRefreshToken;
     }
 }

@@ -4,7 +4,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.StreamingService;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.Token;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.TokenDto;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.UserLoginDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLoginDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.StreamingServiceRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.TokenRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.TokenService;
