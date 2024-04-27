@@ -19,7 +19,7 @@ public class QRCode {
     private LocalDateTime beginDate;
     private LocalDateTime endDate;
 
-    @OneToMany(mappedBy = "qrCode")
+    @OneToMany(mappedBy = "qrCode", fetch = FetchType.EAGER)
     private Set<Session> sessions;
 
     @ManyToOne

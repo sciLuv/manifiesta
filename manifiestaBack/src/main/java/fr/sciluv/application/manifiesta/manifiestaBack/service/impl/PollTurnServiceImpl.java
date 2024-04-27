@@ -34,4 +34,9 @@ public class PollTurnServiceImpl implements PollTurnService {
         );
         return pollTurnRepository.save(pollTurn);
     }
+
+    @Override
+    public int getPollTurnsBySession(Session session) {
+        return pollTurnRepository.findAllBySession(session).size();
+    }
 }

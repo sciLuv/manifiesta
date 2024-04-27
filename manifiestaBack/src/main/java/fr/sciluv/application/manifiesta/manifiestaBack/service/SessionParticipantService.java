@@ -9,4 +9,6 @@ public interface SessionParticipantService {
     SessionParticipant createParticipantForSession(String username, String qrCode, String role);
 
     boolean isUserAlreadyParticipant(String username, Session session);
+
+    int numberOfParticipantsInSession(Session session);
 }

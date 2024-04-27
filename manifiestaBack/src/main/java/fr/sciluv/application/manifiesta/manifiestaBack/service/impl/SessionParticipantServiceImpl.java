@@ -64,4 +64,9 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
         else
             return false;
     }
+
+    @Override
+    public int numberOfParticipantsInSession(Session session) {
+        return sessionParticipantRepository.findAllBySession(session).size();
+    }
 }

@@ -1,6 +1,7 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.service.impl;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.QRCode;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.Session;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLoginDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.QRCodeRepository;
@@ -20,10 +21,6 @@ public class QRCodeServiceImpl implements QRCodeService {
 
     @Autowired
     QRCodeRepository qrCodeRepository;
-
-    @Autowired
-    SessionService sessionService;
-
     @Autowired
     UserService userService;
     private static final SecureRandom random = new SecureRandom();
@@ -47,5 +44,10 @@ public class QRCodeServiceImpl implements QRCodeService {
     @Override
     public QRCode findQRCodeByInfo(String qrCodeInfo) {
         return qrCodeRepository.findByQrCodeInfo(qrCodeInfo).orElse(null);
+    }
+
+    @Override
+    public QRCode findQRCodeBySession(Session session) {
+        return qrCodeRepository.findBySessions(session);
     }
 }

@@ -6,12 +6,11 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicDto
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicListDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.JoinSessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionInformationForHomePageDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionInformationToSendDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLoginDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.*;
-import fr.sciluv.application.manifiesta.manifiestaBack.service.MusicService;
-import fr.sciluv.application.manifiesta.manifiestaBack.service.SessionService;
-import fr.sciluv.application.manifiesta.manifiestaBack.service.UserService;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,9 +38,6 @@ public class SessionServiceImpl implements SessionService {
     MusicRepository musicRepository;
 
     @Autowired
-    SuggestedMusicRepository suggestedMusicRepository;
-
-    @Autowired
     MusicStreamingServiceInformationRepository musicStreamingServiceInformationRepository;
 
     @Autowired
@@ -53,8 +49,18 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     MusicService musicService;
 
-    public Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto, QRCode qrCode) {
+    @Autowired
+    SessionParticipantService sessionParticipantService;
 
+    @Autowired
+    PollTurnService pollTurnService;
+
+    @Autowired
+    QRCodeService qrCodeService;
+
+    public Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto) {
+// generate QRCode
+        QRCode code = qrCodeService.generateQRCode(userLoginDto);
         User user = userService.getUser(userLoginDto.getUsername());
 
         Session newSession = new Session(
@@ -65,7 +71,7 @@ public class SessionServiceImpl implements SessionService {
                 sessionDto.getSongsNumber(),
                 sessionDto.getMusicalStylesNumber(),
                 user,
-                qrCode);
+                code);
         // Set properties for the session
         return sessionRepository.save(newSession);
     }
@@ -104,7 +110,7 @@ public class SessionServiceImpl implements SessionService {
             }
 
              MusicListDto musicListDto = new MusicListDto(musicDtos);
-             Token token = tokenRepository.findMostRecentNonRefreshToken();
+             Token token = tokenRepository.findMostRecentNonRefreshToken(session.getUser());
              System.out.println(token.getToken());
              MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token);
 
@@ -127,5 +133,18 @@ public class SessionServiceImpl implements SessionService {
     public Session findSessionByQrCode(QRCode qrCode){
         return sessionRepository.findByQrCode(qrCode);
     }
+
+
+//    @Override
+//    public SessionInformationForHomePageDto findOwnAndNotEndSessionInformation(String username) {
+//        User user = userService.getUser(username);
+//        Session session = sessionRepository.findCurrentSessionByUser(user);
+//        QRCode qrCode = session.getQrCode();
+//        int participants = sessionParticipantService.numberOfParticipantsInSession(session);
+//        int pollTurns = pollTurnService.getPollTurnsBySession(session);
+//        musicService.musicCurrentlyPlayingToJSON(tokenRepository.findMostRecentNonRefreshToken(user));
+//
+//        return new SessionInformationForHomePageDto(qrCode.getQrCodeInfo(), session.getPassword(), participants, pollTurns);
+//    }
 
 }

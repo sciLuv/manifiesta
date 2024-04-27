@@ -9,4 +9,6 @@ import java.util.Set;
 
 public interface PollTurnService {
     PollTurn createPollTurn(Session session);
+
+    int getPollTurnsBySession(Session session);
 }
