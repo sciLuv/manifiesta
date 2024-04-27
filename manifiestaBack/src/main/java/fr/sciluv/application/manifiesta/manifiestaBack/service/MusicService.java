@@ -18,4 +18,6 @@ public interface MusicService {
     String musicToJSON(Music music, MusicStreamingServiceInformation musicStreamingServiceInformation);
     SuggestedMusic generateSuggestedMusic(Music music, PollTurn pollTurn);
 
+    Music findMusicBySuggestedMusic(SuggestedMusic suggestedMusic);
+
 }

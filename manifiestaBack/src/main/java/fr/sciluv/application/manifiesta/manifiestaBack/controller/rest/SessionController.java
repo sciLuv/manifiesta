@@ -38,14 +38,10 @@ public class SessionController {
     @Autowired
     private PollTurnService pollTurnService;
     @Autowired
-    private SessionParticipantService sessionParticipantService;
-    @Autowired
     private UserService userService;
 
     @Autowired
     private StreamingServiceRepository streamingServiceRepository;
-    @Autowired
-    private SessionRepository sessionRepository;
 
     @PostMapping("/createSession")
     public String createSession(@RequestBody CreateSessionRequestDto requestDto) throws IOException, ParseException, org.apache.hc.core5.http.ParseException, SpotifyWebApiException {
@@ -79,7 +75,7 @@ public class SessionController {
                         }
 
                         User user = userService.getUser(requestDto.getUserLoginDto().getUsername());
-                        sessionParticipantService.createParticipantForSessionOwner(user, newSession);
+                        sessionService.createParticipantForSessionOwner(user, newSession);
                     });
                     return"{\"sessionCode\":\"" + newSession.getQrCode().getQrCodeInfo() + "\"" +
                             ",\"SessionPassword\":\"" + newSession.getPassword() + "\"}";
@@ -92,7 +88,7 @@ public class SessionController {
     }
 
 
-    @PostMapping("joinSession")
+    @PostMapping("/joinSession")
     public SessionInformationToSendDto joinSession(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody JoinSessionDto joinSessionDto) {
@@ -101,7 +97,7 @@ public class SessionController {
         String username = findUsersInformationInJWT.findUserNameinJWT();
         String role = findUsersInformationInJWT.findUserRolesInJWT();
 
-        sessionParticipantService.createParticipantForSession(username, joinSessionDto.getQrCodeInfo() , role);
+        sessionService.createParticipantForSession(username, joinSessionDto.getQrCodeInfo() , role);
         SessionInformationToSendDto joinSessionDto1 = sessionService.joinSession(joinSessionDto);
         return joinSessionDto1;
     }
@@ -116,12 +112,12 @@ public class SessionController {
         return "session";
     }
 
-//    @GetMapping("/getOwnSessionInformation")
-//    public SessionInformationForHomePageDto joinSession(@RequestHeader("Authorization") String authHeader) {
-//        FindUsersInformationInJWT findUsersInformationInJWT = new FindUsersInformationInJWT(authHeader);
-//        String username = findUsersInformationInJWT.findUserNameinJWT();
-//        return sessionService.findOwnAndNotEndSessionInformation(username);
-//    }
+    @GetMapping("public/getOwnSessionInformation")
+    public SessionInformationForHomePageDto joinSession(@RequestHeader("Authorization") String authHeader) {
+        FindUsersInformationInJWT findUsersInformationInJWT = new FindUsersInformationInJWT(authHeader);
+        String username = findUsersInformationInJWT.findUserNameinJWT();
+        return sessionService.findOwnAndNotEndSessionInformation(username);
+    }
 
 
 

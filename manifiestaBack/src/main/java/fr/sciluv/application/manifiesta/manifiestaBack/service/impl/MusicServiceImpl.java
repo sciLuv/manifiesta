@@ -80,6 +80,10 @@ public class MusicServiceImpl implements MusicService {
         return suggestedMusicRepository.save(suggestedMusic);
     }
 
+    @Override
+    public Music findMusicBySuggestedMusic(SuggestedMusic suggestedMusic) {
+        return musicRepository.findBySuggestedMusics(suggestedMusic);
+    }
 
 
     @Override

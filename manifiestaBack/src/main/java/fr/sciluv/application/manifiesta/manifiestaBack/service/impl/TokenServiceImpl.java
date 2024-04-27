@@ -54,4 +54,9 @@ public class TokenServiceImpl implements TokenService {
         tokenRepository.save(accessToken);
         tokenRepository.save(refreshToken);
     }
+
+    @Override
+    public Token findMostRecentNonRefreshToken(User user) {
+        return tokenRepository.findMostRecentNonRefreshToken(user);
+    }
 }

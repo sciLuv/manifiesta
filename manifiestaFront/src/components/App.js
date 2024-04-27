@@ -94,6 +94,8 @@ function App() {
                 <Route path="/" element={<HomeController 
                           role={role} 
                           user={user}
+                          accessToken={accessToken}
+                          refreshToken={refreshToken}
                 />} />
                 <Route path="/create-new-session" element={<SessionParameterController
                           accessToken={accessToken}

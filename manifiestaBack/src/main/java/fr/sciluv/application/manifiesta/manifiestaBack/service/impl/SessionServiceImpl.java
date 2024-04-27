@@ -27,36 +27,21 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     SessionRepository sessionRepository;
     @Autowired
-    PollTurnRepository pollTurnRepository;
-    @Autowired
     UserService userService;
-
-    @Autowired
-    QRCodeRepository qRCodeRepository;
-
-    @Autowired
-    MusicRepository musicRepository;
-
-    @Autowired
-    MusicStreamingServiceInformationRepository musicStreamingServiceInformationRepository;
-
-    @Autowired
-    StreamingServiceRepository streamingServiceRepository;
-
-    @Autowired
-    TokenRepository tokenRepository;
-
     @Autowired
     MusicService musicService;
-
     @Autowired
     SessionParticipantService sessionParticipantService;
-
     @Autowired
     PollTurnService pollTurnService;
-
     @Autowired
     QRCodeService qrCodeService;
+    @Autowired
+    MusicStreamingServiceInformationService musicStreamingServiceInformationService;
+    @Autowired
+    StreamingServiceService streamingServiceService;
+    @Autowired
+    TokenService tokenService;
 
     public Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto) {
 // generate QRCode
@@ -78,24 +63,23 @@ public class SessionServiceImpl implements SessionService {
 
     @Transactional
     public SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto) {
-        Optional<QRCode> qrCode = qRCodeRepository.findByQrCodeInfo(joinSessionDto.getQrCodeInfo());
-        if (qrCode.isPresent()) {
+        QRCode qrCode = qrCodeService.findQRCodeByInfo(joinSessionDto.getQrCodeInfo());
+        if (qrCode != null) {
 
             List<Music> musics = new ArrayList<>();
             List<MusicStreamingServiceInformation> musicStreamingServiceInformations = new ArrayList<>();
             List<MusicDto> musicDtos = new ArrayList<>();
-            StreamingService streamingService = streamingServiceRepository.findByName("Spotify");
+            StreamingService streamingService = streamingServiceService.findByName("Spotify");
 
-            QRCode qrCode1 = qrCode.get();
+            QRCode qrCode1 = qrCode;
             Session session = sessionRepository.findByQrCode(qrCode1);
-            PollTurn pollTurn = pollTurnRepository.findBySession(session);
+            PollTurn pollTurn = pollTurnService.findPollTurnBySession(session);
             Set<SuggestedMusic> suggestedMusics = pollTurn.getSuggestedMusics();
             suggestedMusics.forEach(suggestedMusic -> {
-               musics.add(musicRepository.findBySuggestedMusics(suggestedMusic));
+               musics.add(musicService.findMusicBySuggestedMusic(suggestedMusic));
             });
             musics.forEach(music -> {
-                musicStreamingServiceInformations.add(musicStreamingServiceInformationRepository.findByMusicAndStreamingService(music, streamingService));
-
+                musicStreamingServiceInformations.add(musicStreamingServiceInformationService.findByMusicAndStreamingService(music, streamingService));
             });
             for (int i = 0; i < musics.size(); i++) {
                 musicDtos.add(new MusicDto(
@@ -110,7 +94,7 @@ public class SessionServiceImpl implements SessionService {
             }
 
              MusicListDto musicListDto = new MusicListDto(musicDtos);
-             Token token = tokenRepository.findMostRecentNonRefreshToken(session.getUser());
+             Token token = tokenService.findMostRecentNonRefreshToken(session.getUser());
              System.out.println(token.getToken());
              MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token);
 
@@ -135,16 +119,31 @@ public class SessionServiceImpl implements SessionService {
     }
 
 
-//    @Override
-//    public SessionInformationForHomePageDto findOwnAndNotEndSessionInformation(String username) {
-//        User user = userService.getUser(username);
-//        Session session = sessionRepository.findCurrentSessionByUser(user);
-//        QRCode qrCode = session.getQrCode();
-//        int participants = sessionParticipantService.numberOfParticipantsInSession(session);
-//        int pollTurns = pollTurnService.getPollTurnsBySession(session);
-//        musicService.musicCurrentlyPlayingToJSON(tokenRepository.findMostRecentNonRefreshToken(user));
-//
-//        return new SessionInformationForHomePageDto(qrCode.getQrCodeInfo(), session.getPassword(), participants, pollTurns);
-//    }
+    @Override
+    public SessionInformationForHomePageDto findOwnAndNotEndSessionInformation(String username) {
+        User user = userService.getUser(username);
+        Session session = sessionRepository.findCurrentSessionByUser(user);
+        QRCode qrCode = session.getQrCode();
+        int participants = sessionParticipantService.numberOfParticipantsInSession(session);
+        int pollTurns = pollTurnService.getPollTurnsBySession(session);
+        musicService.musicCurrentlyPlayingToJSON(tokenService.findMostRecentNonRefreshToken(user));
+
+        return new SessionInformationForHomePageDto(qrCode.getQrCodeInfo(), session.getPassword(), participants, pollTurns);
+    }
+
+    @Override
+    public SessionInformationForHomePageDto findSessionInformationByQrCode(String qrCode) {
+        return null;
+    }
+
+    @Override
+    public void createParticipantForSessionOwner(User user, Session session) {
+        sessionParticipantService.createParticipantForSessionOwner(user, session);
+    }
+
+    @Override
+    public void createParticipantForSession(String username, String qrCode, String role) {
+        sessionParticipantService.createParticipantForSession(username, qrCode, role);
+    }
 
 }
