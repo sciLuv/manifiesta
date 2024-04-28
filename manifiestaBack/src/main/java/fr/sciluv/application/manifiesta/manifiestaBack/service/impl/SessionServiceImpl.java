@@ -103,7 +103,8 @@ public class SessionServiceImpl implements SessionService {
             System.out.println(musicCurrentlyPlayedDto.toString());
             SessionInformationToSendDto sessionInformationToSendDto = new SessionInformationToSendDto(
                     musicListDto,
-                    musicCurrentlyPlayedDto
+                    musicCurrentlyPlayedDto,
+                    joinSessionDto
             );
 
              return sessionInformationToSendDto;

@@ -6,10 +6,12 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicLis
 public class SessionInformationToSendDto {
     MusicListDto musics;
     MusicCurrentlyPlayedDto musicCurrentlyPlayed;
+    JoinSessionDto joinSessionDto;
 
-public SessionInformationToSendDto(MusicListDto musics, MusicCurrentlyPlayedDto musicCurrentlyPlayed) {
+public SessionInformationToSendDto(MusicListDto musics, MusicCurrentlyPlayedDto musicCurrentlyPlayed, JoinSessionDto joinSessionDto) {
         this.musics = musics;
         this.musicCurrentlyPlayed = musicCurrentlyPlayed;
+        this.joinSessionDto = joinSessionDto;
     }
 
     public MusicListDto getMusics() {
@@ -20,11 +22,16 @@ public SessionInformationToSendDto(MusicListDto musics, MusicCurrentlyPlayedDto 
         return musicCurrentlyPlayed;
     }
 
+    public JoinSessionDto getJoinSessionDto() {
+        return joinSessionDto;
+    }
+
     @Override
     public String toString() {
         return "SessionInformationToSendDto{" +
-                "musics=" + musics.toString() +
-                ", musicCurrentlyPlayed=" + musicCurrentlyPlayed.toString() +
+                "musics=" + musics +
+                ", musicCurrentlyPlayed=" + musicCurrentlyPlayed +
+                ", joinSessionDto=" + joinSessionDto +
                 '}';
     }
 }

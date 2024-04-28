@@ -123,7 +123,10 @@ function App() {
                       setRole={setRole}
                 />} />
                 <Route path="/spotify" element={<SpotifyCallback />} />
-                <Route path="/session" element={<SessionController />} />
+                <Route path="/session" element={<SessionController 
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                />} />
                 <Route path="/deconnexion" element={
                     <DeconnectionController
                         setAccessToken={setAccessToken}

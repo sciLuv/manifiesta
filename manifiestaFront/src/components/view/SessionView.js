@@ -4,9 +4,8 @@ import MusicPlayer from "./MusicPlayer";
 import SessionNavView from "./SessionNavView";
 
 
-const SessionView = (props) => {
+const SessionView = ({data, setIsMusicEnded}) => {
     // Données simulées, remplacer par les props si les données sont passées du parent
-    const data = props.stringJson;
 
     console.log(data);
 
@@ -32,6 +31,7 @@ const SessionView = (props) => {
                                 <MusicPlayer
                                     currentSongProgress={data.musicCurrentlyPlayed.progressMs}
                                     duration={data.musicCurrentlyPlayed.durationMs}
+                                    setIsMusicEnded={setIsMusicEnded}
                                 />
                         </div>
                         <Card.Body>
