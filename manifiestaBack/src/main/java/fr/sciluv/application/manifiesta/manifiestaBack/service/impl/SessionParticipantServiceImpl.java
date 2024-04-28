@@ -9,7 +9,10 @@ import fr.sciluv.application.manifiesta.manifiestaBack.service.QRCodeService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.SessionParticipantService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 public class SessionParticipantServiceImpl implements SessionParticipantService {
@@ -23,8 +26,12 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
     @Autowired
     QRCodeService qrCodeService;
 
+    private final SessionService sessionService;
+
     @Autowired
-    SessionService sessionService;
+    public SessionParticipantServiceImpl(@Lazy SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 
     @Override
     public SessionParticipant createParticipantForSessionOwner(User user, Session session) {
@@ -68,5 +75,10 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
     @Override
     public int numberOfParticipantsInSession(Session session) {
         return sessionParticipantRepository.findAllBySession(session).size();
+    }
+
+    @Override
+    public Set<SessionParticipant> findAllSessionParticipantByUser(User user) {
+        return sessionParticipantRepository.findAllByUser(user);
     }
 }

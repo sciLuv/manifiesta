@@ -43,6 +43,8 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     TokenService tokenService;
 
+
+
     public Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto) {
 // generate QRCode
         QRCode code = qrCodeService.generateQRCode(userLoginDto);
@@ -72,7 +74,7 @@ public class SessionServiceImpl implements SessionService {
             StreamingService streamingService = streamingServiceService.findByName("Spotify");
 
             QRCode qrCode1 = qrCode;
-            Session session = sessionRepository.findByQrCode(qrCode1);
+            Session session = sessionRepository.findByQrCodeAndPassword(qrCode1, joinSessionDto.getPassword());
             PollTurn pollTurn = pollTurnService.findPollTurnBySession(session);
             Set<SuggestedMusic> suggestedMusics = pollTurn.getSuggestedMusics();
             suggestedMusics.forEach(suggestedMusic -> {
@@ -120,18 +122,6 @@ public class SessionServiceImpl implements SessionService {
 
 
     @Override
-    public SessionInformationForHomePageDto findOwnAndNotEndSessionInformation(String username) {
-        User user = userService.getUser(username);
-        Session session = sessionRepository.findCurrentSessionByUser(user);
-        QRCode qrCode = session.getQrCode();
-        int participants = sessionParticipantService.numberOfParticipantsInSession(session);
-        int pollTurns = pollTurnService.getPollTurnsBySession(session);
-        musicService.musicCurrentlyPlayingToJSON(tokenService.findMostRecentNonRefreshToken(user));
-
-        return new SessionInformationForHomePageDto(qrCode.getQrCodeInfo(), session.getPassword(), participants, pollTurns);
-    }
-
-    @Override
     public SessionInformationForHomePageDto findSessionInformationByQrCode(String qrCode) {
         return null;
     }
@@ -144,6 +134,44 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public void createParticipantForSession(String username, String qrCode, String role) {
         sessionParticipantService.createParticipantForSession(username, qrCode, role);
+    }
+
+    @Override
+    public SessionInformationForHomePageDto findOwnAndNotEndSessionInformation(String username) {
+        User user = userService.getUser(username);
+        Session session = sessionRepository.findCurrentSessionByUser(user);
+        if(session == null) return null;
+        QRCode qrCode = session.getQrCode();
+        int participants = sessionParticipantService.numberOfParticipantsInSession(session);
+        int pollTurns = pollTurnService.getPollTurnsBySession(session);
+        musicService.musicCurrentlyPlayingToJSON(tokenService.findMostRecentNonRefreshToken(user));
+
+        return new SessionInformationForHomePageDto(qrCode.getQrCodeInfo(), session.getPassword(), participants, pollTurns, session.getUser().getUsername());
+    }
+
+    @Override
+    public List<SessionInformationForHomePageDto> findParticipantNotEndSessionInformation(String username) {
+        User user = userService.getUser(username);
+        Set<SessionParticipant> sessionParticipant = sessionParticipantService.findAllSessionParticipantByUser(user);
+        List<Session> sessions = new ArrayList<>();
+        sessionParticipant.forEach(participant -> {
+            int sessionId = participant.getSession().getIdSession();
+            Session session = sessionRepository.findNotOwnCurrentSessionByIdAndEndHour(sessionId, user);
+            if(session != null) sessions.add(session);
+        });
+        if(sessions.size() == 0) return null;
+
+
+        List <SessionInformationForHomePageDto> sessionInformationForHomePageDtos = new ArrayList<>();
+        sessions.forEach(session -> {
+            QRCode qrCode = session.getQrCode();
+            int participants = sessionParticipantService.numberOfParticipantsInSession(session);
+            int pollTurns = pollTurnService.getPollTurnsBySession(session);
+//            musicService.musicCurrentlyPlayingToJSON(tokenService.findMostRecentNonRefreshToken(user));
+            sessionInformationForHomePageDtos.add(new SessionInformationForHomePageDto(qrCode.getQrCodeInfo(), session.getPassword(), participants, pollTurns, session.getUser().getUsername()));
+        });
+        if(sessionInformationForHomePageDtos.size() == 0) return null;
+        return sessionInformationForHomePageDtos;
     }
 
 }

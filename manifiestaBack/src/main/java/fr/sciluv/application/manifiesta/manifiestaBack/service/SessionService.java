@@ -10,6 +10,8 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.Sessio
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionInformationToSendDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLoginDto;
 
+import java.util.List;
+
 public interface SessionService {
     Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto);
 
@@ -19,9 +21,11 @@ public interface SessionService {
 
     Session findSessionByQrCode(QRCode qrCode);
 
-    SessionInformationForHomePageDto findOwnAndNotEndSessionInformation(String username);
-
     SessionInformationForHomePageDto findSessionInformationByQrCode(String qrCode);
     void createParticipantForSessionOwner(User user, Session session);
     void createParticipantForSession(String username, String qrCode, String role);
+
+    SessionInformationForHomePageDto findOwnAndNotEndSessionInformation(String username);
+
+    List<SessionInformationForHomePageDto> findParticipantNotEndSessionInformation(String username);
 }

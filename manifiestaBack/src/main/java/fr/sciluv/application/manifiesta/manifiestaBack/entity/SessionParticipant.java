@@ -91,4 +91,12 @@ public class SessionParticipant {
     public void setVotes(Set<Vote> votes) {
         this.votes = votes;
     }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
 }

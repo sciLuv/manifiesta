@@ -16,6 +16,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.S
 import fr.sciluv.application.manifiesta.manifiestaBack.service.util.FindUsersInformationInJWT;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
@@ -27,8 +28,7 @@ import java.util.Map;
 @RestController
 public class SessionController {
 
-    @Autowired
-    private SessionService sessionService;
+    private final SessionService sessionService;
     @Autowired
     private TokenService tokenService;
     @Autowired
@@ -42,6 +42,10 @@ public class SessionController {
 
     @Autowired
     private StreamingServiceRepository streamingServiceRepository;
+
+    public SessionController(@Lazy SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 
     @PostMapping("/createSession")
     public String createSession(@RequestBody CreateSessionRequestDto requestDto) throws IOException, ParseException, org.apache.hc.core5.http.ParseException, SpotifyWebApiException {
@@ -112,11 +116,30 @@ public class SessionController {
         return "session";
     }
 
-    @GetMapping("public/getOwnSessionInformation")
-    public SessionInformationForHomePageDto joinSession(@RequestHeader("Authorization") String authHeader) {
+    @GetMapping("getOwnSessionInformation")
+    public SessionInformationForHomePageDto GetOwnerSessionInformation(@RequestHeader("Authorization") String authHeader) {
         FindUsersInformationInJWT findUsersInformationInJWT = new FindUsersInformationInJWT(authHeader);
         String username = findUsersInformationInJWT.findUserNameinJWT();
-        return sessionService.findOwnAndNotEndSessionInformation(username);
+
+        SessionInformationForHomePageDto sessionInformationForHomePageDto = sessionService.findOwnAndNotEndSessionInformation(username);
+        if(sessionInformationForHomePageDto != null){
+            return sessionInformationForHomePageDto;
+        } else {
+            return null;
+        }
+    }
+
+    @GetMapping("getParticipantSessionInformation")
+    public List<SessionInformationForHomePageDto> getParticipantSessionInformation(@RequestHeader("Authorization") String authHeader) {
+        FindUsersInformationInJWT findUsersInformationInJWT = new FindUsersInformationInJWT(authHeader);
+        String username = findUsersInformationInJWT.findUserNameinJWT();
+
+        List<SessionInformationForHomePageDto> sessionInformationForHomePageDtos = sessionService.findParticipantNotEndSessionInformation(username);
+        if(sessionInformationForHomePageDtos != null){
+            return sessionInformationForHomePageDtos;
+        } else {
+            return null;
+        }
     }
 
 

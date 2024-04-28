@@ -11,4 +11,6 @@ public interface SessionParticipantRepository extends JpaRepository<SessionParti
     SessionParticipant findByUserAndSession(User user, Session sesion);
 
     Set<SessionParticipant> findAllBySession(Session session);
+
+    Set<SessionParticipant> findAllByUser(User user);
 }
