@@ -44,4 +44,9 @@ public class PollTurnServiceImpl implements PollTurnService {
     public PollTurn findPollTurnBySession(Session session) {
         return pollTurnRepository.findBySession(session);
     }
+
+    @Override
+    public PollTurn findFirstBySessionOrderByNumberTurnDesc(Session session) {
+         return pollTurnRepository.findFirstBySessionOrderByNumberTurnDesc(session);
+    }
 }

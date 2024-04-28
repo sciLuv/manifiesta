@@ -43,6 +43,10 @@ public class SessionController {
     @Autowired
     private StreamingServiceRepository streamingServiceRepository;
 
+    @Autowired
+    private RegularSpotifyApiCallForSessionUpdate regularSpotifyApiCallForSessionUpdate;
+
+
     public SessionController(@Lazy SessionService sessionService) {
         this.sessionService = sessionService;
     }
@@ -61,26 +65,10 @@ public class SessionController {
             if(newSession != null){
                 // generate QRCode (in reality, it's a string with code to go to the session)
                     // get top tracks of user
-                    GetUsersTopTracks getUsersTopTracks = new GetUsersTopTracks(accessToken);
-                    //in function of top tracks, generate musics, suggested musics and music streaming service informations
-
-                    getUsersTopTracks.getUsersTopTracks().ifPresent(trackPaging -> {
-
-                        PollTurn pollTurn = pollTurnService.createPollTurn(newSession);
-                        StreamingService streamingService = streamingServiceRepository.findByName("Spotify");
-
-                        int offSet = trackPaging.getOffset();
-                        System.out.println("offset" + offSet);
-
-                        for (Integer number : NumberUtil.generateNumbers(50, requestDto.getSessionDto().getSongsNumber())) {
-                            Music music = musicService.generateMusic(trackPaging.getItems()[(number)]);
-                            musicService.generateMusicStreamingServiceInformation(trackPaging.getItems()[(number)], music, streamingService);
-                            musicService.generateSuggestedMusic(music, pollTurn);
-                        }
-
-                        User user = userService.getUser(requestDto.getUserLoginDto().getUsername());
-                        sessionService.createParticipantForSessionOwner(user, newSession);
-                    });
+                    musicService.findMusicsOnStreamingServiceForAPollTurn1(newSession, accessToken);
+                    User user = userService.getUser(requestDto.getUserLoginDto().getUsername());
+                    sessionService.createParticipantForSessionOwner(user, newSession);
+                    regularSpotifyApiCallForSessionUpdate.beginRegularApiCallProcess(newSession);
                     return"{\"sessionCode\":\"" + newSession.getQrCode().getQrCodeInfo() + "\"" +
                             ",\"SessionPassword\":\"" + newSession.getPassword() + "\"}";
             } else {
@@ -104,16 +92,6 @@ public class SessionController {
         sessionService.createParticipantForSession(username, joinSessionDto.getQrCodeInfo() , role);
         SessionInformationToSendDto joinSessionDto1 = sessionService.joinSession(joinSessionDto);
         return joinSessionDto1;
-    }
-
-    @GetMapping("/numberOfParticipantsInSession")
-    public String sessionParticipantsNumbers() {
-        return "session";
-    }
-
-    @GetMapping("/ListOfParticipantsInSession")
-    public String sessionListOfParticipants() {
-        return "session";
     }
 
     @GetMapping("getOwnSessionInformation")

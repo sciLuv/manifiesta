@@ -11,4 +11,6 @@ public interface PollTurnService {
     PollTurn createPollTurn(Session session);
     int getPollTurnsBySession(Session session);
     PollTurn findPollTurnBySession(Session session);
+
+    PollTurn findFirstBySessionOrderByNumberTurnDesc(Session session);
 }

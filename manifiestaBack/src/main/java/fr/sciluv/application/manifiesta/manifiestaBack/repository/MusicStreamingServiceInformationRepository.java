@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MusicStreamingServiceInformationRepository
         extends JpaRepository<MusicStreamingServiceInformation, Long>{
         MusicStreamingServiceInformation findByMusicAndStreamingService(Music music, StreamingService streamingService);
+
 }

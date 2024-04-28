@@ -20,4 +20,6 @@ public interface MusicService {
 
     Music findMusicBySuggestedMusic(SuggestedMusic suggestedMusic);
 
+    void findMusicsOnStreamingServiceForAPollTurn1(Session session, String StreamingServiceToken);
+
 }

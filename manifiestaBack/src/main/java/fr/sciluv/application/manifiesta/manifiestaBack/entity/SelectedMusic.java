@@ -10,8 +10,6 @@ public class SelectedMusic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPlayedMusic;
 
-    private Integer listenTurn;
-
     // Un SelectedMusic est associé à une musique
     @ManyToOne
     @JoinColumn(name = "numMusic", referencedColumnName = "numMusic")
@@ -22,9 +20,13 @@ public class SelectedMusic {
     private PollTurn pollTurn;
 
 
-
-
-
-
     // Constructeurs, getters et setters
+
+    public SelectedMusic() {
+    }
+
+    public SelectedMusic(Music music, PollTurn pollTurn) {
+        this.music = music;
+        this.pollTurn = pollTurn;
+    }
 }

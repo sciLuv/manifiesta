@@ -75,7 +75,7 @@ public class SessionServiceImpl implements SessionService {
 
             QRCode qrCode1 = qrCode;
             Session session = sessionRepository.findByQrCodeAndPassword(qrCode1, joinSessionDto.getPassword());
-            PollTurn pollTurn = pollTurnService.findPollTurnBySession(session);
+            PollTurn pollTurn = pollTurnService.findFirstBySessionOrderByNumberTurnDesc(session);
             Set<SuggestedMusic> suggestedMusics = pollTurn.getSuggestedMusics();
             suggestedMusics.forEach(suggestedMusic -> {
                musics.add(musicService.findMusicBySuggestedMusic(suggestedMusic));

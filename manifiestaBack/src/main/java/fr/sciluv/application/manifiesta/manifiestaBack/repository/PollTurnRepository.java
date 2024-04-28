@@ -12,4 +12,6 @@ public interface PollTurnRepository extends JpaRepository<PollTurn, Long>{
     Set<PollTurn> findAllBySession(Session session);
 
     int countBySession(Session session);
+
+    PollTurn findFirstBySessionOrderByNumberTurnDesc(Session session);
 }

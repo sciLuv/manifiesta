@@ -9,7 +9,10 @@ import fr.sciluv.application.manifiesta.manifiestaBack.repository.MusicStreaming
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.StreamingServiceRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.SuggestedMusicRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.MusicService;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.PollTurnService;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.GetUsersTopTracks;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.SpotifyService;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -39,6 +42,9 @@ public class MusicServiceImpl implements MusicService {
 
     @Autowired
     private StreamingServiceRepository streamingServiceRepository;
+
+    @Autowired
+    private PollTurnService pollTurnService;
 
 
     @Override
@@ -136,6 +142,30 @@ public class MusicServiceImpl implements MusicService {
                 musicStreamingServiceInformation.getDuration(), musicStreamingServiceInformation.getUrl_img(),
                 musicStreamingServiceInformation.getUrl_link());
     }
+
+    @Override
+    public void findMusicsOnStreamingServiceForAPollTurn1(Session session, String StreamingServiceToken) {
+        GetUsersTopTracks getUsersTopTracks = new GetUsersTopTracks(StreamingServiceToken);
+        //in function of top tracks, generate musics, suggested musics and music streaming service informations
+
+        getUsersTopTracks.getUsersTopTracks().ifPresent(trackPaging -> {
+
+            PollTurn pollTurn = pollTurnService.createPollTurn(session);
+            StreamingService streamingService = streamingServiceRepository.findByName("Spotify");
+
+            int offSet = trackPaging.getOffset();
+            System.out.println("offset" + offSet);
+
+            for (Integer number : NumberUtil.generateNumbers(50, session.getSongsNumber())) {
+                Music music = generateMusic(trackPaging.getItems()[(number)]);
+                generateMusicStreamingServiceInformation(trackPaging.getItems()[(number)], music, streamingService);
+                generateSuggestedMusic(music, pollTurn);
+            }
+
+
+        });
+    }
+
 
 
 

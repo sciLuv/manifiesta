@@ -9,8 +9,7 @@ public interface UserService {
 
     User getUser(String username);
 
-//   User getUser(String username);
-//
-//   User updateUser(User user);
+    User getUserBySessionId(Integer id);
+
 
 }

@@ -11,7 +11,7 @@ public class PollTurn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPollTurn;
 
-    private int number_turn;
+    private int numberTurn;
 
     // Un PollTurn peut avoir plusieurs musiques suggérées
     @OneToMany(mappedBy = "pollTurn")
@@ -31,11 +31,11 @@ public class PollTurn {
 
     public PollTurn(Session session, int number_turn) {
         this.session = session;
-        this.number_turn = number_turn;
+        this.numberTurn = number_turn;
     }
 
     public int getNumber_turn() {
-        return number_turn;
+        return numberTurn;
     }
 
     public Set<SuggestedMusic> getSuggestedMusics() {
