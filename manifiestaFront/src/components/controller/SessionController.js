@@ -4,22 +4,25 @@ import { useNavigate } from 'react-router-dom';
 import SessionView from '../view/SessionView';
 import { URI_BASE } from '../../env';
 
-const SessionController = (accessToken) => {
-
-    
+const SessionController = ({accessToken, refreshToken, setAccessToken, setRefreshToken}) => {
+    const navigate = useNavigate();
     let stringJson = localStorage.getItem('sessionInformations');
     const [data, setData] = useState(JSON.parse(stringJson));
     const [isMusicEnded, setIsMusicEnded] = useState(false);
+    let repeatRequestRefreshSession = 0;
+
     console.log(data);
 
-    const refreshSession = async (event) => {
 
+
+    const refreshSession = async (event) => {
+                console.log("test entry in refreshSession");
                 try{
                     const response = await fetch(URI_BASE + '/joinSession', {
                         method: 'POST',
                         headers :{
-                            "Authorization" : "Bearer " + accessToken.accessToken,
-                            "Refresh-Token" : accessToken.refreshToken,
+                            "Authorization" : "Bearer " + accessToken,
+                            "Refresh-Token" : refreshToken,
                             "Content-Type": "application/json"
                         },
                           
@@ -29,6 +32,7 @@ const SessionController = (accessToken) => {
                         })
                     });
                     if (response.ok) {
+                        repeatRequestRefreshSession = 0;
                         const responseJson = await response.json();
                         console.log(responseJson);
                         localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
@@ -41,7 +45,27 @@ const SessionController = (accessToken) => {
                             console.log('Session créée avec succès');
                         }
                     } else {
-                        console.error('Erreur lors de la requete de création de session');
+                        if(response.status === 401){
+                            console.log("response.header :" + response.headers.get('New-Access-Token'));
+                            const newAccessToken = response.headers.get('New-Access-Token');
+                            const newRefreshToken = response.headers.get('New-Refresh-Token');
+                
+                            // Vérifier que les deux tokens sont présents avant de mettre à jour les états
+                            if (newAccessToken && newRefreshToken) {
+                                console.log("test refresh token");
+                                repeatRequestRefreshSession++
+                                setAccessToken(newAccessToken);
+                                setRefreshToken(newRefreshToken);
+        
+                                if(repeatRequestRefreshSession < 2){
+                                    console.log("test refresh token 2");
+                                return refreshSession();
+                                }
+                            } else {
+                                navigate('/deconnexion')
+                            }
+                        }
+                        console.error('Erreur lors de la requete de demande d\'information sur les sessions créer par l\'utilisateur');
                     }
                 }
                 catch(e){
@@ -53,7 +77,7 @@ const SessionController = (accessToken) => {
 
     useEffect(() => {   
         refreshSession()
-    }, [isMusicEnded]);
+    }, [isMusicEnded, accessToken]);
 
     // Gerer la selection du nombre de chansons
     const handleSongsNumberChange = (event) => {

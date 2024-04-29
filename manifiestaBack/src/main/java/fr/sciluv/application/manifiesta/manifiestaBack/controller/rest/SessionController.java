@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(exposedHeaders = {"New-Access-Token", "New-Refresh-Token"})
 @RestController
 public class SessionController {
 

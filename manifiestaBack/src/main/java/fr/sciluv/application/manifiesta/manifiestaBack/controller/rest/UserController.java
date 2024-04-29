@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(exposedHeaders = {"New-Access-Token", "New-Refresh-Token"})
 @RestController
 public class UserController {
 

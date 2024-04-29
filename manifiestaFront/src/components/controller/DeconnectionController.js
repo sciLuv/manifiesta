@@ -11,7 +11,7 @@ const DeconnectionController = ({ setAccessToken, setRefreshToken, setUser, setM
         setUser("");
         setMail("");
         setRole("");
-        navigate("/");  // Assurez-vous que le chemin "/home" est correct et défini dans vos Routes
+        navigate("/");
     };
 
     useEffect(() => {

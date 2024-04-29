@@ -59,8 +59,7 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
         Token token = tokenService.findMostRecentNonRefreshToken(userService.getUserBySessionId(session.getIdSession()));
 //        MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token);
 
-        int delayInSecond = delay / 1000;
-        int trueDelay = delay-2500;
+        int trueDelay = delay-500;
         executor.executeAfterDelay(trueDelay, () -> {
             System.out.println("Ce message est affiché après un délai de " + trueDelay + " secondes.");
 

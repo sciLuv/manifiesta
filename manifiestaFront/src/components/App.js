@@ -96,12 +96,14 @@ function App() {
                           user={user}
                           accessToken={accessToken}
                           refreshToken={refreshToken}
+                          setRefreshToken={setRefreshToken}
+                          setAccessToken={setAccessToken}
                 />} />
                 <Route path="/create-new-session" element={<SessionParameterController
                           accessToken={accessToken}
-                          setAccessToken={setAccessToken}
                           refreshToken={refreshToken}
                           setRefreshToken={setRefreshToken}
+                          setAccessToken={setAccessToken}
                           user={user}
                           setUser={setUser}
                           mail={mail}
@@ -126,6 +128,8 @@ function App() {
                 <Route path="/session" element={<SessionController 
                       accessToken={accessToken}
                       refreshToken={refreshToken}
+                      setAccessToken={setAccessToken}
+                      setRefreshToken={setRefreshToken}
                 />} />
                 <Route path="/deconnexion" element={
                     <DeconnectionController

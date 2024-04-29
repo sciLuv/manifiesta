@@ -41,7 +41,7 @@ public class JwtTokenRefresherFilter extends OncePerRequestFilter {
                     String refreshToken = request.getHeader("Refresh-Token");
 
                     if (refreshToken != null /*&& tokenProvider.validateRefreshToken(refreshToken)*/) {
-                        System.out.println("Refresh token valide trouvé, rafraîchissement du token d'accès...");
+                        System.out.println("Refresh token trouvé, rafraîchissement du token d'accès...");
                         String newAccessToken = tokenProvider.refreshAccessToken(refreshToken);
                         String[] tokens = newAccessToken.split(" ");
                         response.setHeader("New-Access-Token", tokens[0]);

@@ -3,14 +3,14 @@ import { URI_BASE } from '../../env';
 import JoinSessionView from '../view/JoinSessionView'; // Assurez-vous que le chemin d'importation est correct
 import { useNavigate } from 'react-router-dom';
 
-function JoinSessionController(accessToken, refreshToken) {
+function JoinSessionController(props) {
     const navigate = useNavigate();
     // États pour le code d'accès et le mot de passe
     const [accessCode, setAccessCode] = useState('');
     const [password, setPassword] = useState('');
     const [includePassword, setIncludePassword] = useState(false);
 
-    console.log(accessToken);
+    console.log(props);
     // Gestion de la soumission du formulaire
     const handleJoinSession = async (event) => {
         event.preventDefault(); // Empêche le rechargement de la page
@@ -18,8 +18,8 @@ function JoinSessionController(accessToken, refreshToken) {
                     const response = await fetch(URI_BASE + '/joinSession', {
                         method: 'POST',
                         headers :{
-                            "Authorization" : "Bearer " + accessToken.accessToken,
-                            "Refresh-Token" : accessToken.refreshToken,
+                            "Authorization" : "Bearer " + props.accessToken,
+                            "Refresh-Token" : props.refreshToken,
                             "Content-Type": "application/json"
                         },
                           

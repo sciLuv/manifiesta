@@ -72,7 +72,9 @@ public class TokenProvider {
     // Hypothétique méthode pour rafraîchir le access token
     public String refreshAccessToken(String refreshToken) {
         // Implémentation fictive
+        System.out.println("---------------------------refreshAccessToken---------------------------");
         UserRefreshToken userRefreshToken = new UserRefreshToken(refreshToken);
+        System.out.println("Refresh token: " + userRefreshToken.getRefreshToken());
         return userRefreshToken.getToken() + " " + userRefreshToken.getRefreshToken();
     }
 }
