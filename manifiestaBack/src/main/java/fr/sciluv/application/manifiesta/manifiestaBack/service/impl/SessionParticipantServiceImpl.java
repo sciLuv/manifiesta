@@ -45,31 +45,36 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
 
     @Override
     public SessionParticipant createParticipantForSession(String username, String qrCode, String role) {
-
+        System.out.println("entrer dans createParticipantForSession de SessionParticipantServiceImpl");
         QRCode realQRCode = qrCodeService.findQRCodeByInfo(qrCode);
         Session session = sessionService.findSessionByQrCode(realQRCode);
-        boolean isUserAlreadyParticipant = isUserAlreadyParticipant(username, session);
+        SessionParticipant isUserAlreadyParticipant = isUserAlreadyParticipant(username, session);
 
-        if(isUserAlreadyParticipant) return null;
-
-        User user = userService.getUser(username);
-        SessionParticipant sessionParticipant = new SessionParticipant(
-                user,
-                session,
-                role
-        );
-        return sessionParticipantRepository.save(sessionParticipant);
+        if(isUserAlreadyParticipant != null) return isUserAlreadyParticipant;
+        else{
+            User user = userService.getUser(username);
+            SessionParticipant sessionParticipant = new SessionParticipant(
+                    user,
+                    session,
+                    role
+            );
+            return sessionParticipantRepository.save(sessionParticipant);
+        }
     }
 
     @Override
-    public boolean isUserAlreadyParticipant(String username, Session session) {
+    public SessionParticipant isUserAlreadyParticipant(String username, Session session) {
 
         User user = userService.getUser(username);
+        System.out.println("test isUserAlreadyParticipant");
         SessionParticipant sessionParticipant = sessionParticipantRepository.findByUserAndSession(user, session);
+        System.out.println("--------------------");
+        System.out.println(sessionParticipant);
+        System.out.println("--------------------");
         if(sessionParticipant != null)
-            return true;
+            return sessionParticipant;
         else
-            return false;
+            return null;
     }
 
     @Override

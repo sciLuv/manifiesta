@@ -85,13 +85,17 @@ public class SessionController {
     public SessionInformationToSendDto joinSession(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody JoinSessionDto joinSessionDto) {
-
+        System.out.println("entrer dans joinSessionController");
+        if(joinSessionDto.getQrCodeInfo() == null){
+            System.out.println("QRCode is null");
+            return null;
+        }
         FindUsersInformationInJWT findUsersInformationInJWT = new FindUsersInformationInJWT(authHeader);
         String username = findUsersInformationInJWT.findUserNameinJWT();
         String role = findUsersInformationInJWT.findUserRolesInJWT();
 
-        sessionService.createParticipantForSession(username, joinSessionDto.getQrCodeInfo() , role);
-        SessionInformationToSendDto joinSessionDto1 = sessionService.joinSession(joinSessionDto);
+        SessionParticipant sp = sessionService.createParticipantForSession(username, joinSessionDto.getQrCodeInfo() , role);
+        SessionInformationToSendDto joinSessionDto1 = sessionService.joinSession(joinSessionDto, sp);
         return joinSessionDto1;
     }
 

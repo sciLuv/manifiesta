@@ -20,7 +20,6 @@ const HomeController = ({role, user, accessToken, refreshToken, setRefreshToken,
     useEffect(() => {
         checkIfUserHasSession();
         checkIfUserParticipeToSessions();
-        handleJoinSession();
     }, [accessToken]);
 
     //fonction qui envoie une requête à l'API pour savoir si l'utilisateur a créer une session en cours
@@ -123,6 +122,7 @@ const HomeController = ({role, user, accessToken, refreshToken, setRefreshToken,
     }
 
     const handleJoinSession = async (pass, code) => {
+        console.log("test entry in handleJoinSession : " + code);
             if(!accessToken == "" || !accessToken == null || !accessToken == undefined){
             try {
                 const response = await fetch(URI_BASE + '/joinSession', {
@@ -179,7 +179,7 @@ const HomeController = ({role, user, accessToken, refreshToken, setRefreshToken,
                 setErrorMessage('Une erreur réseau est survenue.');
                 setShowErrorMessage(true);
             }
-        }
+    }
 };
 
 

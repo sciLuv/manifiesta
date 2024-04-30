@@ -64,10 +64,11 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Transactional
-    public SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto) {
+    public SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto, SessionParticipant sessionParticipant){
+        System.out.println("entrer dans joinSession de SessionServiceImpl");
         QRCode qrCode = qrCodeService.findQRCodeByInfo(joinSessionDto.getQrCodeInfo());
         if (qrCode != null) {
-
+            System.out.println("qrCode different de null dans joinSession de SessionServiceImpl");
             List<Music> musics = new ArrayList<>();
             List<MusicStreamingServiceInformation> musicStreamingServiceInformations = new ArrayList<>();
             List<MusicDto> musicDtos = new ArrayList<>();
@@ -104,7 +105,8 @@ public class SessionServiceImpl implements SessionService {
             SessionInformationToSendDto sessionInformationToSendDto = new SessionInformationToSendDto(
                     musicListDto,
                     musicCurrentlyPlayedDto,
-                    joinSessionDto
+                    joinSessionDto,
+                    sessionParticipant
             );
 
              return sessionInformationToSendDto;
@@ -133,8 +135,8 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void createParticipantForSession(String username, String qrCode, String role) {
-        sessionParticipantService.createParticipantForSession(username, qrCode, role);
+    public SessionParticipant createParticipantForSession(String username, String qrCode, String role) {
+        return sessionParticipantService.createParticipantForSession(username, qrCode, role);
     }
 
     @Override

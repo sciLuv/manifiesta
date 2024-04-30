@@ -15,7 +15,7 @@ import java.util.List;
 public interface SessionService {
     Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto);
 
-    SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto);
+    SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto, SessionParticipant sessionParticipant);
 
     Session addQrCodeToSession(Session session, QRCode qrCode);
 
@@ -23,7 +23,7 @@ public interface SessionService {
 
     SessionInformationForHomePageDto findSessionInformationByQrCode(String qrCode);
     void createParticipantForSessionOwner(User user, Session session);
-    void createParticipantForSession(String username, String qrCode, String role);
+    SessionParticipant createParticipantForSession(String username, String qrCode, String role);
 
     SessionInformationForHomePageDto findOwnAndNotEndSessionInformation(String username);
 

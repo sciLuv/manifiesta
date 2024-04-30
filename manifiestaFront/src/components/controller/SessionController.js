@@ -14,7 +14,6 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
     console.log(data);
 
 
-
     const refreshSession = async (event) => {
                 console.log("test entry in refreshSession");
                 try{

@@ -41,6 +41,7 @@ public class SessionParticipant {
         }else{
             this.isGuest = false;
         }
+        this.votes = null;
     }
     // Getters and setters
 
