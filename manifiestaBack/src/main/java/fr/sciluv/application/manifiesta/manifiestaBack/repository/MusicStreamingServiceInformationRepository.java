@@ -9,4 +9,6 @@ public interface MusicStreamingServiceInformationRepository
         extends JpaRepository<MusicStreamingServiceInformation, Long>{
         MusicStreamingServiceInformation findByMusicAndStreamingService(Music music, StreamingService streamingService);
 
+        MusicStreamingServiceInformation findByMusic(Music music);
+
 }

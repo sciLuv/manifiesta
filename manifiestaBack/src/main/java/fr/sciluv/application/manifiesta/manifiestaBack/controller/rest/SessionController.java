@@ -4,6 +4,7 @@ package fr.sciluv.application.manifiesta.manifiestaBack.controller.rest;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.*;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionParticipantDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.CreateSessionRequestDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.JoinSessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionInformationForHomePageDto;
@@ -40,13 +41,10 @@ public class SessionController {
     private PollTurnService pollTurnService;
     @Autowired
     private UserService userService;
-
     @Autowired
     private StreamingServiceRepository streamingServiceRepository;
-
     @Autowired
     private RegularSpotifyApiCallForSessionUpdate regularSpotifyApiCallForSessionUpdate;
-
 
     public SessionController(@Lazy SessionService sessionService) {
         this.sessionService = sessionService;
@@ -93,9 +91,9 @@ public class SessionController {
         FindUsersInformationInJWT findUsersInformationInJWT = new FindUsersInformationInJWT(authHeader);
         String username = findUsersInformationInJWT.findUserNameinJWT();
         String role = findUsersInformationInJWT.findUserRolesInJWT();
-
-        SessionParticipant sp = sessionService.createParticipantForSession(username, joinSessionDto.getQrCodeInfo() , role);
-        SessionInformationToSendDto joinSessionDto1 = sessionService.joinSession(joinSessionDto, sp);
+        System.out.println("joinSessionController Test");
+        SessionParticipantDto sp = sessionService.createParticipantForSession(username, joinSessionDto.getQrCodeInfo() , role);
+        SessionInformationToSendDto joinSessionDto1 = sessionService.joinSession(joinSessionDto, sp, username);
         return joinSessionDto1;
     }
 
@@ -125,6 +123,14 @@ public class SessionController {
         }
     }
 
+    @PostMapping("endSession")
+    public String endSession(@RequestHeader("Authorization") String authHeader, @RequestBody JoinSessionDto joinSessionDto)
+    {
+        FindUsersInformationInJWT findUsersInformationInJWT = new FindUsersInformationInJWT(authHeader);
+        String username = findUsersInformationInJWT.findUserNameinJWT();
+        sessionService.endSession(username, joinSessionDto.getQrCodeInfo());
+        return "{\"response\":\"Session ended\"}";
+    }
 
 
 }

@@ -9,15 +9,18 @@ public class MusicDto {
     private String imageUrl;
     private int durationMs;
 
+    private int suggestedMusic;
+
     // Constructors
 
-    public MusicDto(String name, String artist, String album, String uri, String imageUrl, int durationMs) {
+    public MusicDto(String name, String artist, String album, String uri, String imageUrl, int durationMs, int suggestedMusic) {
         this.name = name;
         this.artist = artist;
         this.album = album;
         this.uri = uri;
         this.imageUrl = imageUrl;
         this.durationMs = durationMs;
+        this.suggestedMusic = suggestedMusic;
     }
 
 
@@ -69,6 +72,10 @@ public class MusicDto {
 
     public void setDurationMs(int durationMs) {
         this.durationMs = durationMs;
+    }
+
+    public int getSuggestedMusic() {
+        return suggestedMusic;
     }
 
 

@@ -4,6 +4,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.QRCode;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.Session;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.SessionParticipant;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionParticipantDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.SessionParticipantRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.QRCodeService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.SessionParticipantService;
@@ -44,22 +45,23 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
     }
 
     @Override
-    public SessionParticipant createParticipantForSession(String username, String qrCode, String role) {
+    public SessionParticipantDto createParticipantForSession(String username, String qrCode, String role) {
         System.out.println("entrer dans createParticipantForSession de SessionParticipantServiceImpl");
         QRCode realQRCode = qrCodeService.findQRCodeByInfo(qrCode);
         Session session = sessionService.findSessionByQrCode(realQRCode);
         SessionParticipant isUserAlreadyParticipant = isUserAlreadyParticipant(username, session);
 
-        if(isUserAlreadyParticipant != null) return isUserAlreadyParticipant;
-        else{
+        if(isUserAlreadyParticipant == null){
             User user = userService.getUser(username);
             SessionParticipant sessionParticipant = new SessionParticipant(
                     user,
                     session,
                     role
             );
-            return sessionParticipantRepository.save(sessionParticipant);
+            sessionParticipantRepository.save(sessionParticipant);
+
         }
+        return new SessionParticipantDto(username);
     }
 
     @Override
@@ -68,13 +70,7 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
         User user = userService.getUser(username);
         System.out.println("test isUserAlreadyParticipant");
         SessionParticipant sessionParticipant = sessionParticipantRepository.findByUserAndSession(user, session);
-        System.out.println("--------------------");
-        System.out.println(sessionParticipant);
-        System.out.println("--------------------");
-        if(sessionParticipant != null)
-            return sessionParticipant;
-        else
-            return null;
+        return sessionParticipant;
     }
 
     @Override
@@ -85,5 +81,15 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
     @Override
     public Set<SessionParticipant> findAllSessionParticipantByUser(User user) {
         return sessionParticipantRepository.findAllByUser(user);
+    }
+
+    @Override
+    public Set<SessionParticipant> findAllSessionParticipantBySession(Session session) {
+        return sessionParticipantRepository.findAllBySession(session);
+    }
+
+    @Override
+    public SessionParticipant saveSessionParticipant(SessionParticipant sessionParticipant) {
+        return sessionParticipantRepository.save(sessionParticipant);
     }
 }

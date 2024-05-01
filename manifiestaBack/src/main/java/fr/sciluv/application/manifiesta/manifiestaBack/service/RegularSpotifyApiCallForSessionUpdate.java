@@ -18,4 +18,8 @@ public interface RegularSpotifyApiCallForSessionUpdate {
     void executeRegularSpotifyApiCallForSessionUpdate(int delay,Session session);
 
     SuggestedMusic findMostVotedSuggestedMusic(List<SuggestedMusic> suggestedMusics);
+
+    void stopExecution();
+
+    void StartExecution();
 }

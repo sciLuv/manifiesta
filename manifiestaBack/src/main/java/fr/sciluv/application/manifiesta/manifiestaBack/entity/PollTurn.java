@@ -1,6 +1,8 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.entity;
 
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,7 +17,7 @@ public class PollTurn {
 
     // Un PollTurn peut avoir plusieurs musiques suggérées
     @OneToMany(mappedBy = "pollTurn")
-    private Set<SuggestedMusic> suggestedMusics;
+    private List<SuggestedMusic> suggestedMusics;
 
     @OneToOne(mappedBy = "pollTurn", cascade = CascadeType.ALL)
     private SelectedMusic selectedMusic;
@@ -38,7 +40,7 @@ public class PollTurn {
         return numberTurn;
     }
 
-    public Set<SuggestedMusic> getSuggestedMusics() {
+    public List<SuggestedMusic> getSuggestedMusics() {
         return suggestedMusics;
     }
 
@@ -48,5 +50,10 @@ public class PollTurn {
 
     public Session getSession() {
         return session;
+    }
+
+
+    public Long getIdPollTurn() {
+        return idPollTurn;
     }
 }

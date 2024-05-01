@@ -17,4 +17,8 @@ public class MusicStreamingServiceInformationServiceImpl implements MusicStreami
     public MusicStreamingServiceInformation findByMusicAndStreamingService(Music music, StreamingService streamingService) {
         return musicStreamingServiceInformationRepository.findByMusicAndStreamingService(music, streamingService);
     }
+
+    public MusicStreamingServiceInformation findByMusic(Music music) {
+        return musicStreamingServiceInformationRepository.findByMusic(music);
+    }
 }

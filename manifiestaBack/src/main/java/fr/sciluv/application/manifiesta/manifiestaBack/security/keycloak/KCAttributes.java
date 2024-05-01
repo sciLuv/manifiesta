@@ -8,23 +8,23 @@ public class KCAttributes {
 
 
     private String adminClientId = "admin-cli";
-    private String adminClientSecret = "XqMiZuOyAiPFcQfMbUAkvlW11wGF020f";
+    private String adminClientSecret = "nVxqLHElpsoAuvREh5MzbViJp6uGhuNL";
     private String adminUsername = "admin";
     private String adminPassword = "admin";
 
 
     private String manifiestaClientId = "manifiesta";
-    private String manifiestaClientSecret = "VNqyxjUtgvjNANRkfqJ6XczIbFRiYXWs";
+    private String manifiestaClientSecret = "sqVweT2unKFE8WkbSET2PedQgyddGuVs";
 
-    private String manifiestaNumberId = "ab177886-ee42-4a70-b0cf-41408cea4016";
+    private String manifiestaNumberId = "1c242811-44c4-4c52-b6d3-364b7449feb8";
 
 
     private String grantTypePassword = "password";
     private String grantTypeRefreshToken = "refresh_token";
 
 
-    private String userRoleId= "5681558f-fa19-44c7-8cb8-fd05ee63825e";
-    private String guestRoleId= "a93208f0-a807-4ab9-b2e2-29f1e20a97bb";
+    private String userRoleId= "733ac06d-8dfb-49aa-afac-00e8e3249460";
+    private String guestRoleId= "338b431b-2873-4e18-840d-45e053c8c704";
 
     public String getBaseUrl() {
         return baseUrl;

@@ -4,19 +4,22 @@ import MusicPlayer from "./MusicPlayer";
 import SessionNavView from "./SessionNavView";
 
 
-const SessionView = ({data, setIsMusicEnded}) => {
+const SessionView = ({data, setIsMusicEnded, voteForSong, endedSession}) => {
     // Données simulées, remplacer par les props si les données sont passées du parent
 
     console.log(data);
+    console.log(data.owner);
 
     return (
         <Container fluid className="session-view">
             <Row className="justify-content-center align-items-start full-height ">
                 <Col className="">
                     <SessionNavView 
-                        userCount={12} 
-                        playedMusicCount={5} 
+                        userCount={data.numberParticipants} 
+                        playedMusicCount={data.numberSongs} 
+                        owner={data.owner}
                         userRole={"user"}
+                        endedSession={endedSession}
                     />
                     <Card className="text-center dark-card bg-dark dflex-session mt-3">
                         <div className="title-and-image-session">
@@ -42,7 +45,7 @@ const SessionView = ({data, setIsMusicEnded}) => {
                                     <Button
                                         key={index}
                                         className="song-button m-3"
-                                        onClick={() => console.log(`Playing ${music.name}`)}
+                                        onClick={() => voteForSong(music.suggestedMusic)}
                                     >
                                         {music.name + " - " + music.artist}
                                     </Button>

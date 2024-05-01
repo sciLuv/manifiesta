@@ -15,6 +15,9 @@ import java.util.List;
 
 @Service
 public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotifyApiCallForSessionUpdate {
+
+    boolean isSessionEnded = false;
+
     @Autowired
     MusicService musicService;
 
@@ -45,7 +48,7 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
     TimerExecution executor = new TimerExecution();
 
     public void beginRegularApiCallProcess(Session session) {
-
+        StartExecution();
 
         Token token = tokenService.findMostRecentNonRefreshToken(userService.getUserBySessionId(session.getIdSession()));
         MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token);
@@ -55,11 +58,13 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
     }
 
     public void executeRegularSpotifyApiCallForSessionUpdate(int delay, Session session) {
-
+        if(isSessionEnded) {
+            return;
+        }
         Token token = tokenService.findMostRecentNonRefreshToken(userService.getUserBySessionId(session.getIdSession()));
-//        MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token);
+        MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token);
 
-        int trueDelay = delay-1500;
+        int trueDelay = delay-3000;
         executor.executeAfterDelay(trueDelay, () -> {
             System.out.println("Ce message est affiché après un délai de " + trueDelay + " secondes.");
 
@@ -103,5 +108,15 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
         }
 
         return mostVoted;
+    }
+
+
+    public void stopExecution() {
+        isSessionEnded = true;
+    }
+
+    @Override
+    public void StartExecution() {
+        isSessionEnded = false;
     }
 }

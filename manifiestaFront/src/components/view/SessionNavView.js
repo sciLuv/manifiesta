@@ -5,8 +5,7 @@ import DotsIcon from '../../img/ellipsis-vertical.svg';
 import UserImg from '../../img/user.svg';
 import MusicImg from '../../img/music.svg';
 
-const SessionNavView = ({ userCount, playedMusicCount, userRole }) => {
-    const [isOWner, setIsOwner] = useState(false);
+const SessionNavView = ({ userCount, playedMusicCount, owner, endedSession }) => {
 
     const toggleMenu = () => setShowMenu(!showMenu);
 
@@ -25,7 +24,17 @@ const SessionNavView = ({ userCount, playedMusicCount, userRole }) => {
 
                     <Dropdown.Menu>
                         <Dropdown.Item href="#/action-1">Voir la liste des participants</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">Arrêter la session</Dropdown.Item>
+                        {owner ? 
+                                <>
+                                    <Dropdown.Item href="#/action-2" onClick={ () => endedSession()}>Arrêter la session</Dropdown.Item> 
+                                    <Dropdown.Item href="#/action-2">Voir le code de session</Dropdown.Item>
+                                </>
+                            : 
+                            <Dropdown.Item href="#/action-2">Quitter la session</Dropdown.Item>
+                        }
+                        
+                        
+                        
                     </Dropdown.Menu>
                 </Dropdown>
             </div>

@@ -85,8 +85,8 @@ public class Session {
         return hourOfEnd;
     }
 
-    public void setHourOfEnd(LocalDateTime hourOfEnd) {
-        this.hourOfEnd = hourOfEnd;
+    public void setHourOfEnd() {
+        this.hourOfEnd = LocalDateTime.now();
     }
 
     public String getPassword() {

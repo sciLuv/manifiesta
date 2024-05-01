@@ -17,6 +17,18 @@ public class Vote {
     @JoinColumn(name = "suggestedMusicId") // Assure-toi que le nom de la colonne correspond à la colonne clé étrangère dans ta base de données.
     private SuggestedMusic suggestedMusic;
 
+    //Constructeurs
+
+
+    public Vote() {
+    }
+
+    public Vote(SessionParticipant sessionParticipant, SuggestedMusic suggestedMusic) {
+        this.sessionParticipant = sessionParticipant;
+        this.suggestedMusic = suggestedMusic;
+    }
+
+
     //Getters et Setters
 
 
@@ -35,5 +47,13 @@ public class Vote {
 
     public void setSessionParticipant(SessionParticipant sessionParticipant) {
         this.sessionParticipant = sessionParticipant;
+    }
+
+    public SuggestedMusic getSuggestedMusic() {
+        return suggestedMusic;
+    }
+
+    public void setSuggestedMusic(SuggestedMusic suggestedMusic) {
+        this.suggestedMusic = suggestedMusic;
     }
 }

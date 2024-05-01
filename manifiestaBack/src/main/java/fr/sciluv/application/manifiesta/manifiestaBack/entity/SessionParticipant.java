@@ -65,8 +65,8 @@ public class SessionParticipant {
         return hourOfLeave;
     }
 
-    public void setHourOfLeave(LocalDateTime hourOfLeave) {
-        this.hourOfLeave = hourOfLeave;
+    public void setHourOfLeave() {
+        this.hourOfLeave = LocalDateTime.now();
     }
 
     public Boolean getGuest() {
@@ -99,5 +99,22 @@ public class SessionParticipant {
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public String toString() {
+        return "SessionParticipant{" +
+                "idParticipant=" + idParticipant +
+                ", hourOfCome=" + hourOfCome +
+                ", hourOfLeave=" + hourOfLeave +
+                ", isGuest=" + isGuest +
+                ", nameGuest='" + nameGuest + '\'' +
+                ", user=" + user +
+                ", session=" + session +
+                '}';
     }
 }

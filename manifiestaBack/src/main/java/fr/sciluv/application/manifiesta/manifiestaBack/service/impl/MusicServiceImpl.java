@@ -9,6 +9,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.repository.MusicStreaming
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.StreamingServiceRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.SuggestedMusicRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.MusicService;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.MusicStreamingServiceInformationService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.PollTurnService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.GetUsersTopTracks;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.SpotifyService;
@@ -33,6 +34,9 @@ public class MusicServiceImpl implements MusicService {
 
     @Autowired
     private MusicStreamingServiceInformationRepository musicStreamingServiceInformationRepository;
+
+    @Autowired
+    private MusicStreamingServiceInformationService musicStreamingServiceInformationService;
 
     @Autowired
     private SuggestedMusicRepository suggestedMusicRepository;
@@ -67,6 +71,11 @@ public class MusicServiceImpl implements MusicService {
     @Override
     public MusicStreamingServiceInformation generateMusicStreamingServiceInformation(Track track, Music music, StreamingService streamingService) {
 
+        MusicStreamingServiceInformation oldMusic =  musicStreamingServiceInformationService.findByMusic(music);
+        if(oldMusic != null){
+            return oldMusic;
+        }
+
         MusicStreamingServiceInformation musicStreamingServiceInformation = new MusicStreamingServiceInformation(
                 track.getDurationMs(),
                 track.getAlbum().getImages()[0].getUrl(),
@@ -79,6 +88,8 @@ public class MusicServiceImpl implements MusicService {
     }
 
     public SuggestedMusic generateSuggestedMusic(Music music, PollTurn pollTurn){
+        System.out.println("generateSuggestedMusic");
+        System.out.println("music" + music.getName() + "pollTurn" + pollTurn.getIdPollTurn());
         SuggestedMusic suggestedMusic = new SuggestedMusic(
                 music,
                 pollTurn
@@ -93,25 +104,7 @@ public class MusicServiceImpl implements MusicService {
 
 
     @Override
-    public MusicListDto musicsToJSON(List<Music> musics, List<MusicStreamingServiceInformation> musicStreamingServiceInformations) {
-        List<MusicDto> musicsDto = new ArrayList<>();
-        for (int i = 0; i < musics.size(); i++) {
-            musicsDto.add(
-                            new MusicDto(
-                            musics.get(i).getName(),
-                            musics.get(i).getArtist(),
-                            musics.get(i).getAlbum(),
-                            musicStreamingServiceInformations.get(i).getUrl_link(),
-                            musicStreamingServiceInformations.get(i).getUrl_img(),
-                            musicStreamingServiceInformations.get(i).getDuration()
-            ));
-        }
-        return new MusicListDto(musicsDto);
-    }
-
-    @Override
     public MusicCurrentlyPlayedDto musicCurrentlyPlayingToJSON(Token accessToken) {
-        StreamingService streamingService = streamingServiceRepository.findByName("spotify");
         CurrentlyPlaying currentlyPlaying = null;
         try {
             currentlyPlaying = spotifyService.getCurrentTrack(accessToken.getToken());
@@ -120,7 +113,7 @@ public class MusicServiceImpl implements MusicService {
         }
         Track track = (Track) currentlyPlaying.getItem();
         Music musicActual = generateMusic(track);
-
+        StreamingService streamingService = streamingServiceRepository.findByName("Spotify");
         MusicStreamingServiceInformation musicStreamingServiceInformation =
                 generateMusicStreamingServiceInformation(track, musicActual, streamingService);
 

@@ -4,6 +4,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicCurrentlyPlayedDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicListDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionParticipantDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.JoinSessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionInformationForHomePageDto;
@@ -42,6 +43,8 @@ public class SessionServiceImpl implements SessionService {
     StreamingServiceService streamingServiceService;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    private RegularSpotifyApiCallForSessionUpdate regularSpotifyApiCallForSessionUpdate;
 
 
 
@@ -64,7 +67,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Transactional
-    public SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto, SessionParticipant sessionParticipant){
+    public SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto, SessionParticipantDto sessionParticipant, String username){
         System.out.println("entrer dans joinSession de SessionServiceImpl");
         QRCode qrCode = qrCodeService.findQRCodeByInfo(joinSessionDto.getQrCodeInfo());
         if (qrCode != null) {
@@ -76,13 +79,21 @@ public class SessionServiceImpl implements SessionService {
 
             QRCode qrCode1 = qrCode;
             Session session = sessionRepository.findByQrCodeAndPassword(qrCode1, joinSessionDto.getPassword());
+
+            User user = userService.getUser(username);
+            boolean isSessionLinkedToUser = sessionRepository.isSessionLinkedToUser(user, session);
+
+            int participants = sessionParticipantService.numberOfParticipantsInSession(session);
+            int pollTurns = pollTurnService.getPollTurnsBySession(session);
+
             PollTurn pollTurn = pollTurnService.findFirstBySessionOrderByNumberTurnDesc(session);
-            Set<SuggestedMusic> suggestedMusics = pollTurn.getSuggestedMusics();
+            List<SuggestedMusic> suggestedMusics = pollTurn.getSuggestedMusics();
             suggestedMusics.forEach(suggestedMusic -> {
                musics.add(musicService.findMusicBySuggestedMusic(suggestedMusic));
             });
             musics.forEach(music -> {
                 musicStreamingServiceInformations.add(musicStreamingServiceInformationService.findByMusicAndStreamingService(music, streamingService));
+
             });
             for (int i = 0; i < musics.size(); i++) {
                 musicDtos.add(new MusicDto(
@@ -91,7 +102,8 @@ public class SessionServiceImpl implements SessionService {
                         musics.get(i).getAlbum(),
                         musicStreamingServiceInformations.get(i).getUrl_link(),
                         musicStreamingServiceInformations.get(i).getUrl_img(),
-                        musicStreamingServiceInformations.get(i).getDuration()
+                        musicStreamingServiceInformations.get(i).getDuration(),
+                        suggestedMusics.get(i).getIdSuggestMusic()
 
                 ));
             }
@@ -106,7 +118,10 @@ public class SessionServiceImpl implements SessionService {
                     musicListDto,
                     musicCurrentlyPlayedDto,
                     joinSessionDto,
-                    sessionParticipant
+                    sessionParticipant,
+                    isSessionLinkedToUser,
+                    participants,
+                    pollTurns
             );
 
              return sessionInformationToSendDto;
@@ -135,7 +150,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public SessionParticipant createParticipantForSession(String username, String qrCode, String role) {
+    public SessionParticipantDto createParticipantForSession(String username, String qrCode, String role) {
         return sessionParticipantService.createParticipantForSession(username, qrCode, role);
     }
 
@@ -155,26 +170,72 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public List<SessionInformationForHomePageDto> findParticipantNotEndSessionInformation(String username) {
         User user = userService.getUser(username);
-        Set<SessionParticipant> sessionParticipant = sessionParticipantService.findAllSessionParticipantByUser(user);
+        if (user == null) {
+            return null; // Retourne null ou lance une exception si aucun utilisateur n'est trouvé
+        }
+
+        Set<SessionParticipant> sessionParticipants = sessionParticipantService.findAllSessionParticipantByUser(user);
+        if (sessionParticipants == null || sessionParticipants.isEmpty()) {
+            return null; // Retourne null si aucun participant n'est trouvé pour l'utilisateur
+        }
+
         List<Session> sessions = new ArrayList<>();
-        sessionParticipant.forEach(participant -> {
-            int sessionId = participant.getSession().getIdSession();
-            Session session = sessionRepository.findNotOwnCurrentSessionByIdAndEndHour(sessionId, user);
-            if(session != null) sessions.add(session);
-        });
-        if(sessions.size() == 0) return null;
+        for (SessionParticipant participant : sessionParticipants) {
+            Session session = participant.getSession();
+            if (session != null) {
+                Session activeSession = sessionRepository.findActiveSessionBySessionParticipant(participant, user);
+                if (activeSession != null) {
+                    sessions.add(activeSession);
+                }
+            }
+        }
 
+        if (sessions.isEmpty()) {
+            return null; // Retourne null si aucune session active n'est trouvée
+        }
 
-        List <SessionInformationForHomePageDto> sessionInformationForHomePageDtos = new ArrayList<>();
-        sessions.forEach(session -> {
+        List<SessionInformationForHomePageDto> sessionInformationForHomePageDtos = new ArrayList<>();
+        for (Session session : sessions) {
             QRCode qrCode = session.getQrCode();
             int participants = sessionParticipantService.numberOfParticipantsInSession(session);
             int pollTurns = pollTurnService.getPollTurnsBySession(session);
-//            musicService.musicCurrentlyPlayingToJSON(tokenService.findMostRecentNonRefreshToken(user));
-            sessionInformationForHomePageDtos.add(new SessionInformationForHomePageDto(qrCode.getQrCodeInfo(), session.getPassword(), participants, pollTurns, session.getUser().getUsername()));
-        });
-        if(sessionInformationForHomePageDtos.size() == 0) return null;
-        return sessionInformationForHomePageDtos;
+            // Supposons que vous souhaitez également inclure des informations sur la musique actuellement jouée
+            // MusicCurrentlyPlayedDto currentlyPlayed = musicService.musicCurrentlyPlayingToJSON(tokenService.findMostRecentNonRefreshToken(user));
+            String usernameSession = session.getUser() != null ? session.getUser().getUsername() : "Inconnu"; // Gestion si l'utilisateur de la session est null
+
+            sessionInformationForHomePageDtos.add(new SessionInformationForHomePageDto(
+                    qrCode != null ? qrCode.getQrCodeInfo() : "QRCode inconnu",
+                    session.getPassword(),
+                    participants,
+                    pollTurns,
+                    usernameSession
+            ));
+        }
+
+        return sessionInformationForHomePageDtos.isEmpty() ? null : sessionInformationForHomePageDtos;
+    }
+
+
+    @Override
+    public boolean isSessionLinkedToUser(User user, Session session) {
+        return isSessionLinkedToUser(user, session);
+    }
+
+    @Override
+    public void endSession(String username, String qrCodeInfo) {
+        User user = userService.getUser(username);
+        QRCode qrCode = qrCodeService.findQRCodeByInfo(qrCodeInfo);
+        Session session = sessionRepository.findByQrCodeAndUser(qrCode, user);
+        if (session != null) {
+            session.setHourOfEnd();
+            sessionRepository.save(session);
+            Set<SessionParticipant> sessionParticipants = sessionParticipantService.findAllSessionParticipantBySession(session);
+            for (SessionParticipant participant : sessionParticipants) {
+                participant.setHourOfLeave();
+                sessionParticipantService.saveSessionParticipant(participant);
+            }
+            regularSpotifyApiCallForSessionUpdate.stopExecution();
+        }
     }
 
 }

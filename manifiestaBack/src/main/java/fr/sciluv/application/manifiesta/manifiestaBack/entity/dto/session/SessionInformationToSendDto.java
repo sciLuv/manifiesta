@@ -3,18 +3,29 @@ package fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.SessionParticipant;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicCurrentlyPlayedDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicListDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionParticipantDto;
 
 public class SessionInformationToSendDto {
     MusicListDto musics;
     MusicCurrentlyPlayedDto musicCurrentlyPlayed;
     JoinSessionDto joinSessionDto;
-    SessionParticipant sessionParticipant;
+    SessionParticipantDto sessionParticipantDto;
 
-public SessionInformationToSendDto(MusicListDto musics, MusicCurrentlyPlayedDto musicCurrentlyPlayed, JoinSessionDto joinSessionDto, SessionParticipant sessionParticipant) {
+    boolean isOwner;
+
+    int numberParticipants;
+    int numberSongs;
+
+    public SessionInformationToSendDto(MusicListDto musics, MusicCurrentlyPlayedDto musicCurrentlyPlayed,
+                                       JoinSessionDto joinSessionDto, SessionParticipantDto sessionParticipantDto,
+                                       boolean isOwner, int numberParticipants, int numberSongs) {
         this.musics = musics;
         this.musicCurrentlyPlayed = musicCurrentlyPlayed;
         this.joinSessionDto = joinSessionDto;
-        this.sessionParticipant = sessionParticipant;
+        this.sessionParticipantDto = sessionParticipantDto;
+        this.isOwner = isOwner;
+        this.numberParticipants = numberParticipants;
+        this.numberSongs = numberSongs;
     }
 
     public MusicListDto getMusics() {
@@ -29,16 +40,28 @@ public SessionInformationToSendDto(MusicListDto musics, MusicCurrentlyPlayedDto 
         return joinSessionDto;
     }
 
-    public SessionParticipant getSessionParticipant() {
-        return sessionParticipant;
+    public SessionParticipantDto getSessionParticipant() {
+        return sessionParticipantDto;
     }
 
+    public int getNumberParticipants() {
+        return numberParticipants;
+    }
+
+    public int getNumberSongs() {
+        return numberSongs;
+    }
+
+    public boolean isOwner() {
+        return isOwner;
+    }
     @Override
     public String toString() {
         return "SessionInformationToSendDto{" +
                 "musics=" + musics +
                 ", musicCurrentlyPlayed=" + musicCurrentlyPlayed +
                 ", joinSessionDto=" + joinSessionDto +
+                ", sessionParticipantDto=" + sessionParticipantDto +
                 '}';
     }
 }

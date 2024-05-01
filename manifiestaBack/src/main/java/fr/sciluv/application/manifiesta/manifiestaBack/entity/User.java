@@ -53,12 +53,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<QRCode> qrCodes;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_token",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "idToken")
-    )
+    @OneToMany(mappedBy = "user")
     private Set<Token> tokens;
 
     //Getter

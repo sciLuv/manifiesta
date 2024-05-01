@@ -11,7 +11,7 @@ public class SuggestedMusic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idSuggestMusic;
+    private int idSuggestMusic;
 
     @ManyToOne
     @JoinColumn(name = "numMusic", referencedColumnName = "numMusic")
@@ -33,7 +33,8 @@ public SuggestedMusic() {
         this.pollTurn = pollTurn;
     }
 
-    // Tu peux aussi avoir des attributs supplémentaires ici pour les détails spécifiques à la suggestion
-
     // Constructeurs, getters et setters
+    public int getIdSuggestMusic() {
+        return idSuggestMusic;
+    }
 }
