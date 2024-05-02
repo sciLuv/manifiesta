@@ -1,9 +1,8 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session;
 
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.SessionParticipant;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicCurrentlyPlayedDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicListDto;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionParticipantDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionParticipant.SessionParticipantDto;
 
 public class SessionInformationToSendDto {
     MusicListDto musics;

@@ -6,15 +6,30 @@ import SessionOverlayController from "../controller/SessionOverlayController";
 
 
 
-const SessionView = ({data, setIsMusicEnded, voteForSong, endedSession, leaveSession}) => {
-    // Données simulées, remplacer par les props si les données sont passées du parent
+const SessionView = ({
+    data, setIsMusicEnded, voteForSong, 
+    endedSession, leaveSession, overlayIsOpen, 
+    setOverlayIsOpen, getAllParticipants, listOfParticipants,
+    showcodeAndPassword, setShowcodeAndPassword, showListParticipants, setShowListParticipants}) => {
 
     console.log(data);
     console.log(data.owner);
 
     return (
         <Container fluid className="session-view" style={{position : "absolute"}}>
-              <SessionOverlayController />              
+            {overlayIsOpen ? <SessionOverlayController
+                overlayIsOpen={overlayIsOpen}
+                setOverlayIsOpen={setOverlayIsOpen}
+                sessionCode={data.joinSessionDto.qrCodeInfo}
+                sessionPassword={data.joinSessionDto.password}
+                listOfParticipants={listOfParticipants}
+                showListParticipants={showListParticipants}
+                showcodeAndPassword={showcodeAndPassword}
+                setShowListParticipants={setShowListParticipants}
+                setShowcodeAndPassword={setShowcodeAndPassword}
+               /> 
+            : null}
+                           
             <Row className="justify-content-center align-items-start full-height ">
                 <Col className="">
                     <SessionNavView 
@@ -24,6 +39,10 @@ const SessionView = ({data, setIsMusicEnded, voteForSong, endedSession, leaveSes
                         userRole={"user"}
                         endedSession={endedSession}
                         leaveSession={leaveSession}
+                        setOverlayIsOpen={setOverlayIsOpen}
+                        getAllParticipants={getAllParticipants}
+                        setShowListParticipants={setShowListParticipants}
+                        setShowcodeAndPassword={setShowcodeAndPassword}
                     />
                     <Card className="text-center dark-card bg-dark dflex-session mt-3">
                         <div className="title-and-image-session">

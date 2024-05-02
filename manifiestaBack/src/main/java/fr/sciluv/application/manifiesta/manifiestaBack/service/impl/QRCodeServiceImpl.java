@@ -42,6 +42,14 @@ public class QRCodeServiceImpl implements QRCodeService {
     }
 
     @Override
+    public QRCode generateGlobalQRCode(User userLoginDto) {
+        String url = generateUniqueId(9);
+        User user = userService.getUser(userLoginDto.getUsername());
+        QRCode qrCode = qrCodeRepository.save(new QRCode(url, user, true));
+        return null;
+    }
+
+    @Override
     public QRCode findQRCodeByInfo(String qrCodeInfo) {
         return qrCodeRepository.findByQrCodeInfo(qrCodeInfo).orElse(null);
     }
@@ -49,5 +57,10 @@ public class QRCodeServiceImpl implements QRCodeService {
     @Override
     public QRCode findQRCodeBySession(Session session) {
         return qrCodeRepository.findBySessions(session);
+    }
+
+    @Override
+    public QRCode findQRCodeByUserAndIsGlobal(User user, boolean isGlobal) {
+        return qrCodeRepository.findByUserAndIsGlobal(user, isGlobal).orElse(null);
     }
 }

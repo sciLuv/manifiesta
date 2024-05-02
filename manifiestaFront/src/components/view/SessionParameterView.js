@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
 
 
@@ -23,8 +23,27 @@ const SessionParameterView = ({
     setSpotifyToken,
     handleNewSession,
     handleSongsNumberChange,
-    handleMusicalStylesChange
+    handleMusicalStylesChange,
+    setIsQRCodeGlobal
     }) => {   
+
+    // État local pour l'option sélectionnée
+    const [selectedOption, setSelectedOption] = useState("QR code de session");
+
+    // Gestionnaire pour le changement de sélection dans le menu déroulant
+    const handleSelectChange = (event) => {
+            const selectedValue = event.target.value;
+            console.log(selectedValue);
+            setSelectedOption(selectedValue);
+            if(event.target.value == "QR code de session"){
+                console.log("false")
+                setIsQRCodeGlobal(false);
+            } else {
+                console.log("true")
+                setIsQRCodeGlobal(true);
+            }
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         onLoginSubmit();
@@ -65,12 +84,12 @@ const SessionParameterView = ({
         
                         <Form.Group className="mb-3" controlId="qrCodeType">
                         <Form.Label>Quel type de QRcode voulez vous utiliser ?</Form.Label>
-                        <Form.Control as="select">
-                            {["QR code de session", "QR code d'utilisateur"].map((number) => (
-                            <option key={number} value={number}>
-                                {number}
-                            </option>
-                            ))}
+                        <Form.Control as="select" value={selectedOption} onChange={handleSelectChange}>
+                                                {["QR code de session", "QR code d'utilisateur"].map((option) => (
+                                                    <option key={option} value={option}>
+                                                        {option}
+                                                    </option>
+                                                ))}
                         </Form.Control>
                         </Form.Group>
 
@@ -128,7 +147,6 @@ const SessionParameterView = ({
           </Row>
         </Container>
       );
-      
 }
 
 

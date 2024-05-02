@@ -4,11 +4,13 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicCurrentlyPlayedDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.Music.MusicListDto;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionParticipantDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionParticipant.SessionParticipantDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.JoinSessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionInformationForHomePageDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionInformationToSendDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionParticipant.SessionParticipantNameAndIsGuestDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionParticipant.SessionParticipantNameAndIsGuestListDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLoginDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.*;
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -48,10 +49,15 @@ public class SessionServiceImpl implements SessionService {
 
 
 
-    public Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto) {
-// generate QRCode
-        QRCode code = qrCodeService.generateQRCode(userLoginDto);
+    public Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto, boolean isQRCodeGlobal) {
         User user = userService.getUser(userLoginDto.getUsername());
+        QRCode code;
+        System.out.println("est ce que le QRCode est global ? " + isQRCodeGlobal);
+        if (isQRCodeGlobal) {
+            code = qrCodeService.findQRCodeByUserAndIsGlobal(user, true);
+        } else {
+            code = qrCodeService.generateQRCode(userLoginDto);
+        }
 
         Session newSession = new Session(
                 -1,
@@ -61,10 +67,11 @@ public class SessionServiceImpl implements SessionService {
                 sessionDto.getSongsNumber(),
                 sessionDto.getMusicalStylesNumber(),
                 user,
-                code);
-        // Set properties for the session
+                code
+        );
         return sessionRepository.save(newSession);
     }
+
 
     @Transactional
     public SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto, SessionParticipantDto sessionParticipant, String username){
@@ -137,7 +144,8 @@ public class SessionServiceImpl implements SessionService {
     }
 
     public Session findSessionByQrCode(QRCode qrCode){
-        return sessionRepository.findByQrCode(qrCode);
+        Session session = sessionRepository.findByQrCodeAndHourOfEnd(qrCode);
+        return session;
     }
 
 
@@ -262,6 +270,35 @@ public class SessionServiceImpl implements SessionService {
             }
         }
         return "problem with leaving session";
+    }
+
+    @Override
+    public SessionParticipantNameAndIsGuestListDto getAllParticipantsOfSession(String qrCodeInfo) {
+        QRCode qrCode = qrCodeService.findQRCodeByInfo(qrCodeInfo);
+        Session session = findSessionByQrCode(qrCode);
+        Set<SessionParticipant> sessionParticipants = sessionParticipantService.findAllSessionParticipantBySession(session);
+        List<SessionParticipantNameAndIsGuestDto> sessionParticipantNameAndIsGuestListDto = new ArrayList<>();
+        for (SessionParticipant participant : sessionParticipants) {
+            if(participant.getGuest() == true){
+                sessionParticipantNameAndIsGuestListDto.add(
+                        new SessionParticipantNameAndIsGuestDto(
+                                participant.getNameGuest(),
+                                participant.getGuest()
+                        )
+                );
+            }
+            else{
+                sessionParticipantNameAndIsGuestListDto.add(
+                        new SessionParticipantNameAndIsGuestDto(
+                                participant.getUser().getUsername(),
+                                participant.getGuest()
+                        )
+                );
+            }
+
+        }
+        SessionParticipantNameAndIsGuestListDto sessionParticipantNameAndIsGuestListDto1 = new SessionParticipantNameAndIsGuestListDto(sessionParticipantNameAndIsGuestListDto);
+        return sessionParticipantNameAndIsGuestListDto1;
     }
 
 }

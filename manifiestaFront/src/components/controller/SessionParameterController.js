@@ -19,6 +19,7 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
     const [spotifyToken, setSpotifyToken] = useState('');
     const [musicalStyles, setMusicalStyles] = useState(1);
     const [songsNumber, setSongsNumber] = useState(2);
+    const [isQRCodeGlobal, setIsQRCodeGlobal] = useState(false);
     let RepeatHandleAuthorization = 0;
     let repeatRequestNewSession = 0;
 
@@ -167,7 +168,8 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                     tokenDto: {
                         accessToken: spotifyToken,
                         refreshToken: spotifyRefreshToken
-                    }
+                    },
+                    qrCodeGlobal: isQRCodeGlobal,
                 })
             });
             if (response.ok) {
@@ -253,6 +255,7 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                 handleMusicalStylesChange={handleMusicalStylesChange}
                 setSpotifyToken={setSpotifyToken}
                 handleNewSession={handleNewSession}
+                setIsQRCodeGlobal={setIsQRCodeGlobal}
             />
         </>
     );

@@ -7,11 +7,20 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface SessionRepository extends JpaRepository<Session, Long> {
     Session findByQrCode(QRCode qrCode);
 
+    @Query("SELECT s FROM Session s WHERE s.qrCode = :qrCode AND s.hourOfEnd is null")
+    Session findByQrCodeAndHourOfEnd(QRCode qrCode);
+
+
+    @Query("SELECT s FROM Session s WHERE s.qrCode = :qrCode AND s.user = :user AND s.hourOfEnd is null")
     Session findByQrCodeAndUser(QRCode qrCode, User user);
 
+
+    @Query("SELECT s FROM Session s WHERE s.qrCode = :qrCode AND s.password = :password AND s.hourOfEnd is null")
     Session findByQrCodeAndPassword(QRCode qrCode, String password);
 
     @Query("SELECT s FROM Session s WHERE s.user = :user AND s.hourOfEnd is null")

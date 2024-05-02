@@ -39,6 +39,14 @@ public class QRCode {
         this.user = user;
     }
 
+    public QRCode(String qrCodeInfo, User user, boolean isGlobal) {
+        this.qrCodeInfo = qrCodeInfo;
+        this.isGlobal = isGlobal;
+        this.beginDate = LocalDateTime.now();
+        this.endDate = null;
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "QRCode{" +

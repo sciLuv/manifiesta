@@ -2,19 +2,20 @@ package fr.sciluv.application.manifiesta.manifiestaBack.service;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.QRCode;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.Session;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.SessionParticipant;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionParticipantDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionParticipant.SessionParticipantDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.JoinSessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionInformationForHomePageDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.session.SessionInformationToSendDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionParticipant.SessionParticipantNameAndIsGuestDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionParticipant.SessionParticipantNameAndIsGuestListDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLoginDto;
 
 import java.util.List;
 
 public interface SessionService {
-    Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto);
+    Session createSession(SessionDto sessionDto, UserLoginDto userLoginDto, boolean isQRCodeGlobal);
 
     SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto, SessionParticipantDto sessionParticipant, String username);
 
@@ -37,5 +38,7 @@ public interface SessionService {
     boolean isSessionEnded(Session session);
 
     String leaveSession(String username, String qrCodeInfo);
+
+    SessionParticipantNameAndIsGuestListDto getAllParticipantsOfSession(String qrCodeInfo);
 
 }

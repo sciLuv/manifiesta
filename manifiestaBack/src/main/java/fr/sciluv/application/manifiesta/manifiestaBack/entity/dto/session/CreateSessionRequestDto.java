@@ -7,6 +7,7 @@ public class CreateSessionRequestDto {
     private SessionDto sessionDto;
     private UserLoginDto userLoginDto;
     private TokenDto tokenDto;
+    private boolean qrCodeGlobal;
 
     // Getters et Setters
     public SessionDto getSessionDto() {
@@ -31,5 +32,23 @@ public class CreateSessionRequestDto {
 
     public void setTokenDto(TokenDto tokenDto) {
         this.tokenDto = tokenDto;
+    }
+
+    public boolean isQrCodeGlobal() {
+        return qrCodeGlobal;
+    }
+
+    public void setQRCodeGlobal(boolean qrCodeGlobal) {
+        qrCodeGlobal = qrCodeGlobal;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateSessionRequestDto{" +
+                "sessionDto=" + sessionDto +
+                ", userLoginDto=" + userLoginDto +
+                ", tokenDto=" + tokenDto +
+                ", isQRCodeGlobal=" + qrCodeGlobal +
+                '}';
     }
 }

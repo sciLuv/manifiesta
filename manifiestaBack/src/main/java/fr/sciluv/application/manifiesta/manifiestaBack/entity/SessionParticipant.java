@@ -105,6 +105,8 @@ public class SessionParticipant {
         return user;
     }
 
+
+
     @Override
     public String toString() {
         return "SessionParticipant{" +

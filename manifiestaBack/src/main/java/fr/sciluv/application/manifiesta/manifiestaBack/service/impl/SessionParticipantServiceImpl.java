@@ -4,7 +4,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.QRCode;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.Session;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.SessionParticipant;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionParticipantDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionParticipant.SessionParticipantDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.SessionParticipantRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.QRCodeService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.SessionParticipantService;

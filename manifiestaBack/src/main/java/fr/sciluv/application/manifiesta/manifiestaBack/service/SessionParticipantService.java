@@ -3,7 +3,7 @@ package fr.sciluv.application.manifiesta.manifiestaBack.service;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.Session;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.SessionParticipant;
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
-import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.SessionParticipantDto;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionParticipant.SessionParticipantDto;
 
 import java.util.Set;
 

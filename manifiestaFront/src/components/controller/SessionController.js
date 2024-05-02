@@ -10,10 +10,15 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
     const [data, setData] = useState(JSON.parse(stringJson));
     const [isMusicEnded, setIsMusicEnded] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [overlayIsOpen, setOverlayIsOpen] = useState(false);
+    const [listOfParticipants, setListOfParticipants] = useState([]);
+    const [showListParticipants, setShowListParticipants] = useState(false);
+    const [showcodeAndPassword, setShowcodeAndPassword] = useState(false);
     let repeatRequestRefreshSession = 0;
     let repeatVoteForSong = 0;
     let repeatRequestEndSession = 0;
     let repeatLeaveSession = 0;
+    let repeatRequestGetAllParticipants = 0;
 
     console.log(data);
 
@@ -115,6 +120,57 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
         }
 // Vous pourriez appeler une API ou gérer la connexion à une session ici
 };
+
+const getAllParticipants = async (event) => {
+    try{
+        const response = await fetch(URI_BASE + '/GetAllParticipantsOfSession', {
+            method: 'POST',
+            headers :{
+                "Authorization" : "Bearer " + accessToken,
+                "Refresh-Token" : refreshToken,
+                "Content-Type": "application/json"
+            },
+              
+            body: JSON.stringify({
+                qrCodeInfo: data.joinSessionDto.qrCodeInfo,
+                password: data.joinSessionDto.password  // Inclut le mot de passe seulement si nécessaire
+            })
+        });
+        if (response.ok) {
+            repeatRequestGetAllParticipants = 0;
+            const responseJson = await response.json();
+            console.log(responseJson.sessionParticipantNameAndIsGuestDtos);
+            setListOfParticipants(responseJson.sessionParticipantNameAndIsGuestDtos);                
+        } else {
+            if(response.status === 401){
+                console.log("response.header :" + response.headers.get('New-Access-Token'));
+                const newAccessToken = response.headers.get('New-Access-Token');
+                const newRefreshToken = response.headers.get('New-Refresh-Token');
+    
+                // Vérifier que les deux tokens sont présents avant de mettre à jour les états
+                if (newAccessToken && newRefreshToken) {
+                    console.log("test refresh token");
+                    repeatRequestGetAllParticipants++
+                    setAccessToken(newAccessToken);
+                    setRefreshToken(newRefreshToken);
+
+                    if(repeatRequestGetAllParticipants < 2){
+                        console.log("test refresh token 2");
+                    return getAllParticipants();
+                    }
+                } else {
+                    navigate('/deconnexion')
+                }
+            }
+            console.error('Erreur lors de la requete de demande d\'information sur les sessions créer par l\'utilisateur');
+        }
+    }
+    catch(e){
+        console.log(e);
+    }
+// Vous pourriez appeler une API ou gérer la connexion à une session ici
+};
+
 
 const leaveSession = async (event) => {
     try{
@@ -247,6 +303,14 @@ const leaveSession = async (event) => {
                 voteForSong={voteForSong}
                 endedSession={endedSession}
                 leaveSession={leaveSession}
+                overlayIsOpen={overlayIsOpen} 
+                setOverlayIsOpen={setOverlayIsOpen}
+                getAllParticipants={getAllParticipants}
+                listOfParticipants={listOfParticipants}
+                showcodeAndPassword={showcodeAndPassword}
+                setShowcodeAndPassword={setShowcodeAndPassword}
+                showListParticipants={showListParticipants}
+                setShowListParticipants={setShowListParticipants}
             />
         </>
     );
