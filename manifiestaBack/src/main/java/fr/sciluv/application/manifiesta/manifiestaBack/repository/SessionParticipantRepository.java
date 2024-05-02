@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Set;
 
 public interface SessionParticipantRepository extends JpaRepository<SessionParticipant, Long> {
-    SessionParticipant findByUserAndSession(User user, Session sesion);
+    SessionParticipant findByUserAndSession(User user, Session session);
 
-    Set<SessionParticipant> findAllBySession(Session session);
+    Set<SessionParticipant> findAllBySessionAndHourOfLeaveIsNull(Session session);
 
     Set<SessionParticipant> findAllByUser(User user);
 }

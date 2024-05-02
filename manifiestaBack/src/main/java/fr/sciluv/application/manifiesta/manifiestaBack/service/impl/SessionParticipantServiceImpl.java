@@ -50,7 +50,12 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
         QRCode realQRCode = qrCodeService.findQRCodeByInfo(qrCode);
         Session session = sessionService.findSessionByQrCode(realQRCode);
         SessionParticipant isUserAlreadyParticipant = isUserAlreadyParticipant(username, session);
-
+        if(isUserAlreadyParticipant != null){
+            if(isUserAlreadyParticipant.getHourOfLeave() != null){
+                isUserAlreadyParticipant.setHourOfLeave(null);
+                sessionParticipantRepository.save(isUserAlreadyParticipant);
+            }
+        }
         if(isUserAlreadyParticipant == null){
             User user = userService.getUser(username);
             SessionParticipant sessionParticipant = new SessionParticipant(
@@ -59,7 +64,6 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
                     role
             );
             sessionParticipantRepository.save(sessionParticipant);
-
         }
         return new SessionParticipantDto(username);
     }
@@ -68,14 +72,13 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
     public SessionParticipant isUserAlreadyParticipant(String username, Session session) {
 
         User user = userService.getUser(username);
-        System.out.println("test isUserAlreadyParticipant");
         SessionParticipant sessionParticipant = sessionParticipantRepository.findByUserAndSession(user, session);
         return sessionParticipant;
     }
 
     @Override
     public int numberOfParticipantsInSession(Session session) {
-        return sessionParticipantRepository.findAllBySession(session).size();
+        return sessionParticipantRepository.findAllBySessionAndHourOfLeaveIsNull(session).size();
     }
 
     @Override
@@ -85,7 +88,7 @@ public class SessionParticipantServiceImpl implements SessionParticipantService 
 
     @Override
     public Set<SessionParticipant> findAllSessionParticipantBySession(Session session) {
-        return sessionParticipantRepository.findAllBySession(session);
+        return sessionParticipantRepository.findAllBySessionAndHourOfLeaveIsNull(session);
     }
 
     @Override

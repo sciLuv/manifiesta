@@ -3,14 +3,14 @@ import { URI_BASE } from '../../env';
 import JoinSessionView from '../view/JoinSessionView'; // Assurez-vous que le chemin d'importation est correct
 import { useNavigate } from 'react-router-dom';
 
-function JoinSessionController(props) {
+function JoinSessionController({accessToken, refreshToken, setRefreshToken, setAccessToken}) {
     const navigate = useNavigate();
     // États pour le code d'accès et le mot de passe
     const [accessCode, setAccessCode] = useState('');
     const [password, setPassword] = useState('');
     const [includePassword, setIncludePassword] = useState(false);
+    let repeatRequestJoinSession = 0;
 
-    console.log(props);
     // Gestion de la soumission du formulaire
     const handleJoinSession = async (event) => {
         event.preventDefault(); // Empêche le rechargement de la page
@@ -18,8 +18,8 @@ function JoinSessionController(props) {
                     const response = await fetch(URI_BASE + '/joinSession', {
                         method: 'POST',
                         headers :{
-                            "Authorization" : "Bearer " + props.accessToken,
-                            "Refresh-Token" : props.refreshToken,
+                            "Authorization" : "Bearer " + accessToken,
+                            "Refresh-Token" : refreshToken,
                             "Content-Type": "application/json"
                         },
                           
@@ -29,6 +29,7 @@ function JoinSessionController(props) {
                         })
                     });
                     if (response.ok) {
+                        repeatRequestJoinSession = 0;
                         const responseJson = await response.json();
                         console.log(responseJson);
                         localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
@@ -41,7 +42,26 @@ function JoinSessionController(props) {
                             console.log('Session créée avec succès');
                         }
                     } else {
-                        console.error('Erreur lors de la requete de création de session');
+                        if(response.status === 401){
+                            console.log("response.header :" + response.headers.get('New-Access-Token'));
+                            const newAccessToken = response.headers.get('New-Access-Token');
+                            const newRefreshToken = response.headers.get('New-Refresh-Token');
+                
+                            // Vérifier que les deux tokens sont présents avant de mettre à jour les états
+                            if (newAccessToken && newRefreshToken) {
+                                repeatRequestJoinSession++
+                                setAccessToken(newAccessToken);
+                                setRefreshToken(newRefreshToken);
+    
+                                if(repeatRequestJoinSession < 2){
+                                return handleJoinSession();
+                                }
+                            } else {
+                                navigate('/deconnexion')
+                            }
+    
+                        }
+                        console.error('Erreur lors de la connexion à la session');
                     }
                 }
                 catch(e){

@@ -34,4 +34,8 @@ public interface SessionService {
 
     void endSession(String username, String qrCodeInfo);
 
+    boolean isSessionEnded(Session session);
+
+    String leaveSession(String username, String qrCodeInfo);
+
 }

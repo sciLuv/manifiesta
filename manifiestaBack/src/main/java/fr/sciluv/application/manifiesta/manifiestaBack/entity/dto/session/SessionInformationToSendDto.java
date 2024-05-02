@@ -13,12 +13,14 @@ public class SessionInformationToSendDto {
 
     boolean isOwner;
 
+    boolean isSessionEnded;
+
     int numberParticipants;
     int numberSongs;
 
     public SessionInformationToSendDto(MusicListDto musics, MusicCurrentlyPlayedDto musicCurrentlyPlayed,
                                        JoinSessionDto joinSessionDto, SessionParticipantDto sessionParticipantDto,
-                                       boolean isOwner, int numberParticipants, int numberSongs) {
+                                       boolean isOwner, int numberParticipants, int numberSongs, boolean isSessionEnded) {
         this.musics = musics;
         this.musicCurrentlyPlayed = musicCurrentlyPlayed;
         this.joinSessionDto = joinSessionDto;
@@ -26,6 +28,7 @@ public class SessionInformationToSendDto {
         this.isOwner = isOwner;
         this.numberParticipants = numberParticipants;
         this.numberSongs = numberSongs;
+        this.isSessionEnded = isSessionEnded;
     }
 
     public MusicListDto getMusics() {
@@ -54,6 +57,10 @@ public class SessionInformationToSendDto {
 
     public boolean isOwner() {
         return isOwner;
+    }
+
+    public boolean isSessionEnded() {
+        return isSessionEnded;
     }
     @Override
     public String toString() {

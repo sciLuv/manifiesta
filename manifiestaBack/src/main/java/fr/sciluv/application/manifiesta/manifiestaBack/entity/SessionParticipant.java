@@ -65,8 +65,8 @@ public class SessionParticipant {
         return hourOfLeave;
     }
 
-    public void setHourOfLeave() {
-        this.hourOfLeave = LocalDateTime.now();
+    public void setHourOfLeave(LocalDateTime hourOfLeave) {
+        this.hourOfLeave = hourOfLeave;
     }
 
     public Boolean getGuest() {

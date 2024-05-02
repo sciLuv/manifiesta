@@ -23,14 +23,14 @@ const HomeView = (props) => {
                                 <Card.Title>Créer une session d'écoute</Card.Title>
                                 <Card.Text>Pour choisir les musiques que vous allez écouter avec vos amis</Card.Text>
                                 
-                                <Button variant="primary" as={Link} to="/create-new-session">Démarrer une session d'écoute</Button>
+                                <Button variant="primary" as={Link} to="/create-new-session" className='valid-button'>Démarrer une session d'écoute</Button>
                                 </div>
                                 <img src={logo} alt="logo" className='m-2'/>
                             </Card.Body>
                         </Card>
                         ) : (
                             <>
-                                <h4 className='text-light mb-4'>Vous avez créer une session d'écoute toujours en cours </h4>
+                                <h4 className='text-light mb-4'>Vous avez crée une session d'écoute toujours en cours </h4>
                                 <Card className="h-100 text-center shadow bg-dark text-light mb-5">
                                     <Card.Body className="card-with-image">
                                         <div>
@@ -45,7 +45,7 @@ const HomeView = (props) => {
                                                 }
                                             </div>
                                         
-                                            <Button  className="m-3" variant="primary" onClick={
+                                            <Button  className="m-3 valid-button" variant="primary" onClick={
                                                 () => {
                                                     props.handleJoinSession(props.userSession.password, props.userSession.qrcode)
                                                 }

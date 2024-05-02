@@ -58,7 +58,7 @@ const AccountCreation = ({
                                         required
                                     />
                                 </Form.Group>
-                                <Button variant="primary" type="submit">Création du compte</Button>
+                                <Button variant="primary" type="submit" className='valid-button mt-3'>Création du compte</Button>
                             </Form>
                         </Card.Body>
                         <Card.Footer className="text-muted">

@@ -146,6 +146,8 @@ function App() {
                 <Route path="/join-session" element={<JoinSessionController 
                       accessToken={accessToken}
                       refreshToken={refreshToken}
+                      setRefreshToken={setRefreshToken}
+                      setAccessToken={setAccessToken}
                 />} />
               </Routes>
             </div>

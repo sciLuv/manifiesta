@@ -36,7 +36,7 @@ const LoginView = ({ username, password, errorMessage, showErrorMessage, onUsern
                                         required
                                     />
                                 </Form.Group>
-                                <Button variant="primary" type="submit">Se connecter</Button>
+                                <Button variant="primary" type="submit" className='valid-button mt-2'>Se connecter</Button>
                             </Form>
                         </Card.Body>
                         {errorMessage && (

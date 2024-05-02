@@ -42,13 +42,13 @@ const SessionParameterView = ({
                             </Card.Body>
                         </Card>
             ) : (
-                <Card className="mt-5 text-light spotify-autorisation-card">
+                <Card className="mt-5 text-light spotify-autorisation-card " >
                     <Card.Body>
                         <Card.Title>Connectez-vous à Spotify</Card.Title>
                         <Card.Text>
                             Pour commencer votre session il faut autoriser Manifiesta a utiliser Spotify.
                         </Card.Text>
-                        <Button variant="primary" className="bg-primary-subtle" 
+                        <Button variant="primary" className="valid-button" 
                         onClick={handleAuthorization}>
                             Autoriser Manifiesta à utiliser Spotify 
                         </Button>
@@ -58,7 +58,7 @@ const SessionParameterView = ({
 
             {isSpotifyConnected ?
                 //ici on crée un formulaire pour que l'utilisateur puisse choisir les paramètres de sa session
-                <Card className="mt-5 mb-5 w-75">
+                <Card className="mt-5 mb-5 w-75 shadow bg-dark text-light">
                     <Card.Body >
                     <Form>
                         {showErrorMessage && <Alert variant="danger">{errorMessage}</Alert>}
@@ -114,7 +114,7 @@ const SessionParameterView = ({
                             ))}
                         </Form.Control>
                         </Form.Group>
-                        <Button variant="primary" onClick={handleNewSession}>
+                        <Button variant="primary" className="valid-button" onClick={handleNewSession}>
                              Commencer la session !
                         </Button>
                     </Form>

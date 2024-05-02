@@ -9,9 +9,11 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
     let stringJson = localStorage.getItem('sessionInformations');
     const [data, setData] = useState(JSON.parse(stringJson));
     const [isMusicEnded, setIsMusicEnded] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     let repeatRequestRefreshSession = 0;
     let repeatVoteForSong = 0;
     let repeatRequestEndSession = 0;
+    let repeatLeaveSession = 0;
 
     console.log(data);
 
@@ -113,10 +115,64 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
         }
 // Vous pourriez appeler une API ou gérer la connexion à une session ici
 };
+
+const leaveSession = async (event) => {
+    try{
+        const response = await fetch(URI_BASE + '/leaveSession', {
+            method: 'POST',
+            headers :{
+                "Authorization" : "Bearer " + accessToken,
+                "Refresh-Token" : refreshToken,
+                "Content-Type": "application/json"
+            },
+              
+            body: JSON.stringify({
+                qrCodeInfo: data.joinSessionDto.qrCodeInfo,
+                password: data.joinSessionDto.password  // Inclut le mot de passe seulement si nécessaire
+            })
+        });
+        if (response.ok) {
+            repeatLeaveSession = 0;
+            const responseJson = await response.json();
+            console.log(responseJson);
+            if(responseJson.response == "session leaved"){
+                navigate('/');
+            } else if(responseJson.response == "problem with leaving session"){
+                setErrorMessage('Problème lors de la déconnexion de la session');
+            }                       
+            
+        } else {
+            if(response.status === 401){
+                console.log("response.header :" + response.headers.get('New-Access-Token'));
+                const newAccessToken = response.headers.get('New-Access-Token');
+                const newRefreshToken = response.headers.get('New-Refresh-Token');
     
+                // Vérifier que les deux tokens sont présents avant de mettre à jour les états
+                if (newAccessToken && newRefreshToken) {
+                    console.log("test refresh token");
+                    repeatLeaveSession++
+                    setAccessToken(newAccessToken);
+                    setRefreshToken(newRefreshToken);
+
+                    if(repeatLeaveSession < 2){
+                        console.log("test refresh token 2");
+                    return leaveSession();
+                    }
+                } else {
+                    navigate('/deconnexion')
+                }
+            }
+            console.error('Erreur lors de la requete de demande d\'information sur les sessions créer par l\'utilisateur');
+        }
+    }
+    catch(e){
+        console.log(e);
+    }
+// Vous pourriez appeler une API ou gérer la connexion à une session ici
+};
+
 
     const refreshSession = async (event) => {
-                console.log("test entry in refreshSession");
                 try{
                     const response = await fetch(URI_BASE + '/joinSession', {
                         method: 'POST',
@@ -137,13 +193,11 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
                         console.log(responseJson);
                         localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
                         setData(responseJson);
-                        if(responseJson.response == "Music is not played"){
-                            setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
-                            setShowErrorMessage(true);
-                        }  else {
-                            setShowErrorMessage(false);
-                            console.log('Session créée avec succès');
-                        }
+                        //si la réponse est null, cela signifie que la session est terminée
+                        if(responseJson.sessionEnded){
+                            navigate('/');
+                        }                        
+                        
                     } else {
                         if(response.status === 401){
                             console.log("response.header :" + response.headers.get('New-Access-Token'));
@@ -192,6 +246,7 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
                 setIsMusicEnded={setIsMusicEnded}
                 voteForSong={voteForSong}
                 endedSession={endedSession}
+                leaveSession={leaveSession}
             />
         </>
     );

@@ -2,16 +2,19 @@ import React from "react";
 import { Container, Row, Col, Card, Button, ProgressBar } from "react-bootstrap";
 import MusicPlayer from "./MusicPlayer";
 import SessionNavView from "./SessionNavView";
+import SessionOverlayController from "../controller/SessionOverlayController";
 
 
-const SessionView = ({data, setIsMusicEnded, voteForSong, endedSession}) => {
+
+const SessionView = ({data, setIsMusicEnded, voteForSong, endedSession, leaveSession}) => {
     // Données simulées, remplacer par les props si les données sont passées du parent
 
     console.log(data);
     console.log(data.owner);
 
     return (
-        <Container fluid className="session-view">
+        <Container fluid className="session-view" style={{position : "absolute"}}>
+              <SessionOverlayController />              
             <Row className="justify-content-center align-items-start full-height ">
                 <Col className="">
                     <SessionNavView 
@@ -20,6 +23,7 @@ const SessionView = ({data, setIsMusicEnded, voteForSong, endedSession}) => {
                         owner={data.owner}
                         userRole={"user"}
                         endedSession={endedSession}
+                        leaveSession={leaveSession}
                     />
                     <Card className="text-center dark-card bg-dark dflex-session mt-3">
                         <div className="title-and-image-session">

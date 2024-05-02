@@ -47,7 +47,7 @@ const JoinSessionView = ({
                                         />
                                     </FormGroup>
                                 )}
-                                <Button variant="primary" type="submit">Rejoindre</Button>
+                                <Button variant="primary" type="submit" className='valid-button'>Rejoindre</Button>
                             </Form>
                         </Card.Body>
                     </Card>

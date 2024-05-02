@@ -79,6 +79,7 @@ public class SessionServiceImpl implements SessionService {
 
             QRCode qrCode1 = qrCode;
             Session session = sessionRepository.findByQrCodeAndPassword(qrCode1, joinSessionDto.getPassword());
+            boolean isSessionEnded = isSessionEnded(session);
 
             User user = userService.getUser(username);
             boolean isSessionLinkedToUser = sessionRepository.isSessionLinkedToUser(user, session);
@@ -121,7 +122,8 @@ public class SessionServiceImpl implements SessionService {
                     sessionParticipant,
                     isSessionLinkedToUser,
                     participants,
-                    pollTurns
+                    pollTurns,
+                    isSessionEnded
             );
 
              return sessionInformationToSendDto;
@@ -231,11 +233,35 @@ public class SessionServiceImpl implements SessionService {
             sessionRepository.save(session);
             Set<SessionParticipant> sessionParticipants = sessionParticipantService.findAllSessionParticipantBySession(session);
             for (SessionParticipant participant : sessionParticipants) {
-                participant.setHourOfLeave();
+                participant.setHourOfLeave(LocalDateTime.now());
                 sessionParticipantService.saveSessionParticipant(participant);
             }
             regularSpotifyApiCallForSessionUpdate.stopExecution();
         }
+    }
+
+    @Override
+    public boolean isSessionEnded(Session session) {
+        if (session != null) {
+            return session.getHourOfEnd() != null;
+        }
+        return false;
+    }
+
+    @Override
+    public String leaveSession(String username, String qrCodeInfo) {
+        User user = userService.getUser(username);
+        QRCode qrCode = qrCodeService.findQRCodeByInfo(qrCodeInfo);
+        Session session = sessionRepository.findByQrCode(qrCode);
+        if (session != null) {
+            SessionParticipant participant = sessionParticipantService.isUserAlreadyParticipant(username, session);
+            if (participant != null) {
+                participant.setHourOfLeave(LocalDateTime.now());
+                sessionParticipantService.saveSessionParticipant(participant);
+                return "session leaved";
+            }
+        }
+        return "problem with leaving session";
     }
 
 }

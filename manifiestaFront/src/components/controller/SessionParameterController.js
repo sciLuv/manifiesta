@@ -19,7 +19,8 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
     const [spotifyToken, setSpotifyToken] = useState('');
     const [musicalStyles, setMusicalStyles] = useState(1);
     const [songsNumber, setSongsNumber] = useState(2);
-
+    let RepeatHandleAuthorization = 0;
+    let repeatRequestNewSession = 0;
 
 
     useEffect(() => {
@@ -109,12 +110,32 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                 }
             });
             if (response.ok) {
+                RepeatHandleAuthorization = 0;
                 const authorizationUri = await response.text();
                 setSpotifyRefreshToken(authorizationUri);
                 // Rediriger l'utilisateur vers l'URI de redirection Spotify
                 window.location.href = authorizationUri;
             } else {
-                console.error('Erreur lors de la récupération de l\'URI de redirection Spotify');
+                if(response.status === 401){
+                    console.log("response.header :" + response.headers.get('New-Access-Token'));
+                    const newAccessToken = response.headers.get('New-Access-Token');
+                    const newRefreshToken = response.headers.get('New-Refresh-Token');
+        
+                    // Vérifier que les deux tokens sont présents avant de mettre à jour les états
+                    if (newAccessToken && newRefreshToken) {
+                        RepeatHandleAuthorization++
+                        setAccessToken(newAccessToken);
+                        setRefreshToken(newRefreshToken);
+
+                        if(RepeatHandleAuthorization < 2){
+                        return handleAuthorization();
+                        }
+                    } else {
+                        navigate('/deconnexion')
+                    }
+
+                }
+                console.error('Erreur lors l\'obtention de l\'URI de redirection Spotify');
             }
         } catch (error) {
           console.error('Erreur lors de la récupération de l\'URI de redirection Spotify', error);
@@ -166,6 +187,7 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                     })
                 });
                 if (response2.ok) {
+                    repeatRequestNewSession = 0;
                     const responseJson = await response2.json();
                     console.log(responseJson);
                     localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
@@ -181,19 +203,27 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                     console.error('Erreur lors de la requete de création de session');
                 }
 
-                /* const responseJson = await response.json();
-                console.log(responseJson); */
-/*                 localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
-                navigate('/session'); 
-                if(responseJson.response == "Music is not played"){
-                    setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
-                    setShowErrorMessage(true);
-                }  else {
-                    setShowErrorMessage(false);
-                    console.log('Session créée avec succès');
-                } */
             } else {
-                console.error('Erreur lors de la requete de création de session');
+                if(response.status === 401){
+                    console.log("response.header :" + response.headers.get('New-Access-Token'));
+                    const newAccessToken = response.headers.get('New-Access-Token');
+                    const newRefreshToken = response.headers.get('New-Refresh-Token');
+        
+                    // Vérifier que les deux tokens sont présents avant de mettre à jour les états
+                    if (newAccessToken && newRefreshToken) {
+                        repeatRequestNewSession++
+                        setAccessToken(newAccessToken);
+                        setRefreshToken(newRefreshToken);
+
+                        if(repeatRequestNewSession < 2){
+                        return handleNewSession();
+                        }
+                    } else {
+                        navigate('/deconnexion')
+                    }
+
+                }
+                console.error('Erreur lors de la connexion à la session');
             }
         } catch (error) {
             console.error('Erreur lors de la requete de création de session', error);

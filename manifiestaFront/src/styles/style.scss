@@ -99,6 +99,18 @@
     border: none !important; /* Suppression des bordures */
 }
 
+
+.valid-button {
+    background-color: #ff7043 !important; /* Violet pour les boutons */
+
+    max-width: 500px;
+    border: none !important; /* Suppression des bordures */
+    &:hover{
+        background-color: #ffb23f !important; /* Violet pour les boutons */
+        color: rgb(15, 15, 15) !important;
+    }
+}
+
 .song-button:hover, .song-button:focus {
     background-color: #ff7043 !important; /* Orange plus clair pour le hover/click */
 }
@@ -187,12 +199,45 @@
     justify-content: space-between !important;
     align-items: center !important;
     flex-direction: row !important;
-    @media (max-width: 768px){
+/*     @media (max-width: 768px){
         flex-direction: column !important;
-    }
+    } */
     img{
         filter: brightness(0) invert(1);
         margin: 10px;
         margin-right: 5px;
       }
 }
+
+.overlay{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    height: 100vh ;
+    .xmark{
+        align-self: flex-end;
+        filter: brightness(0) invert(1);
+        margin: 30px;
+        &:hover{
+           cursor: pointer;
+           //give to the img a orange color
+           filter: invert(19%) sepia(38%) saturate(5419%) hue-rotate(268deg) brightness(82%) contrast(103%);
+           transform: scale(1.25);
+        }
+    }
+    .content-info-session{
+        background-color: #282828;
+        min-height: 400px;
+        height: 100%;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        @media (max-width: 575px){
+            border-radius: 0px;
+        }
+    }
+}
+

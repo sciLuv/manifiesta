@@ -132,5 +132,14 @@ public class SessionController {
         return "{\"response\":\"Session ended\"}";
     }
 
+    @PostMapping("leaveSession")
+    public String leaveSession(@RequestHeader("Authorization") String authHeader, @RequestBody JoinSessionDto joinSessionDto)
+    {
+        FindUsersInformationInJWT findUsersInformationInJWT = new FindUsersInformationInJWT(authHeader);
+        String username = findUsersInformationInJWT.findUserNameinJWT();
+        String response =  sessionService.leaveSession(username, joinSessionDto.getQrCodeInfo());
+        return "{\"response\":\"" + response + "\"}";
+    }
+
 
 }
