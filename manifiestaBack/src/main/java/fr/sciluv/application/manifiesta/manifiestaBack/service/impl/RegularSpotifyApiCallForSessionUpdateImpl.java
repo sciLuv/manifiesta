@@ -89,6 +89,7 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
                             token.getToken(),
                             musicStreamingServiceInformation.getUrl_link()
                     );
+
             addItemToUsersPlaybackQueue.addItemToUsersPlaybackQueue();
             executeRegularSpotifyApiCallForSessionUpdate(musicStreamingServiceInformation.getDuration(), session);
 

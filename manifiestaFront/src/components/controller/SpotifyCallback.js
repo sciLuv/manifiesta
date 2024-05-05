@@ -23,17 +23,22 @@ const SpotifyCallback = () => {
         .then(response => response.json())
         .then(data => {
           console.log('Success:', data);
-          localStorage.setItem('spotifyToken', data.spotifyToken);
-          localStorage.setItem('spotifyRefreshToken', data.spotifyRefreshToken);
+          console.log("est ce que spotifyToken est défini ? " + data.spotifyToken);
+          if(data.spotifyToken.length > 0) {
+            localStorage.setItem('spotifyToken', data.spotifyToken);
+            localStorage.setItem('spotifyRefreshToken', data.spotifyRefreshToken);
+          } else {
+            localStorage.setItem('spotifyConnectionError', "Il y a eu une erreur lors de la connexion à Spotify. Veuillez réessayer.")
+          }
           navigate('/create-new-session');  // Déplacer ici
         })
         .catch((error) => {
           console.error('Error:', error);
+          localStorage.setItem('spotifyConnectionError', "Il y a eu une erreur lors de la connexion à Spotify. Veuillez réessayer.")
+          navigate('/create-new-session'); 
         });
       }, 1000); // Attendre 1 seconde avant d'exécuter le fetch
       return () => clearTimeout(timer);
-    } else {
-      navigate('/'); // Redirigez l'utilisateur vers la page d'accueil en cas d'erreur
     }
   }, [searchParams, navigate]);
 
@@ -43,27 +48,3 @@ const SpotifyCallback = () => {
 };
 
 export default SpotifyCallback;
-
-
-
-/* 
-
-  //c'était dans app avant
-  const [spotifyAuthorizationUri, setSpotifyAuthorizationUri] = useState('');
-
-  const handleAuthorization = async () => {
-    try {
-      const response = await fetch(URI_BASE + '/spotify/authorize');
-      if (response.ok) {
-        const authorizationUri = await response.text();
-        setSpotifyAuthorizationUri(authorizationUri);
-        // Rediriger l'utilisateur vers l'URI de redirection Spotify
-        window.location.href = authorizationUri;
-      } else {
-        console.error('Erreur lors de la récupération de l\'URI de redirection Spotify');
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération de l\'URI de redirection Spotify', error);
-    }
-  };
-*/

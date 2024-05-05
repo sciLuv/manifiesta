@@ -34,5 +34,8 @@ INSERT INTO user (creation_date, id, mail, username) VALUES
 ('2024-04-22 12:11:15.862515', 1, 'liance.remi@gmail.com', 'remi'),
 ('2024-04-22 12:11:15.862515', 2, 'lululefoufou@gmail.com', 'mou');
 
+INSERT INTO `qr_code` (`is_global`, `begin_date`, `end_date`, `id_user`, `idqrcode`, `qr_code_info`) VALUES (b'1', '2024-05-03 08:53:33.521084', NULL, 1, 1, 'YsNsjUut6CnQ');
+INSERT INTO `qr_code` (`is_global`, `begin_date`, `end_date`, `id_user`, `idqrcode`, `qr_code_info`) VALUES (b'1', '2024-05-03 08:53:33.521084', NULL, 2, 2, 'YsNseSut6CnQ');
+
 INSERT INTO streaming_service (name) VALUES ('Spotify');
 INSERT INTO streaming_service (name) VALUES ('Deezer');

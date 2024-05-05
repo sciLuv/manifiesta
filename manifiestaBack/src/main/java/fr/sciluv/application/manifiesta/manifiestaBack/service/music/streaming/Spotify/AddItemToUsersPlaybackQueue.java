@@ -25,6 +25,17 @@ public class AddItemToUsersPlaybackQueue {
                 .build();
     }
 
+    //method to remove all the tracks from the queue
+    public void removeAllItemsFromUsersPlaybackQueue() {
+        try {
+            final String string = addItemToUsersPlaybackQueueRequest.execute();
+            System.out.println("---------------------------------");
+            System.out.println("Removing all tracks from queue..." + string);
+            System.out.println("Null: " + string);
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 
     public void addItemToUsersPlaybackQueue() {
         try {

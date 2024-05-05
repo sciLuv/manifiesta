@@ -60,11 +60,12 @@ const SessionView = ({
                                     setIsMusicEnded={setIsMusicEnded}
                                 />
                         </div>
-                        <Card.Body>
+                        <Card.Body className="vote-container">
 
                             <div>
                                 <h3 className="mb-3">Sélectionnez la prochaine musique :</h3>
                                 {data.musics.musics.map((music, index) => (
+                                    <div className="btn-container">
                                     <Button
                                         key={index}
                                         className="song-button m-3"
@@ -72,6 +73,7 @@ const SessionView = ({
                                     >
                                         {music.name + " - " + music.artist}
                                     </Button>
+                                    </div>
                                 ))}
                             </div>
                         </Card.Body>

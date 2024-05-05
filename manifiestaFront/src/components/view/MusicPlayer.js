@@ -31,7 +31,7 @@ const MusicPlayer = (props) => {
     }, [currentSongTime, duration]); // Mise à jour de la progression chaque fois que currentSongTime ou duration change
 
     return (
-        <div>
+        <div className='progress-bar-container'>
             <ProgressBar now={progress} label={`${progress}%`} />
         </div>
     );

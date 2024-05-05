@@ -11,6 +11,7 @@ const DeconnectionController = ({ setAccessToken, setRefreshToken, setUser, setM
         setUser("");
         setMail("");
         setRole("");
+        localStorage.clear();
         navigate("/");
     };
 

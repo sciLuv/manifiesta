@@ -36,10 +36,10 @@ const SessionParameterView = ({
             console.log(selectedValue);
             setSelectedOption(selectedValue);
             if(event.target.value == "QR code de session"){
-                console.log("false")
+                console.log("false");
                 setIsQRCodeGlobal(false);
             } else {
-                console.log("true")
+                console.log("true");
                 setIsQRCodeGlobal(true);
             }
     };
@@ -55,26 +55,26 @@ const SessionParameterView = ({
             <Col>
             <div className="flex">
             {isSpotifyConnected ? (
-                            <Card className="mt-4 text-light spotify-autorisation-card">
-                            <Card.Body>
-                                <Card.Title>Manifiesta peut utiliser votre compte Spotify 👍</Card.Title>
-                            </Card.Body>
-                        </Card>
+                <>
+                    <Card className="mt-4 text-light spotify-autorisation-card">
+                        <Card.Body>
+                            <Card.Title>Manifiesta peut utiliser votre compte Spotify 👍</Card.Title>
+                        </Card.Body>
+                    </Card>
+                </>
             ) : (
-                <Card className="mt-5 text-light spotify-autorisation-card " >
+                <Card className="mt-5 text-light spotify-autorisation-card">
                     <Card.Body>
                         <Card.Title>Connectez-vous à Spotify</Card.Title>
                         <Card.Text>
-                            Pour commencer votre session il faut autoriser Manifiesta a utiliser Spotify.
+                            Pour commencer votre session il faut autoriser Manifiesta à utiliser Spotify.
                         </Card.Text>
-                        <Button variant="primary" className="valid-button" 
-                        onClick={handleAuthorization}>
+                        <Button variant="primary" className="valid-button" onClick={handleAuthorization}>
                             Autoriser Manifiesta à utiliser Spotify 
                         </Button>
                     </Card.Body>
                 </Card>
             )}
-
             {isSpotifyConnected ?
                 //ici on crée un formulaire pour que l'utilisateur puisse choisir les paramètres de sa session
                 <Card className="mt-5 mb-5 w-75 shadow bg-dark text-light">
@@ -122,17 +122,7 @@ const SessionParameterView = ({
                             ))}
                         </Form.Control>
                         </Form.Group>
-        
-                        <Form.Group className="mb-3" controlId="genreDiversity">
-                        <Form.Label>Diversité des genres musicaux par votes</Form.Label>
-                        <Form.Control as="select" onClick={handleMusicalStylesChange}>
-                            {[1, 2, 3].map((number) => (
-                            <option key={number} value={number}>
-                                {number}
-                            </option>
-                            ))}
-                        </Form.Control>
-                        </Form.Group>
+
                         <Button variant="primary" className="valid-button" onClick={handleNewSession}>
                              Commencer la session !
                         </Button>

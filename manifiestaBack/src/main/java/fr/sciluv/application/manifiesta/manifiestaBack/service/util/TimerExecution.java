@@ -18,13 +18,4 @@ public class TimerExecution {
             }
         }, delay);
     }
-
-    public static void main(String[] args) {
-        TimerExecution executor = new TimerExecution();
-
-        // Exemple d'utilisation
-        executor.executeAfterDelay(5000, () -> {
-            System.out.println("Ce message est affiché après un délai de 5 secondes.");
-        });
-    }
 }

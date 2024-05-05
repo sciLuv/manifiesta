@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SessionParameterView from '../view/SessionParameterView';
 import { URI_BASE } from '../../env';
-import SpotifyCallback from './SpotifyCallback';
 
 const SessionParameterController = ( {accessToken, setAccessToken, refreshToken, setRefreshToken, setUser ,user, mail,setMail,role,setRole} ) => {
 
     const navigate = useNavigate();
+
+    console.log("prout");
 
     const [passwordSession, setPasswordSession] = useState('');
     const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -20,12 +21,16 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
     const [musicalStyles, setMusicalStyles] = useState(1);
     const [songsNumber, setSongsNumber] = useState(2);
     const [isQRCodeGlobal, setIsQRCodeGlobal] = useState(false);
+    const [spotifyError, setSpotifyError] = useState(false);
+
     let RepeatHandleAuthorization = 0;
     let repeatRequestNewSession = 0;
 
+    console.log(spotifyToken);
+    console.log(spotifyRefreshToken);
+
 
     useEffect(() => {
-        
         if(localStorage.getItem('user') != null && localStorage.getItem('user') != undefined && localStorage.getItem('user') != ""){
             setUser(localStorage.getItem('user'));
             setMail(localStorage.getItem('mail'));
@@ -33,27 +38,26 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
             setAccessToken(localStorage.getItem('accessToken'));
             setRefreshToken(localStorage.getItem('refreshToken'));
         }
-
         const spotifyTokenTest = localStorage.getItem('spotifyToken');
         const spotifyRefreshTokenTest = localStorage.getItem('spotifyRefreshToken');
-        
-        spotifyTokenTest != "" && 
-        spotifyTokenTest != null && 
-        spotifyTokenTest != undefined  ?  setSpotifyToken(spotifyTokenTest) : setSpotifyToken('');
-        spotifyTokenTest != "" &&
-        spotifyTokenTest != null && 
-        spotifyTokenTest != undefined  ?  setSpotifyRefreshToken(spotifyRefreshTokenTest) : setSpotifyRefreshToken('');
-        spotifyTokenTest != "" &&
-        spotifyTokenTest != null && 
-        spotifyTokenTest != undefined  ?  setIsSpotifyConnected(true) : setIsSpotifyConnected(false);
-     
-        
-        if(
-            (user == "" && mail == "" && role != "user" && accessToken == "" && refreshToken == "" )&&
+        if(localStorage.getItem('spotifyConnectionError') === null ){
+                        setSpotifyError(false);
+                        spotifyTokenTest != "" && 
+                        spotifyTokenTest != null && 
+                        spotifyTokenTest != undefined  ?  setSpotifyToken(spotifyTokenTest) : setSpotifyToken('');
+                        spotifyTokenTest != "" &&
+                        spotifyTokenTest != null && 
+                        spotifyTokenTest != undefined  ?  setSpotifyRefreshToken(spotifyRefreshTokenTest) : setSpotifyRefreshToken('');
+                        spotifyTokenTest != "" &&
+                        spotifyTokenTest != null && 
+                        spotifyTokenTest != undefined  ?  setIsSpotifyConnected(true) : setIsSpotifyConnected(false);
+        }
+        if (
+            (user == "" && mail == "" && role != "user" && accessToken == "" && refreshToken == "") &&
             (localStorage.getItem('user') == null || localStorage.getItem('user') == undefined || localStorage.getItem('user') == "")
-        ){
-            window.location.href = "/";
-        };
+        ) {
+            navigate("/spotify-error");
+        }
         
         setTimeout(() => {
             localStorage.removeItem('spotifyToken');
@@ -63,6 +67,7 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
             localStorage.removeItem('role');
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
+            localStorage.removeItem('spotifyConnectionError');
         }, 1000);
 
 
@@ -117,7 +122,7 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                 // Rediriger l'utilisateur vers l'URI de redirection Spotify
                 window.location.href = authorizationUri;
             } else {
-                if(response.status === 401){
+                if((response.status === 401)|| (response.status === 500)){
                     console.log("response.header :" + response.headers.get('New-Access-Token'));
                     const newAccessToken = response.headers.get('New-Access-Token');
                     const newRefreshToken = response.headers.get('New-Refresh-Token');
@@ -146,14 +151,13 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
 
       const handleNewSession = async () => {
         try {
-            const response = await fetch(URI_BASE + '/createSession', {
+            const createSessionResponse = await fetch(URI_BASE + '/createSession', {
                 method: 'POST',
-                headers :{
-                    "Authorization" : "Bearer " + accessToken,
-                    "Refresh-Token" : refreshToken,
+                headers: {
+                    "Authorization": "Bearer " + accessToken,
+                    "Refresh-Token": refreshToken,
                     "Content-Type": "application/json"
                 },
-                  
                 body: JSON.stringify({
                     sessionDto: {
                         idSession: null,
@@ -172,65 +176,67 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                     qrCodeGlobal: isQRCodeGlobal,
                 })
             });
-            if (response.ok) {
-                const responseJson = await response.json();
-                
-                const response2 = await fetch(URI_BASE + '/joinSession', {
-                    method: 'POST',
-                    headers :{
-                        "Authorization" : "Bearer " + accessToken,
-                        "Refresh-Token" : refreshToken,
-                        "Content-Type": "application/json"
-                    },
-                      
-                    body: JSON.stringify({
-                        qrCodeInfo : responseJson.sessionCode,
-                        password : responseJson.SessionPassword
-                    })
-                });
-                if (response2.ok) {
-                    repeatRequestNewSession = 0;
-                    const responseJson = await response2.json();
-                    console.log(responseJson);
-                    localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
-                    navigate('/session'); 
-                    if(responseJson.response == "Music is not played"){
-                        setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
-                        setShowErrorMessage(true);
-                    }  else {
-                        setShowErrorMessage(false);
-                        console.log('Session créée avec succès');
-                    }
-                } else {
-                    console.error('Erreur lors de la requete de création de session');
-                }
-
-            } else {
-                if(response.status === 401){
-                    console.log("response.header :" + response.headers.get('New-Access-Token'));
-                    const newAccessToken = response.headers.get('New-Access-Token');
-                    const newRefreshToken = response.headers.get('New-Refresh-Token');
-        
-                    // Vérifier que les deux tokens sont présents avant de mettre à jour les états
-                    if (newAccessToken && newRefreshToken) {
-                        repeatRequestNewSession++
+    
+            if (!createSessionResponse.ok) {
+                if (createSessionResponse.status === 401) {
+                    const newAccessToken = createSessionResponse.headers.get('New-Access-Token');
+                    const newRefreshToken = createSessionResponse.headers.get('New-Refresh-Token');
+    
+                    if (newAccessToken && newRefreshToken && repeatRequestNewSession < 2) {
                         setAccessToken(newAccessToken);
                         setRefreshToken(newRefreshToken);
-
-                        if(repeatRequestNewSession < 2){
+                        repeatRequestNewSession++;
                         return handleNewSession();
-                        }
                     } else {
-                        navigate('/deconnexion')
+                        navigate('/deconnexion');
+                        return;
                     }
-
                 }
-                console.error('Erreur lors de la connexion à la session');
+                throw new Error('Failed to create session');
+            }
+    
+            const createSessionJson = await createSessionResponse.json();
+            if (createSessionJson.response === "Music is not played") {
+                setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
+                setShowErrorMessage(true);
+                return;
+            }
+    
+            const joinSessionResponse = await fetch(URI_BASE + '/joinSession', {
+                method: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + accessToken,
+                    "Refresh-Token": refreshToken,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    qrCodeInfo: createSessionJson.sessionCode,
+                    password: createSessionJson.SessionPassword
+                })
+            });
+    
+            if (!joinSessionResponse.ok) {
+                throw new Error('Failed to join session');
+            }
+    
+            const joinSessionJson = await joinSessionResponse.json();
+            localStorage.setItem('sessionInformations', JSON.stringify(joinSessionJson));
+            navigate('/session');
+    
+            if (joinSessionJson.response === "Music is not played") {
+                setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
+                setShowErrorMessage(true);
+            } else {
+                setShowErrorMessage(false);
+                console.log('Session créée avec succès');
             }
         } catch (error) {
-            console.error('Erreur lors de la requete de création de session', error);
-        }               
+            console.error('Erreur lors de la requête de création ou de connexion à la session', error);
+            setErrorMessage(error.message);
+            setShowErrorMessage(true);
+        }
     }
+    
 
 
     return (
@@ -256,6 +262,7 @@ const SessionParameterController = ( {accessToken, setAccessToken, refreshToken,
                 setSpotifyToken={setSpotifyToken}
                 handleNewSession={handleNewSession}
                 setIsQRCodeGlobal={setIsQRCodeGlobal}
+                spotifyError={spotifyError}
             />
         </>
     );

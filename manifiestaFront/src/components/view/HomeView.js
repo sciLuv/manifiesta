@@ -93,7 +93,6 @@ const HomeView = (props) => {
                         <p className="text-light">
                             <a href="/login">connectez-vous</a> pour accéder à toutes les fonctionnalités du site.<br/>
                             Si vous n'avez pas de compte, vous pouvez en <a href="/account">créer un</a>.
-                            vous pouvez aussi <a href="/join-session-guest">rejoindre une session en tant qu'invité</a>.
                         </p>
                     </div>
                 )}

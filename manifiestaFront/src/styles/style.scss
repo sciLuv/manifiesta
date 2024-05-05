@@ -31,7 +31,7 @@
         width: 100%;
         max-width: 150px;
     }
-    @media (max-width: 768px){
+    @media (max-width: 788px){
         flex-direction: column-reverse !important;
     }
     @media (max-width: 350px){
@@ -148,10 +148,25 @@
     }
 }
 
+.progress-bar-container{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    margin: 20px;
+    @media (max-width: 768px){
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+}
+
 .progress{
     width: 90% !important;
     height: 30px !important;
-    min-width: 400px !important;
+    max-width: 1000px !important;
+    min-width: 20vw !important;
 
 }
 .progress-bar{
@@ -241,3 +256,13 @@
     }
 }
 
+.btn-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 20px;
+    button{
+        margin: 10px;
+    }
+}

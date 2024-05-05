@@ -10,11 +10,13 @@ import logo from '../img/logo.png';
 
 import AccountCreationController from './controller/AccountCreationController';
 import SessionParameterController from './controller/SessionParameterController';
-import  SessionController  from './controller/SessionController';
+import SessionController  from './controller/SessionController';
 import DeconnectionController from './controller/DeconnectionController';
 import JoinSessionController from './controller/JoinSessionController';
 import LoginController from './controller/LoginController';
 import HomeController from './controller/HomeController';
+import ErrorView from './view/ErrorView';
+import SpotifyErrorPage from './view/SpotifyErrorView';
 
 
 //test
@@ -149,6 +151,8 @@ function App() {
                       setRefreshToken={setRefreshToken}
                       setAccessToken={setAccessToken}
                 />} />
+                <Route path="*" element={<ErrorView />} />
+                <Route path="/spotify-error" element={<SpotifyErrorPage />} />
               </Routes>
             </div>
           </Router>
