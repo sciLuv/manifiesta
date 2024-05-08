@@ -9,11 +9,13 @@ import fr.sciluv.application.manifiesta.manifiestaBack.service.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.AddItemToUsersPlaybackQueue;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.util.TimerExecution;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Scope("prototype")
 public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotifyApiCallForSessionUpdate {
 
     boolean isSessionEnded = false;
@@ -58,9 +60,6 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
     }
 
     public void executeRegularSpotifyApiCallForSessionUpdate(int delay, Session session) {
-        if(isSessionEnded) {
-            return;
-        }
         Token token = tokenService.findMostRecentNonRefreshToken(userService.getUserBySessionId(session.getIdSession()));
         MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token);
 
@@ -113,7 +112,7 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
 
 
     public void stopExecution() {
-        isSessionEnded = true;
+        executor.shutdown();
     }
 
     @Override

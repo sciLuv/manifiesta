@@ -1,6 +1,6 @@
-package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak;
+package fr.sciluv.application.manifiesta.manifiestaBack.config;
 
-public class KCAttributes {
+public class EnvAttributes {
 
 
     private String baseUrl = "http://localhost:8080/";

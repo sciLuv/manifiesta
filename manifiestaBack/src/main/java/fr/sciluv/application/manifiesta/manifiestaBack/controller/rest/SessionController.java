@@ -41,6 +41,9 @@ public class SessionController {
     private StreamingServiceRepository streamingServiceRepository;
     @Autowired
     private RegularSpotifyApiCallForSessionUpdate regularSpotifyApiCallForSessionUpdate;
+    @Autowired
+    private SpotifyApiCallManager spotifyApiCallManager;
+
 
     public SessionController(@Lazy SessionService sessionService) {
         this.sessionService = sessionService;
@@ -49,7 +52,6 @@ public class SessionController {
     @PostMapping("/createSession")
     public String createSession(@RequestBody CreateSessionRequestDto requestDto) throws IOException, ParseException, org.apache.hc.core5.http.ParseException, SpotifyWebApiException {
         String accessToken = requestDto.getTokenDto().getAccessToken();
-
         System.out.println(requestDto.toString());
         // Check if music is played
         if(spotifyService.isMusicPlayed(accessToken, accessToken)){
@@ -64,7 +66,11 @@ public class SessionController {
                     musicService.findMusicsOnStreamingServiceForAPollTurn1(newSession, accessToken);
                     User user = userService.getUser(requestDto.getUserLoginDto().getUsername());
                     sessionService.createParticipantForSessionOwner(user, newSession);
-                    regularSpotifyApiCallForSessionUpdate.beginRegularApiCallProcess(newSession);
+
+                    // Get or create a new instance of RegularSpotifyApiCallForSessionUpdate
+                    RegularSpotifyApiCallForSessionUpdate apiCall = spotifyApiCallManager.getOrCreateApiCall(newSession.getIdSession());
+                    apiCall.beginRegularApiCallProcess(newSession);
+
                     return"{\"sessionCode\":\"" + newSession.getQrCode().getQrCodeInfo() + "\"" +
                             ",\"SessionPassword\":\"" + newSession.getPassword() + "\"}";
             } else {

@@ -16,6 +16,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.repository.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,10 @@ import java.util.Set;
 @Service
 public class SessionServiceImpl implements SessionService {
 
+    @Autowired
+    private SpotifyApiCallManager spotifyApiCallManager;
+    @Autowired
+    private ApplicationContext applicationContext;
     @Autowired
     SessionRepository sessionRepository;
     @Autowired
@@ -244,7 +249,7 @@ public class SessionServiceImpl implements SessionService {
                 participant.setHourOfLeave(LocalDateTime.now());
                 sessionParticipantService.saveSessionParticipant(participant);
             }
-            regularSpotifyApiCallForSessionUpdate.stopExecution();
+            spotifyApiCallManager.endApiCall(session.getIdSession());
         }
     }
 

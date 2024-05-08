@@ -2,6 +2,7 @@ package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.sciluv.application.manifiesta.manifiestaBack.config.EnvAttributes;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,7 +16,7 @@ public class AdminToken {
     private String token;
     private String refreshToken;
 
-    KCAttributes kcAttributes = new KCAttributes();
+    EnvAttributes envAttributes = new EnvAttributes();
 
 
     //constructor with getToken method inside
@@ -26,15 +27,15 @@ public class AdminToken {
         headers.add("Content-Type", "application/x-www-form-urlencoded");
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("client_id", kcAttributes.getAdminClientId());
-        map.add("client_secret", kcAttributes.getAdminClientSecret());
-        map.add("grant_type", kcAttributes.getGrantTypePassword());
-        map.add("username", kcAttributes.getAdminUsername());
-        map.add("password", kcAttributes.getAdminPassword());
+        map.add("client_id", envAttributes.getAdminClientId());
+        map.add("client_secret", envAttributes.getAdminClientSecret());
+        map.add("grant_type", envAttributes.getGrantTypePassword());
+        map.add("username", envAttributes.getAdminUsername());
+        map.add("password", envAttributes.getAdminPassword());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(kcAttributes.getBaseUrl() + kcAttributes.getTokenUrl(), HttpMethod.POST, request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(envAttributes.getBaseUrl() + envAttributes.getTokenUrl(), HttpMethod.POST, request, String.class);
 
         //sout response.getBody() to see the response
         System.out.println(response.getBody());

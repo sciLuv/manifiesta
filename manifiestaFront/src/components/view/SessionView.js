@@ -9,7 +9,8 @@ import SessionOverlayController from "../controller/SessionOverlayController";
 const SessionView = ({
     data, setIsMusicEnded, voteForSong, 
     endedSession, leaveSession, overlayIsOpen, 
-    setOverlayIsOpen, getAllParticipants, listOfParticipants,
+    setOverlayIsOpen, getAllParticipants, listOfParticipants, 
+    setSelectedMusicId, selectedMusicId,
     showcodeAndPassword, setShowcodeAndPassword, showListParticipants, setShowListParticipants}) => {
 
     console.log(data);
@@ -63,12 +64,12 @@ const SessionView = ({
                         <Card.Body className="vote-container">
 
                             <div>
-                                <h3 className="mb-3">Sélectionnez la prochaine musique :</h3>
+                                <h3 className="mb-3">Votez pour la prochaine musique :</h3>
                                 {data.musics.musics.map((music, index) => (
                                     <div className="btn-container">
                                     <Button
                                         key={index}
-                                        className="song-button m-3"
+                                        className={`song-button m-3 ${selectedMusicId === music.suggestedMusic ? 'selected-button' : ''}`}
                                         onClick={() => voteForSong(music.suggestedMusic)}
                                     >
                                         {music.name + " - " + music.artist}

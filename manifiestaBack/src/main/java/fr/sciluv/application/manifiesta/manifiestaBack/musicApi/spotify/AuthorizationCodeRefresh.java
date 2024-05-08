@@ -40,19 +40,14 @@ public class AuthorizationCodeRefresh {
 
 
     public String authorizationCodeRefresh_Sync() {
-        System.out.println(refreshToken);
         try {
             AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
 
             // Set access and refresh token for further "spotifyApi" object usage
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
 
-            System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
-            System.out.println("Access Token: " + authorizationCodeCredentials.getAccessToken());
-
             return authorizationCodeCredentials.getAccessToken();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Error: " + e.getMessage());
             return "Error: " + e.getMessage();
         }
     }

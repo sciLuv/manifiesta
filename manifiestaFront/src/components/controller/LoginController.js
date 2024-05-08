@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginView from '../view/LoginView';
-
+import { URI_BASE } from '../../env';
 
 const LoginController = (props) => {
     const navigate = useNavigate();
@@ -25,7 +25,7 @@ const LoginController = (props) => {
         setErrorMessage('');
 
         try {
-            const response = await fetch('http://localhost:8180/public/login', {
+            const response = await fetch(URI_BASE + '/public/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

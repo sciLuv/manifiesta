@@ -14,6 +14,7 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
     const [listOfParticipants, setListOfParticipants] = useState([]);
     const [showListParticipants, setShowListParticipants] = useState(false);
     const [showcodeAndPassword, setShowcodeAndPassword] = useState(false);
+    const [selectedMusicId, setSelectedMusicId] = useState(null);
     let repeatRequestRefreshSession = 0;
     let repeatVoteForSong = 0;
     let repeatRequestEndSession = 0;
@@ -23,6 +24,8 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
     console.log(data);
 
     const voteForSong = async (SelectedSong) => {
+        console.log("SelectedSong : " + SelectedSong);
+        setSelectedMusicId(SelectedSong);
         try {
             console.log("Envoi de la requête de vote");
             const response = await fetch(URI_BASE + '/vote', {
@@ -287,7 +290,7 @@ const leaveSession = async (event) => {
 
     useEffect(() => {   
         refreshSession()
-    }, [isMusicEnded, accessToken]);
+    }, [isMusicEnded, accessToken, selectedMusicId]);
 
     // Gerer la selection du nombre de chansons
     const handleSongsNumberChange = (event) => {
@@ -311,6 +314,8 @@ const leaveSession = async (event) => {
                 setShowcodeAndPassword={setShowcodeAndPassword}
                 showListParticipants={showListParticipants}
                 setShowListParticipants={setShowListParticipants}
+                setSelectedMusicId={setSelectedMusicId}
+                selectedMusicId={selectedMusicId}
             />
         </>
     );

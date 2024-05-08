@@ -2,7 +2,7 @@ package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.KCAttributes;
+import fr.sciluv.application.manifiesta.manifiestaBack.config.EnvAttributes;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,7 +15,7 @@ public class UserRefreshToken {
     private String token;
     private String refreshToken;
 
-    KCAttributes kcAttributes = new KCAttributes();
+    EnvAttributes envAttributes = new EnvAttributes();
 
 
     //constructor with getToken method inside
@@ -27,14 +27,14 @@ public class UserRefreshToken {
         headers.add("Content-Type", "application/x-www-form-urlencoded");
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("client_id", kcAttributes.getManifiestaClientId());
-        map.add("client_secret", kcAttributes.getManifiestaClientSecret());
-        map.add("grant_type", kcAttributes.getGrantTypeRefreshToken());
+        map.add("client_id", envAttributes.getManifiestaClientId());
+        map.add("client_secret", envAttributes.getManifiestaClientSecret());
+        map.add("grant_type", envAttributes.getGrantTypeRefreshToken());
         map.add("refresh_token", refreshToken);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(kcAttributes.getBaseUrl() + kcAttributes.getTokenUrl(), HttpMethod.POST, request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(envAttributes.getBaseUrl() + envAttributes.getTokenUrl(), HttpMethod.POST, request, String.class);
 
         //sout response.getBody() to see the response
         System.out.println(response.getBody());

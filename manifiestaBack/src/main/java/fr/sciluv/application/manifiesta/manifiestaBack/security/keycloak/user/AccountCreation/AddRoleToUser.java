@@ -1,7 +1,7 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.user.AccountCreation;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.AdminToken;
-import fr.sciluv.application.manifiesta.manifiestaBack.security.keycloak.KCAttributes;
+import fr.sciluv.application.manifiesta.manifiestaBack.config.EnvAttributes;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -10,13 +10,14 @@ import org.springframework.web.client.RestTemplate;
 
 public class AddRoleToUser {
 
+    static EnvAttributes envAttributes = new EnvAttributes();
     private boolean response;
 
     public AddRoleToUser(String userId) {
         // Create a new AdminToken object
         AdminToken connexion = new AdminToken();
 
-        KCAttributes kcAttributes = new KCAttributes();
+        EnvAttributes envAttributes = new EnvAttributes();
 
         // Create a new RestTemplate object
         RestTemplate restTemplate = new RestTemplate();
@@ -33,12 +34,12 @@ public class AddRoleToUser {
 
         String roleInformations = "[\n" +
                 "        {\n" +
-                "            \"id\": \"" + kcAttributes.getUserRoleId() + "\",\n" +
+                "            \"id\": \"" + envAttributes.getUserRoleId() + "\",\n" +
                 "            \"name\": \"client_user\",\n" +
                 "            \"description\": \"\",\n" +
                 "            \"composite\": true,\n" +
                 "            \"clientRole\": true,\n" +
-                "            \"containerId\": \"" + kcAttributes.getManifiestaNumberId() + "\",\n" +
+                "            \"containerId\": \"" + envAttributes.getManifiestaNumberId() + "\",\n" +
                 "            \"attributes\": {}\n" +
                 "        }\n" +
                 "    ]";
@@ -49,8 +50,8 @@ public class AddRoleToUser {
 
         // Send a request to Keycloak to add the realm role to the user
         ResponseEntity<String> response = restTemplate.exchange(
-                "http://localhost:8080/admin/realms/manifiesta/users/" +
-                        userId + "/role-mappings/clients/" + kcAttributes.getManifiestaNumberId(),
+                envAttributes.getBaseUrl() + "admin/realms/manifiesta/users/" +
+                        userId + "/role-mappings/clients/" + envAttributes.getManifiestaNumberId(),
                 HttpMethod.POST, request, String.class
         );
 
