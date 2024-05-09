@@ -14,6 +14,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.sessionPartici
 import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLoginDto;
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.*;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.SpotifyService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -51,6 +52,9 @@ public class SessionServiceImpl implements SessionService {
     TokenService tokenService;
     @Autowired
     private RegularSpotifyApiCallForSessionUpdate regularSpotifyApiCallForSessionUpdate;
+
+    @Autowired
+    private SpotifyService spotifyService;
 
 
 
@@ -177,7 +181,9 @@ public class SessionServiceImpl implements SessionService {
         QRCode qrCode = session.getQrCode();
         int participants = sessionParticipantService.numberOfParticipantsInSession(session);
         int pollTurns = pollTurnService.getPollTurnsBySession(session);
-        musicService.musicCurrentlyPlayingToJSON(tokenService.findMostRecentNonRefreshToken(user));
+
+        String realAccessToken = spotifyService.createNewAccessIfExpired(tokenService.findMostRecentNonRefreshToken(user).getToken());
+        musicService.musicCurrentlyPlayingToJSON(tokenService.findByToken(realAccessToken));
 
         return new SessionInformationForHomePageDto(qrCode.getQrCodeInfo(), session.getPassword(), participants, pollTurns, session.getUser().getUsername());
     }

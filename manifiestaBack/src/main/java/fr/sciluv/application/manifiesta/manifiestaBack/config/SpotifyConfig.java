@@ -28,5 +28,4 @@ public class SpotifyConfig {
         return redirectUri;
     }
 
-    // Setters if necessary
 }

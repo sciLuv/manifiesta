@@ -7,6 +7,7 @@ import fr.sciluv.application.manifiesta.manifiestaBack.repository.SelectedMusicR
 import fr.sciluv.application.manifiesta.manifiestaBack.repository.StreamingServiceRepository;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.*;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.AddItemToUsersPlaybackQueue;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify.SpotifyService;
 import fr.sciluv.application.manifiesta.manifiestaBack.service.util.TimerExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -45,6 +46,9 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
     @Autowired
     MusicStreamingServiceInformationService musicStreamingServiceInformationService;
 
+    @Autowired
+    private SpotifyService spotifyService;
+
 
 
     TimerExecution executor = new TimerExecution();
@@ -60,8 +64,11 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
     }
 
     public void executeRegularSpotifyApiCallForSessionUpdate(int delay, Session session) {
-        Token token = tokenService.findMostRecentNonRefreshToken(userService.getUserBySessionId(session.getIdSession()));
-        MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token);
+        User user = userService.getUserBySessionId(session.getIdSession());
+        Token token = tokenService.findMostRecentNonRefreshToken(user);
+        String realAccessToken = spotifyService.createNewAccessIfExpired(token.getToken());
+        Token token2 = tokenService.findByToken(realAccessToken);
+        MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token2);
 
         int trueDelay = delay-3000;
         executor.executeAfterDelay(trueDelay, () -> {
@@ -76,7 +83,7 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
             SelectedMusic selectedMusic = new SelectedMusic(winnerMusic, pt);
             selectedMusicRepository.save(selectedMusic);
 
-            musicService.findMusicsOnStreamingServiceForAPollTurn1(session, token.getToken());
+            musicService.findMusicsOnStreamingServiceForAPollTurn1(session, token2.getToken());
 
             StreamingService streamingService = streamingServiceRepository.findByName("Spotify");
 
@@ -85,7 +92,7 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
             System.out.println(musicStreamingServiceInformation.getUrl_link());
             AddItemToUsersPlaybackQueue addItemToUsersPlaybackQueue =
                     new AddItemToUsersPlaybackQueue(
-                            token.getToken(),
+                            token2.getToken(),
                             musicStreamingServiceInformation.getUrl_link()
                     );
 

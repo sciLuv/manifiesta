@@ -56,7 +56,38 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public void createToken(String token, User user) {
+        StreamingService streamingService = streamingServiceRepository.findByName("spotify");
+
+        Token accessToken = new Token(
+                token,
+                LocalDateTime.now(),
+                3600,
+                false,
+                user,
+                streamingService
+        );
+
+        tokenRepository.save(accessToken);
+    }
+
+    @Override
     public Token findMostRecentNonRefreshToken(User user) {
         return tokenRepository.findMostRecentNonRefreshToken(user);
+    }
+
+    @Override
+    public Token findFirstRefreshToken(User user) {
+        return tokenRepository.findFirstRefreshToken(user);
+    }
+
+    @Override
+    public User findUserByToken(String token) {
+        return tokenRepository.findUserByToken(token);
+    }
+
+    @Override
+    public Token findByToken(String token) {
+        return tokenRepository.findByToken(token);
     }
 }

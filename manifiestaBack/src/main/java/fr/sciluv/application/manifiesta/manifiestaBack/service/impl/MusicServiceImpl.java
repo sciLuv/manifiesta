@@ -108,7 +108,7 @@ public class MusicServiceImpl implements MusicService {
         CurrentlyPlaying currentlyPlaying = null;
         try {
             currentlyPlaying = spotifyService.getCurrentTrack(accessToken.getToken());
-        } catch (IOException | org.apache.hc.core5.http.ParseException | ParseException | SpotifyWebApiException e) {
+        } catch (IOException | org.apache.hc.core5.http.ParseException | SpotifyWebApiException e) {
             throw new RuntimeException(e);
         }
         Track track = (Track) currentlyPlaying.getItem();

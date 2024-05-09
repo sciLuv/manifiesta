@@ -1,6 +1,8 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.musicApi.spotify;
 
 
+import fr.sciluv.application.manifiesta.manifiestaBack.config.SpotifyConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
@@ -11,9 +13,6 @@ import java.io.IOException;
 
 public class AuthorizationCodeRefresh {
 
-    SpotifyAttributes spotifyAttributes = new SpotifyAttributes();
-
-
     private String clientId;
     private String clientSecret;
     private String refreshToken;
@@ -21,11 +20,10 @@ public class AuthorizationCodeRefresh {
     private SpotifyApi spotifyApi;
     private AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest;
 
-    public AuthorizationCodeRefresh(SpotifyAttributes spotifyAttributes) {
-        this.spotifyAttributes = spotifyAttributes;
-        this.refreshToken = spotifyAttributes.getRefreshToken();
-        this.clientId = spotifyAttributes.getClientId();
-        this.clientSecret = spotifyAttributes.getClientSecret();
+    public AuthorizationCodeRefresh(String refreshToken, String clientId, String clientSecret) {
+        this.refreshToken = refreshToken;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
 
         this.spotifyApi = new SpotifyApi.Builder()
                 .setClientId(clientId)
@@ -39,23 +37,16 @@ public class AuthorizationCodeRefresh {
 
 
 
-    public String authorizationCodeRefresh_Sync() {
+    public String authorizationCodeRefresh() {
         try {
             AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRefreshRequest.execute();
 
             // Set access and refresh token for further "spotifyApi" object usage
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
-
+            System.out.println("Access Token: " + authorizationCodeCredentials.getAccessToken());
             return authorizationCodeCredentials.getAccessToken();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             return "Error: " + e.getMessage();
         }
-    }
-
-
-    public static void main(String[] args) {
-        SpotifyAttributes spotifyAttributes1 = new SpotifyAttributes();
-        new AuthorizationCodeRefresh(spotifyAttributes1).
-        authorizationCodeRefresh_Sync();
     }
 }

@@ -287,7 +287,21 @@ const leaveSession = async (event) => {
         // Vous pourriez appeler une API ou gérer la connexion à une session ici
     };
 
-
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+          if (document.visibilityState === 'visible') {
+            console.log('L\'utilisateur est revenu sur cet onglet!');
+            refreshSession()
+          }
+        };
+    
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+        // N'oubliez pas de nettoyer l'effet !
+        return () => {
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+      }, []);
     useEffect(() => {   
         refreshSession()
     }, [isMusicEnded, accessToken, selectedMusicId]);

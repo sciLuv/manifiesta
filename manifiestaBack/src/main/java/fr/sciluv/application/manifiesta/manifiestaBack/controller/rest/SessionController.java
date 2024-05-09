@@ -53,10 +53,11 @@ public class SessionController {
     public String createSession(@RequestBody CreateSessionRequestDto requestDto) throws IOException, ParseException, org.apache.hc.core5.http.ParseException, SpotifyWebApiException {
         String accessToken = requestDto.getTokenDto().getAccessToken();
         System.out.println(requestDto.toString());
+
+        // put spotify token (refresh et access) on db
+        tokenService.createToken(requestDto.getTokenDto(), requestDto.getUserLoginDto());
         // Check if music is played
         if(spotifyService.isMusicPlayed(accessToken, accessToken)){
-            // put spotify token (refresh et access) on db
-            tokenService.createToken(requestDto.getTokenDto(), requestDto.getUserLoginDto());
 
             // create session
             Session newSession = sessionService.createSession(requestDto.getSessionDto(), requestDto.getUserLoginDto(), requestDto.isQrCodeGlobal());

@@ -1,7 +1,12 @@
 package fr.sciluv.application.manifiesta.manifiestaBack.service.music.streaming.Spotify;
 
 import fr.sciluv.application.manifiesta.manifiestaBack.config.SpotifyConfig;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.Token;
+import fr.sciluv.application.manifiesta.manifiestaBack.entity.User;
+import fr.sciluv.application.manifiesta.manifiestaBack.musicApi.spotify.AuthorizationCodeRefresh;
+import fr.sciluv.application.manifiesta.manifiestaBack.service.TokenService;
 import jakarta.annotation.PostConstruct;
+import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -11,10 +16,11 @@ import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCrede
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
+import se.michaelthelin.spotify.exceptions.detailed.UnauthorizedException;
 
 import java.io.IOException;
 import java.net.URI;
-import java.text.ParseException;
+import java.time.LocalDateTime;
 
 @Service
 public class SpotifyService {
@@ -22,6 +28,9 @@ public class SpotifyService {
     private SpotifyApi spotifyApi;
 
     private final SpotifyConfig spotifyConfig;
+
+    @Autowired
+    TokenService tokenService;
 
     @Autowired
     public SpotifyService(SpotifyConfig spotifyConfig) {
@@ -60,26 +69,48 @@ public class SpotifyService {
     }
 
     public boolean isMusicPlayed(String accessToken, String refreshToken){
-        GetInformationAboutUsersCurrentPlayback getInformationAboutUsersCurrentPlayback = new GetInformationAboutUsersCurrentPlayback(accessToken);
+        String realAccessToken = createNewAccessIfExpired(accessToken);
+        GetInformationAboutUsersCurrentPlayback getInformationAboutUsersCurrentPlayback =
+                new GetInformationAboutUsersCurrentPlayback(realAccessToken);
         return getInformationAboutUsersCurrentPlayback.getInformationAboutUsersCurrentPlayback();
     }
 
-    public CurrentlyPlaying getCurrentTrack(String accessToken) throws IOException, SpotifyWebApiException, ParseException, org.apache.hc.core5.http.ParseException {
-        GetUsersCurrentlyPlayingTrackRequest request = new GetUsersCurrentlyPlayingTrackRequest.Builder(accessToken)
-                .additionalTypes("track")  // Si tu veux aussi des épisodes, par exemple
-                .build();
-        return request.execute();
+    public CurrentlyPlaying getCurrentTrack(String accessToken) throws IOException, ParseException, SpotifyWebApiException {
+        String realAccessToken = createNewAccessIfExpired(accessToken);
+            GetUsersCurrentlyPlayingTrackRequest request = new GetUsersCurrentlyPlayingTrackRequest.Builder(realAccessToken)
+                    .additionalTypes("track")
+                    .build();
+            return request.execute();
+    }
+    public String getNewAccessToken(String refreshToken) {
+        AuthorizationCodeRefresh authorizationCodeRefresh = new AuthorizationCodeRefresh(refreshToken, spotifyConfig.getClientId(), spotifyConfig.getClientSecret());
+        return authorizationCodeRefresh.authorizationCodeRefresh();
     }
 
-//    public static void main(String[] args) throws IOException, ParseException, org.apache.hc.core5.http.ParseException, SpotifyWebApiException {
-//        SpotifyService spotifyService = new SpotifyService(new SpotifyConfig());
-//        CurrentlyPlaying currentlyPlaying = spotifyService.getCurrentTrack("BQDHGth6IqlZuo2V1BOLc5dIdrVpeSYPRX-A4l_LPS3-p3kh6hkLCH40Nq_oEmunSctr6_xrOWQDOqIgPCHIGspDFtj3i1h6CiLlnlIDQxi5xzHtMoBVTzWnKBfqvuh2Gv5z6hjAebnHKRIOZlG3FJIxMBpuaEa4617Kjr9A4i73YTrhy0P2FfjZpyea4a2dVb8ibvTmPagyCb6bjOT38g8XWe7bV2-4BE6Zq-kUknfPJ_CSg0WkvK6kCWXbyX_Fj0hCFS2WsWknmbbNurD2tsYDE3m8jwOHyUcpsgjIqWkV_4YwHl-ylI5XwDs4VnfTcQ");
-//        System.out.println(currentlyPlaying);
-//        System.out.println(currentlyPlaying.getTimestamp());
-//        System.out.println(currentlyPlaying.getProgress_ms());
-//        Track track = (Track) currentlyPlaying.getItem();
-//
-//        System.out.println(track.getName());
-//        System.out.println(track.getArtists()[0].getName());
-//    }
+    private String findRefreshToken(String tokenFromUser) {
+        return tokenService.findFirstRefreshToken(tokenService.findUserByToken(tokenFromUser)).getToken();
+    }
+
+    public String createNewAccessToken(String tokenFromUser) {
+        User user = tokenService.findUserByToken(tokenFromUser);
+        String refreshToken = tokenService.findFirstRefreshToken(user).getToken();
+        String newAccessToken = getNewAccessToken(refreshToken);
+        tokenService.createToken(newAccessToken, user);
+        return newAccessToken;
+    }
+
+    public String createNewAccessIfExpired(String accessToken) {
+        System.out.println(accessToken);
+        Token token = tokenService.findByToken(accessToken);
+        System.out.println(token);
+        // Calcul de la date d'expiration en ajoutant les secondes d'expiration à beginDate
+        LocalDateTime expirationDate = token.getBeginDate().plusSeconds(token.getExpirationTime());
+
+        if (LocalDateTime.now().isAfter(expirationDate)) {
+            // Le token a expiré, créer un nouveau access token
+            return createNewAccessToken(accessToken);
+        }
+        // Le token n'est pas expiré, renvoyer l'access token actuel ou une autre logique appropriée
+        return accessToken;
+    }
 }

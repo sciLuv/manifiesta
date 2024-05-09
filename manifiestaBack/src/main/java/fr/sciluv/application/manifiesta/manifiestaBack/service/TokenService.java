@@ -8,5 +8,13 @@ import fr.sciluv.application.manifiesta.manifiestaBack.entity.dto.user.UserLogin
 public interface TokenService {
     void createToken(TokenDto token, UserLoginDto user);
 
+    void createToken(String token, User user);
+
     Token findMostRecentNonRefreshToken(User user);
+
+    Token findFirstRefreshToken(User user);
+
+    User findUserByToken(String token);
+
+    Token findByToken(String token);
 }
