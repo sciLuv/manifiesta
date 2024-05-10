@@ -56,4 +56,18 @@ public class Token {
     public Boolean getRefreshToken() {
         return isRefreshToken;
     }
+
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "idToken=" + idToken +
+                ", token='" + token + '\'' +
+                ", beginDate=" + beginDate +
+                ", expirationTime=" + expirationTime +
+                ", isRefreshToken=" + isRefreshToken +
+                ", user=" + user +
+                ", streamingService=" + streamingService +
+                '}';
+    }
 }

@@ -64,15 +64,19 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
     }
 
     public void executeRegularSpotifyApiCallForSessionUpdate(int delay, Session session) {
-        User user = userService.getUserBySessionId(session.getIdSession());
-        Token token = tokenService.findMostRecentNonRefreshToken(user);
-        String realAccessToken = spotifyService.createNewAccessIfExpired(token.getToken());
-        Token token2 = tokenService.findByToken(realAccessToken);
-        MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token2);
 
         int trueDelay = delay-3000;
         executor.executeAfterDelay(trueDelay, () -> {
-            System.out.println("Ce message est affiché après un délai de " + trueDelay + " secondes.");
+            System.out.println("---------------- entrée dans la boucle ----------------");
+            User user = userService.getUserBySessionId(session.getIdSession());
+            Token token = tokenService.findMostRecentNonRefreshToken(user);
+            String realAccessToken = spotifyService.createNewAccessIfExpired(token.getToken());
+
+            System.out.println("----------------Access Token: " + realAccessToken);
+            Token token2 = tokenService.findByToken(realAccessToken);
+            MusicCurrentlyPlayedDto musicCurrentlyPlayedDto =  musicService.musicCurrentlyPlayingToJSON(token2);
+
+            System.out.println("----------------Ce message est affiché après un délai de " + trueDelay + " secondes.----------------");
 
             PollTurn pt = pollTurnService.findFirstBySessionOrderByNumberTurnDesc(session);
             List<SuggestedMusic> sm = suggestedMusicService.findByPollTurn(pt);
@@ -119,6 +123,7 @@ public class RegularSpotifyApiCallForSessionUpdateImpl implements RegularSpotify
 
 
     public void stopExecution() {
+        System.out.println("Execution stopped");
         executor.shutdown();
     }
 

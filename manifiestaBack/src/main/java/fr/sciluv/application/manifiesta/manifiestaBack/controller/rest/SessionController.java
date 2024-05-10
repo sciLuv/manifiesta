@@ -54,11 +54,11 @@ public class SessionController {
         String accessToken = requestDto.getTokenDto().getAccessToken();
         System.out.println(requestDto.toString());
 
-        // put spotify token (refresh et access) on db
-        tokenService.createToken(requestDto.getTokenDto(), requestDto.getUserLoginDto());
+
         // Check if music is played
         if(spotifyService.isMusicPlayed(accessToken, accessToken)){
-
+            // put spotify token (refresh et access) on db
+            tokenService.createToken(requestDto.getTokenDto(), requestDto.getUserLoginDto());
             // create session
             Session newSession = sessionService.createSession(requestDto.getSessionDto(), requestDto.getUserLoginDto(), requestDto.isQrCodeGlobal());
             if(newSession != null){
@@ -87,7 +87,7 @@ public class SessionController {
     public SessionInformationToSendDto joinSession(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody JoinSessionDto joinSessionDto) {
-        System.out.println("entrer dans joinSessionController");
+        System.out.println("+++++++++++++++entrer dans joinSessionController+++++++++++++++");
         if(joinSessionDto.getQrCodeInfo() == null){
             System.out.println("QRCode is null");
             return null;
@@ -98,6 +98,7 @@ public class SessionController {
         System.out.println("joinSessionController Test");
         SessionParticipantDto sp = sessionService.createParticipantForSession(username, joinSessionDto.getQrCodeInfo() , role);
         SessionInformationToSendDto joinSessionDto1 = sessionService.joinSession(joinSessionDto, sp, username);
+        System.out.println("+++++++++++++++Sortie de joinSessionController+++++++++++++++");
         return joinSessionDto1;
     }
 

@@ -69,9 +69,9 @@ public class SpotifyService {
     }
 
     public boolean isMusicPlayed(String accessToken, String refreshToken){
-        String realAccessToken = createNewAccessIfExpired(accessToken);
+//        String realAccessToken = createNewAccessIfExpired(accessToken);
         GetInformationAboutUsersCurrentPlayback getInformationAboutUsersCurrentPlayback =
-                new GetInformationAboutUsersCurrentPlayback(realAccessToken);
+                new GetInformationAboutUsersCurrentPlayback(accessToken);
         return getInformationAboutUsersCurrentPlayback.getInformationAboutUsersCurrentPlayback();
     }
 
@@ -100,17 +100,23 @@ public class SpotifyService {
     }
 
     public String createNewAccessIfExpired(String accessToken) {
-        System.out.println(accessToken);
+        System.out.println("////////////////////////////\r\n----------------------");
+        System.out.println("access token en parametre : " + accessToken);
+
         Token token = tokenService.findByToken(accessToken);
-        System.out.println(token);
+        System.out.println(token.toString());
         // Calcul de la date d'expiration en ajoutant les secondes d'expiration à beginDate
         LocalDateTime expirationDate = token.getBeginDate().plusSeconds(token.getExpirationTime());
 
-        if (LocalDateTime.now().isAfter(expirationDate)) {
+        if (LocalDateTime.now().isAfter(expirationDate/*token.getBeginDate().plusSeconds(30))*/)) {
             // Le token a expiré, créer un nouveau access token
-            return createNewAccessToken(accessToken);
+            String returned = createNewAccessToken(accessToken);
+            System.out.println("nouvel access token: " + returned);
+            return returned;
         }
         // Le token n'est pas expiré, renvoyer l'access token actuel ou une autre logique appropriée
+        System.out.println("----------------------\r\n////////////////////////////");
         return accessToken;
+
     }
 }
