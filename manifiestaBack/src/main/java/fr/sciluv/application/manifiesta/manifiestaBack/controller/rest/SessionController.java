@@ -84,7 +84,7 @@ public class SessionController {
 
 
     @PostMapping("/joinSession")
-    public SessionInformationToSendDto joinSession(
+    public synchronized SessionInformationToSendDto joinSession(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody JoinSessionDto joinSessionDto) {
         System.out.println("+++++++++++++++entrer dans joinSessionController+++++++++++++++");
