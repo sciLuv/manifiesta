@@ -72,7 +72,7 @@ const HomeView = (props) => {
                                                 </div>
                                                 </div>
                                                     
-                                                    <Button className="m-3" variant="primary" onClick={
+                                                    <Button className="m-3 valid-button" variant="primary" onClick={
                                                         () => {
                                                             props.handleJoinSession(session.password, session.qrcode)
                                                         }

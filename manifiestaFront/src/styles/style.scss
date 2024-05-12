@@ -92,12 +92,7 @@
     color: #f3bb13 !important; /* Couleur orange pour les titres */
 }
 
-.song-button {
-    background-color: #6a1b9a !important; /* Violet pour les boutons */
-    width: 80%; 
-    max-width: 500px;
-    border: none !important; /* Suppression des bordures */
-}
+
 
 
 .valid-button {
@@ -111,9 +106,7 @@
     }
 }
 
-.song-button:hover, .song-button:focus {
-    background-color: #ff7043 !important; /* Orange plus clair pour le hover/click */
-}
+
 
 .dflex-session{
     margin-top: 50px;
@@ -174,18 +167,22 @@
     background-color: #ff7043 !important;
 }
 
-
+.song-button {
+    background-color: #6a1b9a !important; /* Violet pour les boutons */
+    width: 80%; 
+    max-width: 500px;
+    border: none !important; /* Suppression des bordures */
+    max-height: none !important;
+}
+.song-button:hover, .song-button:focus {
+    background-color: #ff7043 !important; /* Orange plus clair pour le hover/click */
+}
 .song-button {
     overflow: hidden; /* Empêche le texte de déborder */
     white-space: nowrap; /* Garde le texte sur une seule ligne */
     text-overflow: ellipsis; /* Ajoute des points de suspension si le texte est trop long */
   }
-  
-  .song-button:hover {
-    text-overflow: clip; /* Supprime les points de suspension au survol */
-    white-space: normal; /* Permet au texte de passer à la ligne suivante */
-    overflow: auto; /* Permet le défilement */
-  }
+
   
 
   .menu-toggle {
@@ -274,3 +271,6 @@
 }
 
 
+.vote-container{
+    min-width: 40%;
+}

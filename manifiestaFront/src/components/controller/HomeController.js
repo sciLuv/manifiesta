@@ -20,6 +20,7 @@ const HomeController = ({role, user, accessToken, refreshToken, setRefreshToken,
     useEffect(() => {
         checkIfUserHasSession();
         checkIfUserParticipeToSessions();
+        handleJoinSession();
     }, [accessToken]);
 
     //fonction qui envoie une requête à l'API pour savoir si l'utilisateur a créer une session en cours

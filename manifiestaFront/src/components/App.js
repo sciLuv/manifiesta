@@ -28,35 +28,42 @@ function App() {
   const [mail, setMail] = useState("");
   const [role, setRole] = useState("");
 
-  console.log();
+  useEffect(() => {
+    // Charger les données depuis le stockage local lors du montage du composant
+    const storedAccessToken = localStorage.getItem('accessToken');
+    const storedRefreshToken = localStorage.getItem('refreshToken');
+    const storedUser = localStorage.getItem('user');
+    const storedMail = localStorage.getItem('mail');
+    const storedRole = localStorage.getItem('role');
+
+    if (storedAccessToken) setAccessToken(storedAccessToken);
+    if (storedRefreshToken) setRefreshToken(storedRefreshToken);
+    if (storedUser) setUser(storedUser);
+    if (storedMail) setMail(storedMail);
+    if (storedRole) setRole(storedRole);
+
+    // Nettoyer le stockage local lors du démontage du composant
+    return () => {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+      localStorage.removeItem('mail');
+      localStorage.removeItem('role');
+    };
+  }, []); // Le tableau vide en tant que second argument signifie que cet effet ne s'exécutera qu'une seule fois, équivalent à componentDidMount
 
   useEffect(() => {
-    console.log(user);
-    console.log(mail);
-    console.log(accessToken);
-    console.log(refreshToken);
-    console.log(role);
+    // Mettre à jour le stockage local lorsque les états changent
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem('user', user);
+    localStorage.setItem('mail', mail);
+    localStorage.setItem('role', role);
+  }, [accessToken, refreshToken, user, mail, role]);
+
+  useEffect(() => {
+
     }, [accessToken]);
-
-/*   useEffect(() => {
-    const socket = new SockJS(URI_BASE + '/public/websocket');
-    const stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, (frame) => {
-      console.log('Connecté: ' + frame);
-      stompClient.subscribe('/public/topic', (message) => {
-        console.log("test");
-        setCompteur(JSON.parse(message.body));
-      });
-    });
-
-    return () => {
-      if (stompClient) {
-        stompClient.disconnect();
-      }
-    };
-  }, []); */
-
 
   return (
     
