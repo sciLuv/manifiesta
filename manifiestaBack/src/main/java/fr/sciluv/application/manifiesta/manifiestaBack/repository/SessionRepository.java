@@ -20,7 +20,7 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     Session findByQrCodeAndUser(QRCode qrCode, User user);
 
 
-    @Query("SELECT s FROM Session s WHERE s.qrCode = :qrCode AND s.password = :password AND s.hourOfEnd is null")
+    @Query("SELECT s FROM Session s WHERE s.qrCode = :qrCode AND s.password = :password")
     Session findByQrCodeAndPassword(QRCode qrCode, String password);
 
     @Query("SELECT s FROM Session s WHERE s.user = :user AND s.hourOfEnd is null")

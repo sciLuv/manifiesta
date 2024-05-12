@@ -144,4 +144,5 @@ public class Session {
     public void setQrCode(QRCode qrCodes) {
         this.qrCode = qrCode;
     }
+
 }

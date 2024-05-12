@@ -21,6 +21,22 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
     let repeatLeaveSession = 0;
     let repeatRequestGetAllParticipants = 0;
 
+    const promiseQueue = [];
+    let currentlyProcessing = false;
+
+
+    const processQueue = async () => {
+        if (currentlyProcessing) return;
+        if (promiseQueue.length === 0) return;
+    
+        currentlyProcessing = true;
+        const currentTask = promiseQueue.shift();
+        await currentTask();
+        currentlyProcessing = false;
+    
+        processQueue(); // Appelle la prochaine tâche dans la queue
+    };
+
     console.log(data);
 
     const voteForSong = async (SelectedSong) => {
@@ -68,61 +84,62 @@ const SessionController = ({accessToken, refreshToken, setAccessToken, setRefres
         }
     };
     
-    // Supposons que vous ayez un bouton dans votre interface qui appelle cette fonction quand on clique dessus
-    // Vous devriez ajouter un gestionnaire d'événements qui utilise cette fonction `voteForSong`
-    // Par exemple:
-    // <button onClick={() => voteForSong(selectedSongId, data.qrCode, data.password)}>Vote for this song</button>
-    const endedSession = async (event) => {
-        console.log("test entry in refreshSession");
-        try{
-            const response = await fetch(URI_BASE + '/endSession', {
-                method: 'POST',
-                headers :{
-                    "Authorization" : "Bearer " + accessToken,
-                    "Refresh-Token" : refreshToken,
-                    "Content-Type": "application/json"
-                },
-                  
-                body: JSON.stringify({
-                    qrCodeInfo: data.joinSessionDto.qrCodeInfo  // Inclut le mot de passe seulement si nécessaire
-                })
-            });
-            if (response.ok) {
-                repeatRequestEndSession = 0;
-                const responseJson = await response.json();
-                if(responseJson.response == "Session ended"){
-                    navigate('/');
-                }
-  
-            } else {
-                if(response.status === 401){
-                    console.log("response.header :" + response.headers.get('New-Access-Token'));
-                    const newAccessToken = response.headers.get('New-Access-Token');
-                    const newRefreshToken = response.headers.get('New-Refresh-Token');
-        
-                    // Vérifier que les deux tokens sont présents avant de mettre à jour les états
-                    if (newAccessToken && newRefreshToken) {
-                        console.log("test refresh token");
-                        repeatRequestEndSession++
-                        setAccessToken(newAccessToken);
-                        setRefreshToken(newRefreshToken);
-
-                        if(repeatRequestRefreshSession < 2){
-                            console.log("test refresh token 2");
-                        return endedSession();
-                        }
-                    } else {
-                        navigate('/deconnexion')
+    const endedSession = async () => {
+        const task = async () => {
+            console.log("test entry in refreshSession");
+            try{
+                const response = await fetch(URI_BASE + '/endSession', {
+                    method: 'POST',
+                    headers :{
+                        "Authorization" : "Bearer " + accessToken,
+                        "Refresh-Token" : refreshToken,
+                        "Content-Type": "application/json"
+                    },
+                      
+                    body: JSON.stringify({
+                        qrCodeInfo: data.joinSessionDto.qrCodeInfo  // Inclut le mot de passe seulement si nécessaire
+                    })
+                });
+                if (response.ok) {
+                    repeatRequestEndSession = 0;
+                    const responseJson = await response.json();
+                    if(responseJson.response == "Session ended"){
+                        navigate('/');
                     }
+      
+                } else {
+                    if(response.status === 401){
+                        console.log("response.header :" + response.headers.get('New-Access-Token'));
+                        const newAccessToken = response.headers.get('New-Access-Token');
+                        const newRefreshToken = response.headers.get('New-Refresh-Token');
+            
+                        // Vérifier que les deux tokens sont présents avant de mettre à jour les états
+                        if (newAccessToken && newRefreshToken) {
+                            console.log("test refresh token");
+                            repeatRequestEndSession++
+                            setAccessToken(newAccessToken);
+                            setRefreshToken(newRefreshToken);
+                            console.log(repeatRequestEndSession);
+    
+                            if(repeatRequestEndSession < 5){
+                                console.log("test refresh token 2");
+                            return endedSession();
+                            }
+                        } else {
+                            navigate('/deconnexion')
+                        }
+                    }
+                    console.error('Erreur lors de la fermeture de la session');
                 }
-                console.error('Erreur lors de la fermeture de la session');
             }
-        }
-        catch(e){
-            console.log(e);
-        }
-// Vous pourriez appeler une API ou gérer la connexion à une session ici
-};
+            catch(e){
+                console.log(e);
+            }
+        };
+        promiseQueue.push(task);
+        processQueue();
+    };
+
 
 const getAllParticipants = async (event) => {
     try{
@@ -230,62 +247,57 @@ const leaveSession = async (event) => {
 // Vous pourriez appeler une API ou gérer la connexion à une session ici
 };
 
-
-    const refreshSession = async (event) => {
-                try{
-                    const response = await fetch(URI_BASE + '/joinSession', {
-                        method: 'POST',
-                        headers :{
-                            "Authorization" : "Bearer " + accessToken,
-                            "Refresh-Token" : refreshToken,
-                            "Content-Type": "application/json"
-                        },
-                          
-                        body: JSON.stringify({
-                            qrCodeInfo: data.joinSessionDto.qrCodeInfo,
-                            password: data.joinSessionDto.password  // Inclut le mot de passe seulement si nécessaire
-                        })
-                    });
-                    if (response.ok) {
-                        repeatRequestRefreshSession = 0;
-                        const responseJson = await response.json();
-                        console.log(responseJson);
-                        localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
-                        setData(responseJson);
-                        //si la réponse est null, cela signifie que la session est terminée
-                        if(responseJson.sessionEnded){
-                            navigate('/');
-                        }                        
-                        
-                    } else {
-                        if(response.status === 401){
-                            console.log("response.header :" + response.headers.get('New-Access-Token'));
-                            const newAccessToken = response.headers.get('New-Access-Token');
-                            const newRefreshToken = response.headers.get('New-Refresh-Token');
-                
-                            // Vérifier que les deux tokens sont présents avant de mettre à jour les états
-                            if (newAccessToken && newRefreshToken) {
-                                console.log("test refresh token");
-                                repeatRequestRefreshSession++
-                                setAccessToken(newAccessToken);
-                                setRefreshToken(newRefreshToken);
-        
-                                if(repeatRequestRefreshSession < 2){
-                                    console.log("test refresh token 2");
-                                return refreshSession();
-                                }
-                            } else {
-                                navigate('/deconnexion')
-                            }
-                        }
-                        console.error('Erreur lors de la requete de demande d\'information sur les sessions créer par l\'utilisateur');
-                    }
+const refreshSession = async () => {
+    const task = async () => {
+        if (repeatRequestRefreshSession >= 2) {
+            console.error("Nombre maximal de tentatives atteint pour rafraîchir la session");
+            return;
+        }
+        try {
+            const response = await fetch(URI_BASE + '/joinSession', {
+                method: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + accessToken,
+                    "Refresh-Token": refreshToken,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    qrCodeInfo: data.joinSessionDto.qrCodeInfo,
+                    password: data.joinSessionDto.password  // Inclut le mot de passe seulement si nécessaire
+                })
+            });
+            if (response.ok) {
+                repeatRequestRefreshSession = 0;
+                const responseJson = await response.json();
+                localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
+                setData(responseJson);
+                if(responseJson.sessionEnded){
+                    navigate('/');
                 }
-                catch(e){
-                    console.log(e);
+            } else if (response.status === 401) {
+                const newAccessToken = response.headers.get('New-Access-Token');
+                const newRefreshToken = response.headers.get('New-Refresh-Token');
+                if (newAccessToken && newRefreshToken) {
+                    setAccessToken(newAccessToken);
+                    setRefreshToken(newRefreshToken);
+                    repeatRequestRefreshSession++;
+                    return refreshSession();
+                } else {
+                    navigate('/deconnexion')
                 }
-        // Vous pourriez appeler une API ou gérer la connexion à une session ici
+            } else {
+                throw new Error("Problème lors de la requête");
+            }
+        } catch (e) {
+            console.error('Erreur lors de la requête de rafraîchissement de la session', e);
+        }
     };
+    promiseQueue.push(task);
+    processQueue();
+};
+
+
+
 
     useEffect(() => {
         const handleVisibilityChange = () => {
@@ -303,6 +315,7 @@ const leaveSession = async (event) => {
         };
       }, []);
     useEffect(() => {   
+        console.log("test entry in refreshSession");
         refreshSession()
     }, [isMusicEnded, accessToken, selectedMusicId]);
 

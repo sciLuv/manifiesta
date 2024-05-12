@@ -8,14 +8,15 @@ const JoinSessionView = ({
     onAccessCodeChange,
     onPasswordChange,
     onIncludePasswordChange,
-    onJoinSessionSubmit
+    onJoinSessionSubmit,
+    showErrorMessage
 }) => {
     return (
         <Container className="mt-3">
             <Row className="justify-content-center">
                 <Col md={6}>
                     <Card className="shadow bg-dark text-light">
-                        <Card.Body>
+                        <Card.Body className='pb-1'>
                             <Card.Title>Rejoindre une Session</Card.Title>
                             <Form onSubmit={onJoinSessionSubmit}>
                                 <FormGroup className="mb-3">
@@ -47,8 +48,11 @@ const JoinSessionView = ({
                                         />
                                     </FormGroup>
                                 )}
-                                <Button variant="primary" type="submit" className='valid-button'>Rejoindre</Button>
+                                <Button variant="primary" type="submit" className='valid-button mb-3'>Rejoindre</Button>
                             </Form>
+                            <Card.Footer className={`text-danger text-center ${showErrorMessage ? "" : "d-none"}`}>
+                                Il y a eu une erreur lors de la connexion à la session. vérifier le code d'accès et le mot de passe.
+                            </Card.Footer>
                         </Card.Body>
                     </Card>
                 </Col>

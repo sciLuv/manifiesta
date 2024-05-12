@@ -9,6 +9,7 @@ function JoinSessionController({accessToken, refreshToken, setRefreshToken, setA
     const [accessCode, setAccessCode] = useState('');
     const [password, setPassword] = useState('');
     const [includePassword, setIncludePassword] = useState(false);
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
     let repeatRequestJoinSession = 0;
 
     // Gestion de la soumission du formulaire
@@ -30,18 +31,17 @@ function JoinSessionController({accessToken, refreshToken, setRefreshToken, setA
                     });
                     if (response.ok) {
                         repeatRequestJoinSession = 0;
-                        const responseJson = await response.json();
-                        console.log(responseJson);
-                        localStorage.setItem('sessionInformations', JSON.stringify(responseJson));
-                        navigate('/session'); 
-                        if(responseJson.response == "Music is not played"){
-                            setErrorMessage('Veuillez lancer la lecture de musique sur Spotify pour continuer.');
+                        const responseBody = await response.text();
+                        console.log(responseBody);
+                        if (responseBody.length != 0) {
+                            console.log('test1');
+                            localStorage.setItem('sessionInformations', responseBody);
+                            navigate('/session'); 
+                        } else {
+                            console.log('test2');
                             setShowErrorMessage(true);
-                        }  else {
-                            setShowErrorMessage(false);
-                            console.log('Session créée avec succès');
                         }
-                    } else {
+                    }  else {
                         if(response.status === 401){
                             console.log("response.header :" + response.headers.get('New-Access-Token'));
                             const newAccessToken = response.headers.get('New-Access-Token');
@@ -54,7 +54,7 @@ function JoinSessionController({accessToken, refreshToken, setRefreshToken, setA
                                 setRefreshToken(newRefreshToken);
     
                                 if(repeatRequestJoinSession < 2){
-                                return handleJoinSession();
+                                return handleJoinSession(event);
                                 }
                             } else {
                                 navigate('/deconnexion')
@@ -100,6 +100,7 @@ function JoinSessionController({accessToken, refreshToken, setRefreshToken, setA
             onPasswordChange={handlePasswordChange}
             onIncludePasswordChange={handleIncludePasswordChange}
             onJoinSessionSubmit={handleJoinSession}
+            showErrorMessage={showErrorMessage}
         />
     );
 }

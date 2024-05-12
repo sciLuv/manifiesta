@@ -86,16 +86,18 @@ public class SessionServiceImpl implements SessionService {
     public SessionInformationToSendDto joinSession(JoinSessionDto joinSessionDto, SessionParticipantDto sessionParticipant, String username){
         System.out.println("entrer dans joinSession de SessionServiceImpl");
         QRCode qrCode = qrCodeService.findQRCodeByInfo(joinSessionDto.getQrCodeInfo());
-        if (qrCode != null) {
+        QRCode qrCode1 = qrCode;
+        Session session = sessionRepository.findByQrCodeAndPassword(qrCode1, joinSessionDto.getPassword());
+        boolean isSessionEnded = isSessionEnded(session);
+        if(session == null){
+            return null;
+        }
+        if (qrCode != null || !isSessionEnded) {
             System.out.println("qrCode different de null dans joinSession de SessionServiceImpl");
             List<Music> musics = new ArrayList<>();
             List<MusicStreamingServiceInformation> musicStreamingServiceInformations = new ArrayList<>();
             List<MusicDto> musicDtos = new ArrayList<>();
             StreamingService streamingService = streamingServiceService.findByName("Spotify");
-
-            QRCode qrCode1 = qrCode;
-            Session session = sessionRepository.findByQrCodeAndPassword(qrCode1, joinSessionDto.getPassword());
-            boolean isSessionEnded = isSessionEnded(session);
 
             User user = userService.getUser(username);
             boolean isSessionLinkedToUser = sessionRepository.isSessionLinkedToUser(user, session);
@@ -262,8 +264,10 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public boolean isSessionEnded(Session session) {
         if (session != null) {
+            System.out.println("isSessionEndedTest1");
             return session.getHourOfEnd() != null;
         }
+        System.out.println("isSessionEndedTest2");
         return false;
     }
 
