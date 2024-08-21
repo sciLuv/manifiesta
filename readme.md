@@ -1,7 +1,3 @@
-Voici une version reformattée de votre README pour une meilleure lisibilité sur GitHub :
-
----
-
 # Manifiesta
 
 An application enabling the interactive sharing of Spotify playlists between users spatially present together, integrating a voting system to determine the next song to play. This application enhances general musical appreciation and fosters interpersonal interaction in a festive setting.
