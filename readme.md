@@ -1,107 +1,136 @@
+Voici une version reformattée de votre README pour une meilleure lisibilité sur GitHub :
+
+---
 
 # Manifiesta
- 
-An application enabling the interactive sharing of Spotify playlists, between users spatially present together, while integrating a voting system to determine the next music to listen to, in order to enhance general musical appreciation and foster interpersonal interaction in a festive setting.
 
-## How To Install :
+An application enabling the interactive sharing of Spotify playlists between users spatially present together, integrating a voting system to determine the next song to play. This application enhances general musical appreciation and fosters interpersonal interaction in a festive setting.
 
-  
+## How To Install
 
 ### Spotify
 
-  
+First, you'll need to create a Spotify Developer account. Once your account is set up, navigate to the Dashboard and create a new application. This will generate a Client ID and Client Secret that you can use to integrate Spotify's API into your project.
+
+Be sure to add the appropriate Redirect URIs in your app settings. These URIs are crucial because they allow Spotify to securely redirect users back to your front-end application with the necessary authorization information.
 
 ### Security
 
-*localhost:8080*
+**Localhost:8080**
+ 
+Manifiesta uses the Keycloak framework and a MySQL database for user authentication, role authorization, and data encryption. Below are the steps to set up Keycloak and MySQL.
 
-Manifiesta use keycloak framework and a MySQL database for user's authentification, role's autorisation and data encryption. First download Keycloak.
+#### MySQL Configuration for Keycloak
 
-**MySQL configuration to be used with Keycloak :** 
-
-    //We must use InnoDB engine for MySQL
+1. Set the default storage engine to InnoDB:
+    ```sql
     SET GLOBAL default_storage_engine = 'InnoDB';
+    ```
 
-    //To verify if InnoDB is apply
-    SHOW GLOBAL variables like "default_storage%"; 
+2. Verify that InnoDB is applied:
+    ```sql
+    SHOW GLOBAL VARIABLES LIKE "default_storage%";
+    ```
 
-    //To avoid some behavior doesn't work with Keycloak
+3. Disable invisible primary key generation (needed for Keycloak):
+    ```sql
     SET SESSION sql_generate_invisible_primary_key = OFF;
+    ```
 
-    //to verify if it's apply
+4. Verify that the setting is applied:
+    ```sql
     SHOW VARIABLES LIKE 'sql_generate_invisible_primary_key';
+    ```
 
-
-    //Create a specific MySQL user for keycloak
+5. Create a specific MySQL user for Keycloak:
+    ```sql
     CREATE USER 'name'@'%' IDENTIFIED BY 'password';
+    ```
 
-    //Create a specific DB for keycloak
+6. Create a specific database for Keycloak:
+    ```sql
     CREATE DATABASE dbname;
+    ```
 
-    //To add capacity to interact with the Db to the keycloak user
+7. Grant the necessary privileges to the Keycloak user:
+    ```sql
     GRANT ALL PRIVILEGES ON dbname.* TO 'name'@'%';
+    ```
 
-**Configure the keycloak.conf file (in conf folder), to allow it to use MySQL DB**
-1/ remove all thing already write in the keycloak.conf file
-2/ write this instead: 
+#### Configure the `keycloak.conf` File
 
-*The database vendor.
-db=mysql
-The username of the database user.
-db-username=[name-of-database]
-The password of the database user.
-db-password=[password]
-The full database JDBC URL. If not provided default URL is set based on the selected database vendor.
-db-url=jdbc:mysql://localhost:3306/dbname
-characterEncoding=UTF-8*
+1. Clear the contents of the `keycloak.conf` file (located in the `conf` folder).
+2. Add the following configuration:
 
-**Setting keycloak administrator space (in localhost:8080 by default)**
-1 - create an admin and its password to access to the keycloak administrator space panel
-2 - create a realm manifiesta
-2 - create an admin user for the new realm, with validate password and mail, and add him the realm-admin realmrole
-3 - create a new client, call it "manifiesta", and select "client authentification", "Authorization" and "service accounts roles" in "capability config"
-4 - in the new client creation write "http://<your-host>", "http://<your-host>", "http://<your-host>/\*" , "http://<your-host>", "\*"
-5 - in this realm, find the "admin-cli" client and select "client authentification" and "Authorization" in "capability config"
-6 - After that, we can go in crendential and find the secret_key, necessary for use keycloak admin API
-7 - create two realm-roles, "user", and "guest"
-8 - create two client-roles for manifiesta client "client_user" and "client_guest"
-9 - associate "user" with "client_user" and "guest" with "client_guest" in "add associated roles" of each client-role created
-10 - go to "real setting" in "keys" and copy the public key of rs256
+    ```
+    # The database vendor
+    db=mysql
+    
+    # The username of the database user
+    db-username=[name-of-database]
+    
+    # The password of the database user
+    db-password=[password]
+    
+    # The full database JDBC URL. If not provided, a default URL is set based on the selected database vendor.
+    db-url=jdbc:mysql://localhost:3306/dbname?characterEncoding=UTF-8
+    ```
 
-**Default values of variables creates in this process**
+#### Setting up the Keycloak Administrator Space
 
-MySQL user : keycloakAdmin
-MySQL user password : g7PUOC-hqD-&
-MySQL database keycloak name : keycloakManifiesta
+1. Create an admin user and password to access the Keycloak administrator panel.
+2. Create a realm named `manifiesta`.
+3. Create an admin user for the new realm, validate the password and email, and assign the `realm-admin` realm role.
+4. Create a new client named `manifiesta` and enable "Client Authentication," "Authorization," and "Service Accounts Roles" in the capability config.
+5. Set valid redirect URIs for the client (e.g., `http://<your-host>` and `http://<your-host>/*`).
+6. In the `admin-cli` client, enable "Client Authentication" and "Authorization."
+7. Retrieve the `secret_key` from the "Credentials" tab, necessary for using the Keycloak Admin API.
+8. Create two realm roles: `user` and `guest`.
+9. Create two client roles for the `manifiesta` client: `client_user` and `client_guest`.
+10. Associate `user` with `client_user` and `guest` with `client_guest`.
+11. Go to "Realm Settings" > "Keys" and copy the RS256 public key.
 
-keycloak administrator space name : admin
-keycloak adminstrator space password : admin  
+#### Default Values for Variables
+
+- **MySQL User**: `keycloakAdmin`
+- **MySQL User Password**: `g7PUOC-hqD-&`
+- **MySQL Database Keycloak Name**: `keycloakManifiesta`
+- **Keycloak Administrator Name**: `admin`
+- **Keycloak Administrator Password**: `admin`
 
 ### Backend
 
-*localhost:8180*
+**Localhost:8180**
 
-The backend of the application use Spring, SpringBoot and a MySQL Database
+The backend of the application uses Spring, Spring Boot, and a MySQL Database.
 
-    //Create a specific MySQL user for keycloak
+1. Create a MySQL user for the backend:
+    ```sql
     CREATE USER 'name'@'%' IDENTIFIED BY 'password';
+    ```
 
-    //Create a specific DB for keycloak
-    CREATE DATABASE dbname;
+2. Create a specific database for the Manifiesta application:
+    ```sql
+    CREATE DATABASE manifiesta;
+    ```
 
-	Create a specific DB for manifiesta application
-    CREATE DATABASE dbname;
-MySQL database manifiesta application name : manifiesta
-  
+### Frontend
 
-### FrontEnd
+**Localhost:3000**
 
-*localhost:3000*
+To install all Node.js dependencies, run the following commands:
 
-**to add all nodeJS dependance there are 3 commands to do :**
+1. Install Webpack and related tools:
+    ```bash
+    npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin style-loader css-loader file-loader bootstrap react-bootstrap nanoid sass react-router-dom react-router sockjs
+    ```
 
-npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin style-loader css-loader file-loader bootstrap react-bootstrap nanoid sass react-router-dom react-router sockjs
+2. Install Babel for transpiling:
+    ```bash
+    npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader
+    ```
 
-npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader
-
-npm install sass-loader css-loader style-loader --save-dev
+3. Install Sass and CSS loaders:
+    ```bash
+    npm install sass-loader css-loader style-loader --save-dev
+    ```
